@@ -4,6 +4,8 @@ Schlichter PDF-Betrachter für macOS 15+, gebaut mit SwiftUI und PDFKit. Er kann
 
 Leser ist kostenlos, quelloffen (MIT-Lizenz, siehe `LICENSE`), werbefrei und sammelt keine Daten: kein Tracking, keine Analyse, keine Netzwerkverbindungen. Es nutzt ausschließlich Apple-Frameworks. Wer die Entwicklung unterstützen möchte, kann unter **Leser → Über Leser** ein freiwilliges Trinkgeld über den App Store geben; es schaltet nichts frei.
 
+Für die Veröffentlichung im Mac App Store liegen unter `docs/` die vorbereiteten Texte (`app-store.md`), die Datenschutzerklärung (`datenschutz.md`), die Support-Seite (`support.md`) und die Screenshots.
+
 ## Bauen
 
 Leser ist ein Xcode-Projekt (`Leser.xcodeproj`, Xcode 26 oder neuer, macOS 15+). In Xcode öffnen und mit ⌘R starten; für einen signierten Build unter „Signing & Capabilities“ das eigene Team eintragen.
