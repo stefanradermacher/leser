@@ -1,0 +1,80 @@
+{
+  "appPolicies" : {
+    "eula" : "",
+    "policies" : [
+      {
+        "locale" : "de_DE",
+        "policyText" : "",
+        "policyURL" : ""
+      }
+    ]
+  },
+  "identifier" : "5E1A2B3C",
+  "nonRenewingSubscriptions" : [
+
+  ],
+  "products" : [
+    {
+      "displayPrice" : "1.99",
+      "familyShareable" : false,
+      "internalID" : "6740000001",
+      "localizations" : [
+        {
+          "description" : "Ein kleines Trinkgeld für die Weiterentwicklung von Leser.",
+          "displayName" : "Ein Kaffee",
+          "locale" : "de_DE"
+        }
+      ],
+      "productID" : "com.stefanradermacher.leser.tip.coffee",
+      "referenceName" : "Trinkgeld Kaffee",
+      "type" : "Consumable"
+    },
+    {
+      "displayPrice" : "4.99",
+      "familyShareable" : false,
+      "internalID" : "6740000002",
+      "localizations" : [
+        {
+          "description" : "Ein mittleres Trinkgeld für die Weiterentwicklung von Leser.",
+          "displayName" : "Ein Frühstück",
+          "locale" : "de_DE"
+        }
+      ],
+      "productID" : "com.stefanradermacher.leser.tip.breakfast",
+      "referenceName" : "Trinkgeld Frühstück",
+      "type" : "Consumable"
+    },
+    {
+      "displayPrice" : "9.99",
+      "familyShareable" : false,
+      "internalID" : "6740000003",
+      "localizations" : [
+        {
+          "description" : "Ein großzügiges Trinkgeld für die Weiterentwicklung von Leser.",
+          "displayName" : "Ein Abendessen",
+          "locale" : "de_DE"
+        }
+      ],
+      "productID" : "com.stefanradermacher.leser.tip.dinner",
+      "referenceName" : "Trinkgeld Abendessen",
+      "type" : "Consumable"
+    }
+  ],
+  "settings" : {
+    "_applicationInternalID" : "6740000000",
+    "_developerTeamID" : "",
+    "_failTransactionsEnabled" : false,
+    "_locale" : "de_DE",
+    "_storefront" : "DEU",
+    "_storeKitErrors" : [
+
+    ]
+  },
+  "subscriptionGroups" : [
+
+  ],
+  "version" : {
+    "major" : 4,
+    "minor" : 0
+  }
+}

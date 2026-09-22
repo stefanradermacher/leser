@@ -1,0 +1,94 @@
+import AppKit
+import SwiftUI
+
+/// One part of a segmented toolbar control: a symbol or a short text, with an action or a menu.
+struct ToolbarSegment {
+    var symbol: String?
+    var title: String?
+    var label: String
+    var isEnabled = true
+    var action: (() -> Void)?
+    /// Built each time the control updates, so check marks stay current.
+    var menu: (() -> NSMenu)?
+}
+
+/// A group of toolbar buttons in one capsule with dividers, as in Preview
+/// (e.g. zoom out | zoom level | zoom in). SwiftUI's own toolbar groups
+/// cannot hold menus in the same capsule, AppKit's segmented control can.
+struct ToolbarSegments: NSViewRepresentable {
+    let segments: [ToolbarSegment]
+
+    func makeCoordinator() -> Coordinator { Coordinator() }
+
+    func makeNSView(context: Context) -> NSSegmentedControl {
+        let control = NSSegmentedControl()
+        control.trackingMode = .momentary
+        control.segmentStyle = .automatic
+        control.target = context.coordinator
+        control.action = #selector(Coordinator.clicked(_:))
+        return control
+    }
+
+    func updateNSView(_ control: NSSegmentedControl, context: Context) {
+        context.coordinator.segments = segments
+        control.segmentCount = segments.count
+        for (index, segment) in segments.enumerated() {
+            if let symbol = segment.symbol {
+                let image = NSImage(systemSymbolName: symbol, accessibilityDescription: segment.label)
+                control.setImage(image, forSegment: index)
+                control.setImageScaling(.scaleProportionallyDown, forSegment: index)
+            } else {
+                control.setImage(nil, forSegment: index)
+            }
+            control.setLabel(segment.title ?? "", forSegment: index)
+            control.setToolTip(segment.label, forSegment: index)
+            control.setEnabled(segment.isEnabled, forSegment: index)
+            control.setWidth(0, forSegment: index)
+            let menu = segment.menu?()
+            control.setMenu(menu, forSegment: index)
+            control.setShowsMenuIndicator(menu != nil, forSegment: index)
+        }
+        control.setAccessibilityLabel(segments.map(\.label).joined(separator: ", "))
+    }
+
+    func sizeThatFits(_ proposal: ProposedViewSize, nsView: NSSegmentedControl, context: Context) -> CGSize? {
+        nsView.intrinsicContentSize
+    }
+
+    final class Coordinator: NSObject {
+        var segments: [ToolbarSegment] = []
+
+        @objc func clicked(_ sender: NSSegmentedControl) {
+            let index = sender.selectedSegment
+            guard segments.indices.contains(index) else { return }
+            let segment = segments[index]
+            if let action = segment.action {
+                action()
+            } else if let menu = sender.menu(forSegment: index) {
+                // Menu segments open their menu on a simple click.
+                let x = (0..<index).reduce(CGFloat(0)) { $0 + sender.width(forSegment: $1) }
+                let y = sender.isFlipped ? sender.bounds.height + 4 : -4
+                menu.popUp(positioning: nil, at: NSPoint(x: x, y: y), in: sender)
+            }
+        }
+    }
+}
+
+/// Menu item that runs a closure.
+final class ActionMenuItem: NSMenuItem {
+    private let handler: () -> Void
+
+    init(_ title: String, symbol: String? = nil, checked: Bool = false, handler: @escaping () -> Void) {
+        self.handler = handler
+        super.init(title: title, action: #selector(run), keyEquivalent: "")
+        target = self
+        state = checked ? .on : .off
+        if let symbol { image = NSImage(systemSymbolName: symbol, accessibilityDescription: nil) }
+    }
+
+    required init(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+
+    @objc private func run() { handler() }
+}

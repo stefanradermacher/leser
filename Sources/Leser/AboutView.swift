@@ -1,0 +1,143 @@
+import AppKit
+import SwiftUI
+
+/// Addresses shown in the About window, kept in one place.
+enum AppLinks {
+    static let sourceCode = URL(string: "https://github.com/stefanradermacher/leser")!
+    static let reportIssue = URL(string: "https://github.com/stefanradermacher/leser/issues/new")!
+    static let moreProjects = URL(string: "https://stefanradermacher.com/projects")!
+}
+
+extension Color {
+    /// The brick red of the app icon, a little lighter in dark mode.
+    static let leserBrick = Color(nsColor: NSColor(name: nil) { appearance in
+        appearance.bestMatch(from: [.darkAqua, .aqua]) == .darkAqua
+            ? NSColor(srgbRed: 0.83, green: 0.36, blue: 0.30, alpha: 1)
+            : NSColor(srgbRed: 0.66, green: 0.21, blue: 0.17, alpha: 1)
+    })
+}
+
+struct AboutView: View {
+    @Environment(\.colorScheme) private var colorScheme
+
+    private var version: String {
+        let info = Bundle.main.infoDictionary ?? [:]
+        let short = info["CFBundleShortVersionString"] as? String ?? "1.0"
+        let build = info["CFBundleVersion"] as? String ?? "1"
+        return "Version \(short) (\(build))"
+    }
+
+    private var copyright: String {
+        Bundle.main.infoDictionary?["NSHumanReadableCopyright"] as? String ?? ""
+    }
+
+    var body: some View {
+        VStack(spacing: 18) {
+            header
+            promises
+            support
+            links
+            footer
+        }
+        .padding(.horizontal, 28)
+        .padding(.top, 8)
+        .padding(.bottom, 20)
+        .frame(width: 440)
+        .fixedSize(horizontal: false, vertical: true)
+        .tint(.leserBrick)
+    }
+
+    private var header: some View {
+        VStack(spacing: 6) {
+            Image(nsImage: NSApp.applicationIconImage)
+                .resizable()
+                .frame(width: 112, height: 112)
+                .accessibilityHidden(true)
+            Text("Leser")
+                .font(.system(size: 26, weight: .semibold))
+            Text(version)
+                .font(.callout)
+                .foregroundStyle(.secondary)
+                .textSelection(.enabled)
+            Text("Ein schlichter, schneller PDF-Betrachter für macOS.\nLeser zeigt Dokumente an, verändert sie aber nie.")
+                .multilineTextAlignment(.center)
+                .fixedSize(horizontal: false, vertical: true)
+                .padding(.top, 4)
+        }
+    }
+
+    /// What Leser promises: free, open, without ads, without collecting data.
+    private var promises: some View {
+        VStack(alignment: .leading, spacing: 10) {
+            Grid(alignment: .leading, horizontalSpacing: 18, verticalSpacing: 8) {
+                GridRow {
+                    promise("Kostenlos", "gift")
+                    promise("Open Source (MIT)", "chevron.left.forwardslash.chevron.right")
+                }
+                GridRow {
+                    promise("Werbefrei", "rectangle.slash")
+                    promise("Keine Datensammlung", "hand.raised")
+                }
+            }
+            Text("Leser hat kein Tracking, keine Analyse und keine Werbung und baut selbst keine Verbindungen ins Internet auf; nur ein freiwilliges Trinkgeld läuft über den App Store. Deine Dokumente und Einstellungen bleiben auf deinem Mac.")
+                .font(.callout)
+                .foregroundStyle(.secondary)
+                .fixedSize(horizontal: false, vertical: true)
+        }
+        .padding(14)
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .background(.quaternary.opacity(0.5), in: RoundedRectangle(cornerRadius: 10))
+    }
+
+    private func promise(_ title: String, _ symbol: String) -> some View {
+        Label {
+            Text(title)
+        } icon: {
+            Image(systemName: symbol)
+                .foregroundStyle(.tint)
+                .frame(width: 18)
+        }
+    }
+
+    private var support: some View {
+        TipJarView()
+    }
+
+    private var links: some View {
+        VStack(spacing: 8) {
+            Link(destination: AppLinks.sourceCode) {
+                Label("Quellcode auf GitHub", systemImage: "chevron.left.forwardslash.chevron.right")
+            }
+            HStack(spacing: 6) {
+                monogram
+                Text("Weitere Werkzeuge von mir:")
+                    .foregroundStyle(.secondary)
+                Link("stefanradermacher.com/projects", destination: AppLinks.moreProjects)
+            }
+        }
+        .font(.callout)
+    }
+
+    @ViewBuilder
+    private var monogram: some View {
+        let name = colorScheme == .dark ? "Monogram-Dark" : "Monogram"
+        if let url = Bundle.main.url(forResource: name, withExtension: "png"),
+           let image = NSImage(contentsOf: url) {
+            Image(nsImage: image)
+                .resizable()
+                .frame(width: 18, height: 18)
+                .opacity(0.8)
+                .accessibilityHidden(true)
+        }
+    }
+
+    private var footer: some View {
+        VStack(spacing: 2) {
+            Text("\(copyright) · MIT-Lizenz")
+            Text("Nur Apple-Frameworks, keine Fremdkomponenten.")
+        }
+        .font(.caption)
+        .foregroundStyle(.secondary)
+        .multilineTextAlignment(.center)
+    }
+}
