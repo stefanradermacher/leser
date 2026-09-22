@@ -9,6 +9,7 @@
 /* Begin PBXFileReference section */
 		3398A89E5193BB4A7403F00C /* Leser.storekit */ = {isa = PBXFileReference; lastKnownFileType = text.json.xcstorekit; path = Leser.storekit; sourceTree = "<group>"; };
 		86B3BC083DF59791BE56CFAE /* Leser.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Leser.entitlements; sourceTree = "<group>"; };
+		717037E812ACD37C551EE87B /* Leser.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Leser.xcconfig; sourceTree = "<group>"; };
 		BB5944C6515D6D2B678426AB /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		D2A57DC1D883FD21FB995169 /* Leser.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Leser.app; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
@@ -43,6 +44,7 @@
 			children = (
 				BB5944C6515D6D2B678426AB /* Info.plist */,
 				86B3BC083DF59791BE56CFAE /* Leser.entitlements */,
+				717037E812ACD37C551EE87B /* Leser.xcconfig */,
 				3398A89E5193BB4A7403F00C /* Leser.storekit */,
 			);
 			path = Config;
@@ -198,13 +200,13 @@
 		};
 		8951287761002419191396D2 /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 717037E812ACD37C551EE87B /* Leser.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = Config/Leser.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = U9ZC2QN877;
 				ENABLE_APP_SANDBOX = YES;
 				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_USER_SCRIPT_SANDBOXING = NO;
@@ -246,13 +248,13 @@
 		};
 		E67DED621DA82404399DCDC1 /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 717037E812ACD37C551EE87B /* Leser.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = Config/Leser.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = U9ZC2QN877;
 				ENABLE_APP_SANDBOX = YES;
 				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_USER_SCRIPT_SANDBOXING = NO;

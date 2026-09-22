@@ -1,0 +1,7 @@
+// Projektweite Build-Einstellungen.
+//
+// Persönliches bleibt außen vor: Die Team-ID fürs Signieren steht in
+// Config/Local.xcconfig, die nicht im Repository liegt. Vorlage dafür ist
+// Config/Local.xcconfig.example. Fehlt die Datei, baut Xcode ohne Team;
+// build.sh signiert ohnehin ad hoc.
+#include? "Local.xcconfig"

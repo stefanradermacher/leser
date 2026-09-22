@@ -29,6 +29,9 @@ Das App-Icon und das Dokumentsymbol werden von `scripts/make_icon.swift` gezeich
 - `Sources/Leser/`: Quellcode; neue Dateien gehören automatisch zum Projekt
 - `Resources/`: Asset-Katalog mit App-Icon, Monogramme, deutsche Lokalisierung
 - `Config/Info.plist`, `Config/Leser.entitlements`: App-Einstellungen und Sandbox-Berechtigungen (nur Lesezugriff auf selbst gewählte Dateien und Drucken)
+- `Config/Leser.xcconfig`: Build-Einstellungen; bindet optional `Config/Local.xcconfig` ein
+
+Zum Signieren mit eigenem Entwicklerkonto `Config/Local.xcconfig.example` nach `Config/Local.xcconfig` kopieren und die eigene Team-ID eintragen. Die Datei bleibt lokal. Ohne sie baut Xcode ohne Team, und `./build.sh` signiert wie immer ad hoc.
 
 PDFs öffnen per Doppelklick („Öffnen mit“), per Drag & Drop aufs Dock-Symbol oder mit ⌘O.
 
