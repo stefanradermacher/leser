@@ -132,8 +132,8 @@ final class ReaderState {
     func chooseOtherDocument() {
         let panel = NSOpenPanel()
         panel.allowedContentTypes = [.pdf]
-        panel.message = "Dokument für die zweite Ansicht wählen"
-        panel.prompt = "Öffnen"
+        panel.message = String(localized: "Dokument für die zweite Ansicht wählen")
+        panel.prompt = String(localized: "Öffnen")
 
         let handle: (NSApplication.ModalResponse) -> Void = { [weak self] response in
             guard response == .OK, let url = panel.url else { return }
@@ -149,8 +149,8 @@ final class ReaderState {
     private func openOtherDocument(at url: URL) {
         guard let document = PDFDocument(url: url) else {
             let alert = NSAlert()
-            alert.messageText = "Das Dokument „\(url.lastPathComponent)“ konnte nicht geöffnet werden."
-            alert.informativeText = "Die Datei ist beschädigt oder kein PDF-Dokument."
+            alert.messageText = String(localized: "Das Dokument „\(url.lastPathComponent)“ konnte nicht geöffnet werden.")
+            alert.informativeText = String(localized: "Die Datei ist beschädigt oder kein PDF-Dokument.")
             if let window = primary.pdfView.window {
                 alert.beginSheetModal(for: window)
             } else {
@@ -370,7 +370,7 @@ private struct PaneHeader: View {
                     Image(systemName: "xmark")
                 }
                 .help("Geteilte Ansicht schließen")
-                .accessibilityLabel("Geteilte Ansicht schließen")
+                .accessibilityLabel(String(localized: "Geteilte Ansicht schließen"))
             }
         }
         .buttonStyle(.borderless)

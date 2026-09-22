@@ -6,6 +6,8 @@ Leser ist kostenlos, quelloffen (MIT-Lizenz, siehe `LICENSE`), werbefrei und sam
 
 Für die Veröffentlichung im Mac App Store liegen unter `docs/` die vorbereiteten Texte (`app-store.md`), die Datenschutzerklärung (`datenschutz.md`), die Support-Seite (`support.md`) und die Screenshots.
 
+Die Oberfläche gibt es auf Deutsch und Englisch. Die Texte liegen im String-Katalog `Resources/Localizable.xcstrings`; die Schlüssel sind die deutschen Sätze. Neue Texte holt man mit `xcodebuild -exportLocalizations -project Leser.xcodeproj -localizationPath <Ordner> -exportLanguage en` heraus und trägt die Übersetzung im Katalog nach.
+
 ## Bauen
 
 Leser ist ein Xcode-Projekt (`Leser.xcodeproj`, Xcode 26 oder neuer, macOS 15+). In Xcode öffnen und mit ⌘R starten; für einen signierten Build unter „Signing & Capabilities“ das eigene Team eintragen.

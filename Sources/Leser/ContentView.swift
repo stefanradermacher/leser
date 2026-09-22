@@ -156,17 +156,18 @@ struct ReaderView: View {
         let number = model.pageIndex + 1
         let label = model.pageLabel
         // Some documents number their pages differently, e.g. with roman numerals.
+        let count = model.pageCount
         return label == "\(number)"
-            ? "Seite \(number) von \(model.pageCount)"
-            : "Seite \(label) (\(number) von \(model.pageCount))"
+            ? String(localized: "Seite \(number) von \(count)")
+            : String(localized: "Seite \(label) (\(number) von \(count))")
     }
 
     /// Previous and next page; "Go to page" opens below it.
     private var navigationGroup: some View {
         ToolbarSegments(segments: [
-            ToolbarSegment(symbol: "chevron.up", label: "Vorherige Seite",
+            ToolbarSegment(symbol: "chevron.up", label: String(localized: "Vorherige Seite"),
                            isEnabled: model.pageIndex > 0, action: { model.previousPage() }),
-            ToolbarSegment(symbol: "chevron.down", label: "Nächste Seite",
+            ToolbarSegment(symbol: "chevron.down", label: String(localized: "Nächste Seite"),
                            isEnabled: model.pageIndex < model.pageCount - 1, action: { model.nextPage() }),
         ])
         .popover(isPresented: $showsGoToPage, arrowEdge: .bottom) {
@@ -179,7 +180,7 @@ struct ReaderView: View {
         let model = model
         let state = state
         return ToolbarSegments(segments: [
-            ToolbarSegment(symbol: model.pageLayout.systemImage, label: "Anzeige: \(model.pageLayout.title)", menu: {
+            ToolbarSegment(symbol: model.pageLayout.systemImage, label: String(localized: "Anzeige: \(model.pageLayout.title)"), menu: {
                 let menu = NSMenu()
                 for layout in PageLayout.allCases {
                     menu.addItem(ActionMenuItem(layout.title, symbol: layout.systemImage, checked: layout == model.pageLayout) {
@@ -189,7 +190,9 @@ struct ReaderView: View {
                 return menu
             }),
             ToolbarSegment(symbol: state.axis == .stacked ? "square.split.1x2" : "square.split.2x1",
-                           label: state.isSplit ? "Geteilte Ansicht schließen" : "Ansicht teilen",
+                           label: state.isSplit
+                               ? String(localized: "Geteilte Ansicht schließen")
+                               : String(localized: "Ansicht teilen"),
                            action: { state.toggleSplit() }),
         ])
     }
@@ -198,8 +201,8 @@ struct ReaderView: View {
     private var zoomGroup: some View {
         let model = model
         return ToolbarSegments(segments: [
-            ToolbarSegment(symbol: "minus.magnifyingglass", label: "Verkleinern", action: { model.zoomOut() }),
-            ToolbarSegment(title: "\(Int((model.scale * 100).rounded())) %", label: "Zoomstufe", menu: {
+            ToolbarSegment(symbol: "minus.magnifyingglass", label: String(localized: "Verkleinern"), action: { model.zoomOut() }),
+            ToolbarSegment(title: "\(Int((model.scale * 100).rounded())) %", label: String(localized: "Zoomstufe"), menu: {
                 let menu = NSMenu()
                 let fits: [(String, FitMode)] = [("Seitenbreite", .width), ("Seitenhöhe", .height), ("Ganze Seite", .page)]
                 for (title, mode) in fits {
@@ -211,7 +214,7 @@ struct ReaderView: View {
                 }
                 return menu
             }),
-            ToolbarSegment(symbol: "plus.magnifyingglass", label: "Vergrößern", action: { model.zoomIn() }),
+            ToolbarSegment(symbol: "plus.magnifyingglass", label: String(localized: "Vergrößern"), action: { model.zoomIn() }),
         ])
     }
 }

@@ -110,10 +110,10 @@ enum ZoomPreference: String, CaseIterable, Identifiable {
 
     var title: String {
         switch self {
-        case .width: "Seitenbreite"
-        case .height: "Seitenhöhe"
-        case .page: "Ganze Seite"
-        case .actual: "Originalgröße (100 %)"
+        case .width: String(localized: "Seitenbreite")
+        case .height: String(localized: "Seitenhöhe")
+        case .page: String(localized: "Ganze Seite")
+        case .actual: String(localized: "Originalgröße (100 %)")
         }
     }
 
@@ -134,9 +134,9 @@ enum SidebarPreference: String, CaseIterable, Identifiable {
 
     var title: String {
         switch self {
-        case .automatic: "Wenn das Dokument eine Gliederung hat"
-        case .always: "Immer"
-        case .never: "Nie"
+        case .automatic: String(localized: "Wenn das Dokument eine Gliederung hat")
+        case .always: String(localized: "Immer")
+        case .never: String(localized: "Nie")
         }
     }
 }
@@ -148,8 +148,8 @@ enum SidebarContentPreference: String, CaseIterable, Identifiable {
 
     var title: String {
         switch self {
-        case .outline: "Gliederung, sonst Miniaturen"
-        case .thumbnails: "Miniaturen"
+        case .outline: String(localized: "Gliederung, sonst Miniaturen")
+        case .thumbnails: String(localized: "Miniaturen")
         }
     }
 
@@ -166,9 +166,9 @@ enum TabbingPreference: String, CaseIterable, Identifiable {
 
     var title: String {
         switch self {
-        case .system: "Wie in den Systemeinstellungen"
-        case .tabs: "Als Tab im vorhandenen Fenster"
-        case .windows: "In einem neuen Fenster"
+        case .system: String(localized: "Wie in den Systemeinstellungen")
+        case .tabs: String(localized: "Als Tab im vorhandenen Fenster")
+        case .windows: String(localized: "In einem neuen Fenster")
         }
     }
 

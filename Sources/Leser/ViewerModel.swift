@@ -14,10 +14,10 @@ enum PageLayout: String, CaseIterable, Identifiable {
 
     var title: String {
         switch self {
-        case .continuous: "Fortlaufend"
-        case .single: "Einzelseite"
-        case .twoUp: "Doppelseite"
-        case .book: "Doppelseite (erste Seite einzeln)"
+        case .continuous: String(localized: "Fortlaufend")
+        case .single: String(localized: "Einzelseite")
+        case .twoUp: String(localized: "Doppelseite")
+        case .book: String(localized: "Doppelseite (erste Seite einzeln)")
         }
     }
 
@@ -137,7 +137,7 @@ final class ViewerModel {
         self.document = document
         self.pageCount = document.pageCount
         self.filePath = fileURL?.standardizedFileURL.path
-        self.displayName = displayName ?? fileURL?.lastPathComponent ?? document.documentURL?.lastPathComponent ?? "Dokument"
+        self.displayName = displayName ?? fileURL?.lastPathComponent ?? document.documentURL?.lastPathComponent ?? String(localized: "Dokument")
         self.location = location ?? fileURL ?? document.documentURL
         self.startPage = startPage
         self.restoring = restoring
@@ -416,7 +416,7 @@ final class ViewerModel {
 
                 let node = OutlineNode(
                     id: id,
-                    title: title.isEmpty ? "Ohne Titel" : title,
+                    title: title.isEmpty ? String(localized: "Ohne Titel") : title,
                     pageIndex: index,
                     pageLabel: page?.label ?? index.map { "\($0 + 1)" },
                     children: children(of: child)

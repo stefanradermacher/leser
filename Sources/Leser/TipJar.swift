@@ -24,17 +24,17 @@ final class TipJar {
 
         var fallbackName: String {
             switch self {
-            case .coffee: "Ein Kaffee"
-            case .breakfast: "Ein Frühstück"
-            case .dinner: "Ein Abendessen"
+            case .coffee: String(localized: "Ein Kaffee")
+            case .breakfast: String(localized: "Ein Frühstück")
+            case .dinner: String(localized: "Ein Abendessen")
             }
         }
 
         var thanks: String {
             switch self {
-            case .coffee: "Danke für den Kaffee!"
-            case .breakfast: "Danke für das Frühstück!"
-            case .dinner: "Danke für das Abendessen!"
+            case .coffee: String(localized: "Danke für den Kaffee!")
+            case .breakfast: String(localized: "Danke für das Frühstück!")
+            case .dinner: String(localized: "Danke für das Abendessen!")
             }
         }
     }
@@ -96,16 +96,16 @@ final class TipJar {
                 await transaction.finish()
                 thankedFor = tip
             case .success(.unverified):
-                message = "Der Kauf konnte nicht bestätigt werden."
+                message = String(localized: "Der Kauf konnte nicht bestätigt werden.")
             case .pending:
-                message = "Der Kauf wartet noch auf eine Bestätigung."
+                message = String(localized: "Der Kauf wartet noch auf eine Bestätigung.")
             case .userCancelled:
                 break
             @unknown default:
                 break
             }
         } catch {
-            message = "Der Kauf ist nicht zustande gekommen."
+            message = String(localized: "Der Kauf ist nicht zustande gekommen.")
         }
     }
 

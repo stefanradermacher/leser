@@ -89,7 +89,7 @@ struct AboutView: View {
         .background(.quaternary.opacity(0.5), in: RoundedRectangle(cornerRadius: 10))
     }
 
-    private func promise(_ title: String, _ symbol: String) -> some View {
+    private func promise(_ title: LocalizedStringKey, _ symbol: String) -> some View {
         Label {
             Text(title)
         } icon: {

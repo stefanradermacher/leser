@@ -20,15 +20,15 @@ struct DocumentInfo {
         self.location = location
 
         // File
-        file.append(Entry(label: "Name", value: location?.lastPathComponent ?? displayName))
+        file.append(Entry(label: String(localized: "Name"), value: location?.lastPathComponent ?? displayName))
         if let location {
-            file.append(Entry(label: "Ort", value: (location.deletingLastPathComponent().path as NSString).abbreviatingWithTildeInPath))
+            file.append(Entry(label: String(localized: "Ort"), value: (location.deletingLastPathComponent().path as NSString).abbreviatingWithTildeInPath))
             if let values = try? location.resourceValues(forKeys: [.fileSizeKey, .creationDateKey, .contentModificationDateKey]) {
                 if let size = values.fileSize {
-                    file.append(Entry(label: "Größe", value: ByteCountFormatter.string(fromByteCount: Int64(size), countStyle: .file)))
+                    file.append(Entry(label: String(localized: "Größe"), value: ByteCountFormatter.string(fromByteCount: Int64(size), countStyle: .file)))
                 }
-                if let date = values.creationDate { file.append(Entry(label: "Erstellt", value: Self.format(date))) }
-                if let date = values.contentModificationDate { file.append(Entry(label: "Geändert", value: Self.format(date))) }
+                if let date = values.creationDate { file.append(Entry(label: String(localized: "Erstellt"), value: Self.format(date))) }
+                if let date = values.contentModificationDate { file.append(Entry(label: String(localized: "Geändert"), value: Self.format(date))) }
             }
         }
 
@@ -45,32 +45,36 @@ struct DocumentInfo {
             return trimmed?.isEmpty == false ? trimmed : nil
         }
         let texts: [(String, PDFDocumentAttribute)] = [
-            ("Titel", .titleAttribute), ("Autor", .authorAttribute), ("Thema", .subjectAttribute),
-            ("Stichwörter", .keywordsAttribute), ("Erstellt mit", .creatorAttribute), ("PDF erzeugt mit", .producerAttribute),
+            (String(localized: "Titel"), .titleAttribute),
+            (String(localized: "Autor"), .authorAttribute),
+            (String(localized: "Thema"), .subjectAttribute),
+            (String(localized: "Stichwörter"), .keywordsAttribute),
+            (String(localized: "Erstellt mit"), .creatorAttribute),
+            (String(localized: "PDF erzeugt mit"), .producerAttribute),
         ]
         for (label, key) in texts {
             if let value = text(key) { metadata.append(Entry(label: label, value: value)) }
         }
         if let date = attributes[PDFDocumentAttribute.creationDateAttribute] as? Date {
-            metadata.append(Entry(label: "Erstellt am", value: Self.format(date)))
+            metadata.append(Entry(label: String(localized: "Erstellt am"), value: Self.format(date)))
         }
         if let date = attributes[PDFDocumentAttribute.modificationDateAttribute] as? Date {
-            metadata.append(Entry(label: "Geändert am", value: Self.format(date)))
+            metadata.append(Entry(label: String(localized: "Geändert am"), value: Self.format(date)))
         }
-        metadata.append(Entry(label: "PDF-Version", value: "\(document.majorVersion).\(document.minorVersion)"))
+        metadata.append(Entry(label: String(localized: "PDF-Version"), value: "\(document.majorVersion).\(document.minorVersion)"))
 
         // Pages
-        pages.append(Entry(label: "Seiten", value: "\(document.pageCount)"))
+        pages.append(Entry(label: String(localized: "Seiten"), value: "\(document.pageCount)"))
         if let size = Self.pageSize(of: document) {
-            pages.append(Entry(label: "Seitenformat", value: size))
+            pages.append(Entry(label: String(localized: "Seitenformat"), value: size))
         }
-        pages.append(Entry(label: "Gliederung", value: document.outlineRoot?.numberOfChildren ?? 0 > 0 ? "Ja" : "Nein"))
-        pages.append(Entry(label: "Durchsuchbarer Text", value: Self.hasText(document) ? "Ja" : "Nein (z. B. eingescannt)"))
+        pages.append(Entry(label: String(localized: "Gliederung"), value: document.outlineRoot?.numberOfChildren ?? 0 > 0 ? String(localized: "Ja") : String(localized: "Nein")))
+        pages.append(Entry(label: String(localized: "Durchsuchbarer Text"), value: Self.hasText(document) ? String(localized: "Ja") : String(localized: "Nein (z. B. eingescannt)")))
 
         // Security
-        security.append(Entry(label: "Verschlüsselt", value: document.isEncrypted ? "Ja" : "Nein"))
-        security.append(Entry(label: "Drucken", value: document.allowsPrinting ? "Erlaubt" : "Nicht erlaubt"))
-        security.append(Entry(label: "Text kopieren", value: document.allowsCopying ? "Erlaubt" : "Nicht erlaubt"))
+        security.append(Entry(label: String(localized: "Verschlüsselt"), value: document.isEncrypted ? String(localized: "Ja") : String(localized: "Nein")))
+        security.append(Entry(label: String(localized: "Drucken"), value: document.allowsPrinting ? String(localized: "Erlaubt") : String(localized: "Nicht erlaubt")))
+        security.append(Entry(label: String(localized: "Text kopieren"), value: document.allowsCopying ? String(localized: "Erlaubt") : String(localized: "Nicht erlaubt")))
     }
 
     private static func format(_ date: Date) -> String {
@@ -87,18 +91,20 @@ struct DocumentInfo {
         }
         guard let first = document.page(at: 0) else { return nil }
         let size = millimeters(first)
-        var text = "\(Int(size.width.rounded())) × \(Int(size.height.rounded())) mm"
+        let width = Int(size.width.rounded()), height = Int(size.height.rounded())
+        var text = String(localized: "\(width) × \(height) mm")
 
         let formats: [(String, CGFloat, CGFloat)] = [
             ("A3", 297, 420), ("A4", 210, 297), ("A5", 148, 210), ("A6", 105, 148),
             ("US Letter", 215.9, 279.4), ("US Legal", 215.9, 355.6),
         ]
         let short = min(size.width, size.height), long = max(size.width, size.height)
-        let orientation = size.width > size.height ? "Querformat" : "Hochformat"
+        let orientation = size.width > size.height
+            ? String(localized: "Querformat") : String(localized: "Hochformat")
         if let format = formats.first(where: { abs($0.1 - short) < 2 && abs($0.2 - long) < 2 }) {
-            text += " (\(format.0), \(orientation))"
+            text += String(localized: " (\(format.0), \(orientation))")
         } else {
-            text += " (\(orientation))"
+            text += String(localized: " (\(orientation))")
         }
 
         let differs = (1..<min(document.pageCount, 500)).contains { index in
@@ -106,7 +112,7 @@ struct DocumentInfo {
             let other = millimeters(page)
             return abs(other.width - size.width) > 1 || abs(other.height - size.height) > 1
         }
-        if differs { text += ", Seiten unterschiedlich groß" }
+        if differs { text += String(localized: ", Seiten unterschiedlich groß") }
         return text
     }
 
@@ -152,7 +158,7 @@ struct DocumentInfoView: View {
     }
 
     @ViewBuilder
-    private func section(_ title: String, _ entries: [DocumentInfo.Entry]) -> some View {
+    private func section(_ title: LocalizedStringKey, _ entries: [DocumentInfo.Entry]) -> some View {
         if !entries.isEmpty {
             Section(title) {
                 ForEach(entries) { entry in

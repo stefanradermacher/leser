@@ -10,7 +10,7 @@ Vorbereitete Texte und Angaben für den Eintrag in App Store Connect. Zeichenzah
 | Untertitel (30) | PDFs lesen, sonst nichts |
 | Bundle-ID | com.stefanradermacher.leser |
 | SKU | leser-macos |
-| Primäre Sprache | Deutsch |
+| Primäre Sprache | Deutsch (zusätzlich Englisch) |
 | Kategorie | Produktivität (zweite: Dienstprogramme) |
 | Altersfreigabe | 4+ |
 | Preis | Kostenlos, mit In-App-Käufen |
@@ -76,6 +76,8 @@ Typ für alle drei: Verbrauchsartikel. Sie schalten nichts frei.
 
 Als Prüfbild für jeden Artikel dient `screenshots/trinkgeld.png`.
 
+Die Anzeigenamen und Beschreibungen der drei Artikel sollten in App Store Connect auch auf Englisch hinterlegt werden: „A coffee“, „A breakfast“, „A dinner“ mit „A small/medium/generous tip for the continued work on Leser.“ Sie erscheinen in der App genau so, wie sie dort stehen.
+
 ## Datenschutzangaben im Fragebogen
 
 „Es werden keine Daten erfasst.“ Leser sendet nichts an eigene oder fremde Server. Einstellungen und Lesepositionen liegen ausschließlich lokal. Käufe wickelt Apple ab.
@@ -101,6 +103,8 @@ In `docs/screenshots/`, 2880 × 1800 Pixel:
 | 3-geteilt.png | Geteilte Ansicht mit zwei Stellen |
 | 4-miniaturen.png | Miniaturen in der Seitenleiste |
 | trinkgeld.png | Fenster „Leser unterstützen“ als Prüfbild für die In-App-Käufe |
+
+Die Screenshots zeigen die deutsche Oberfläche. Für den englischen Eintrag lassen sie sich in derselben Form mit englischer Oberfläche aufnehmen; Apple erlaubt aber auch, dieselben Bilder für beide Sprachen zu verwenden.
 
 ## Vor dem Hochladen
 

@@ -8,8 +8,8 @@ enum SidebarMode: String, CaseIterable, Identifiable {
 
     var title: String {
         switch self {
-        case .outline: "Gliederung"
-        case .thumbnails: "Miniaturen"
+        case .outline: String(localized: "Gliederung")
+        case .thumbnails: String(localized: "Miniaturen")
         }
     }
 
@@ -242,7 +242,9 @@ struct SearchResultsView: View {
                         .tag(match.id)
                     }
                 } header: {
-                    Text(model.matches.count == 1 ? "1 Treffer" : "\(model.matches.count) Treffer")
+                    Text(model.matches.count == 1
+                         ? String(localized: "1 Treffer")
+                         : String(localized: "\(model.matches.count) Treffer"))
                 }
             }
         }
