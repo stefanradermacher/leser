@@ -110,6 +110,8 @@ struct AboutView: View {
                 .foregroundStyle(.tint)
                 .frame(width: 18)
         }
+        // Both columns share the width evenly.
+        .frame(maxWidth: .infinity, alignment: .leading)
     }
 
     private var support: some View {
