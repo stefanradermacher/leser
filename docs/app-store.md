@@ -90,7 +90,7 @@ Die drei In-App-Käufe sind freiwillige Trinkgelder für die Weiterentwicklung. 
 
 Leser fragt an seltenen Stellen, ob es die Standard-App für PDFs werden soll. Die Frage erscheint als schmale Leiste im Dokumentfenster, erst nachdem an drei verschiedenen Tagen PDFs geöffnet wurden, höchstens zweimal insgesamt, und die eigentliche Umstellung bestätigt macOS selbst.
 
-Zum Testen eignet sich jedes beliebige PDF; im Quellcode liegt `Testdokument.pdf` mit Gliederung und mehreren Seiten.
+Zum Testen eignet sich jedes beliebige PDF; im Quellcode liegt `docs/Leser-Handbuch.pdf` mit Gliederung und neun Seiten. Es ist zugleich das Dokument, das in den Screenshots zu sehen ist.
 
 ## Screenshots
 
@@ -98,13 +98,26 @@ In `docs/screenshots/`, 2880 × 1800 Pixel:
 
 | Datei | Inhalt |
 |---|---|
-| 1-dokument.png | Dokument mit Gliederung in der Seitenleiste |
-| 2-suche.png | Suche mit Trefferliste rechts |
-| 3-geteilt.png | Geteilte Ansicht mit zwei Stellen |
-| 4-miniaturen.png | Miniaturen in der Seitenleiste |
+| 1-dokument.png | Ganze Seite mit Gliederung in der Seitenleiste |
+| 2-suche.png | Suche nach „Leser“, Trefferliste rechts, Fundstellen hervorgehoben |
+| 3-geteilt.png | Geteilte Ansicht mit zwei Kapiteln nebeneinander |
+| 4-miniaturen.png | Miniaturen in der Seitenleiste, aktuelle Seite hervorgehoben |
 | trinkgeld.png | Fenster „Leser unterstützen“ als Prüfbild für die In-App-Käufe |
 
-Die Screenshots zeigen die deutsche Oberfläche. Für den englischen Eintrag lassen sie sich in derselben Form mit englischer Oberfläche aufnehmen; Apple erlaubt aber auch, dieselben Bilder für beide Sprachen zu verwenden.
+Gezeigt wird darin `docs/Leser-Handbuch.pdf`, das Handbuch zu Leser, das `scripts/make_handbook.swift` erzeugt.
+
+Für den englischen Eintrag liegt derselbe Satz mit englischer Oberfläche in `docs/screenshots/en/`, ebenfalls 2880 × 1800:
+
+| Datei | Inhalt |
+|---|---|
+| en/1-document.png | Ganze Seite mit Gliederung in der Seitenleiste |
+| en/2-search.png | Suche nach „Leser“, Trefferliste rechts, Fundstellen hervorgehoben |
+| en/3-split.png | Geteilte Ansicht mit zwei Kapiteln nebeneinander |
+| en/4-thumbnails.png | Miniaturen in der Seitenleiste, aktuelle Seite hervorgehoben |
+
+Gezeigt wird darin `docs/Leser-Handbook.pdf`, die englische Fassung des Handbuchs (`swift scripts/make_handbook.swift en`).
+
+Screenshots hängen in App Store Connect an der jeweiligen Lokalisierung: Der deutsche Satz gehört zu „Deutsch“, der englische zu „Englisch“. Lädt man für eine Sprache keine eigenen hoch, zeigt der Store die der primären Sprache.
 
 ## Vor dem Hochladen
 

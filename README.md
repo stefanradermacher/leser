@@ -26,6 +26,8 @@ Die Versionsnummer (z. B. 1.0) steht im Projekt unter „Version“ (`MARKETING_
 
 Das App-Icon und das Dokumentsymbol werden von `scripts/make_icon.swift` gezeichnet: das App-Icon in den Asset-Katalog, das Dokumentsymbol nach `Resources/PDFDocument.icns`. Nach Änderungen an der Zeichnung im Projektordner `swift scripts/make_icon.swift` ausführen. Das Dokumentsymbol zeigt macOS nur, wenn Leser die Standard-App für PDFs ist, und auch dann meist nur dort, wo es keine Seitenvorschau gibt.
 
+`scripts/make_handbook.swift` zeichnet `docs/Leser-Handbuch.pdf`, ein neunseitiges Handbuch mit Gliederung. Es erklärt die Bedienung, dient zugleich als Beispieldokument und ist in den Screenshots für den App Store zu sehen. Nach Änderungen am Text im Projektordner `swift scripts/make_handbook.swift` ausführen; `swift scripts/make_handbook.swift en` schreibt die englische Fassung nach `docs/Leser-Handbook.pdf`.
+
 ### Projektstruktur
 
 - `Sources/Leser/`: Quellcode; neue Dateien gehören automatisch zum Projekt
