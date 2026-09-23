@@ -1,3 +1,9 @@
+// Copyright 2026 Stefan Radermacher
+//
+// NOT covered by the Apache License 2.0 that applies to the rest of Leser.
+// This file draws the app icon, the document icon and the monograms, which
+// are marks of Stefan Radermacher and are reserved. See NOTICE.
+
 import AppKit
 
 // Draws the Leser app icon into the asset catalog and the document icon into Resources.
