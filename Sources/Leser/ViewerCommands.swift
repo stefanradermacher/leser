@@ -127,7 +127,7 @@ struct ViewerCommands: Commands {
         }
     }
 
-    private func fitToggle(_ title: String, _ mode: FitMode, key: KeyEquivalent) -> some View {
+    private func fitToggle(_ title: LocalizedStringKey, _ mode: FitMode, key: KeyEquivalent) -> some View {
         Toggle(title, isOn: Binding(
             get: { viewer?.fitMode == mode },
             set: { _ in viewer?.setFitMode(mode) }

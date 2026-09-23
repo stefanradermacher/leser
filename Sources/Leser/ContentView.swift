@@ -204,7 +204,9 @@ struct ReaderView: View {
             ToolbarSegment(symbol: "minus.magnifyingglass", label: String(localized: "Verkleinern"), action: { model.zoomOut() }),
             ToolbarSegment(title: "\(Int((model.scale * 100).rounded())) %", label: String(localized: "Zoomstufe"), menu: {
                 let menu = NSMenu()
-                let fits: [(String, FitMode)] = [("Seitenbreite", .width), ("Seitenhöhe", .height), ("Ganze Seite", .page)]
+                let fits: [(String, FitMode)] = [(String(localized: "Seitenbreite"), .width),
+                                                 (String(localized: "Seitenhöhe"), .height),
+                                                 (String(localized: "Ganze Seite"), .page)]
                 for (title, mode) in fits {
                     menu.addItem(ActionMenuItem(title, checked: model.fitMode == mode) { model.setFitMode(mode) })
                 }
