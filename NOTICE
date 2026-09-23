@@ -3,28 +3,14 @@ Copyright 2026 Stefan Radermacher
 
 Dieses Produkt steht unter der Apache-Lizenz, Version 2.0 (siehe LICENSE).
 
-Nicht von der Lizenz erfasst sind die Kennzeichen des Projekts:
-
-  - der Name „Leser“
-  - das App-Symbol und das Dokumentsymbol
-  - die Monogramme
-  - scripts/make_icon.swift, das diese Symbole zeichnet
-
-Sie sind Kennzeichen von Stefan Radermacher. Die Apache-Lizenz gewährt daran
-keine Rechte (siehe Abschnitt 6 der Lizenz). Veränderte Fassungen dieser
-Software müssen einen anderen Namen und eigene Symbole verwenden.
+Nicht Teil des lizenzierten Werks sind der Name „Leser“, das App- und das
+Dokumentsymbol, die Monogramme und scripts/make_icon.swift, das diese Symbole
+zeichnet. Was damit erlaubt ist, steht in TRADEMARKS.md.
 
 ---
 
 This product is licensed under the Apache License, Version 2.0 (see LICENSE).
 
-The following are not covered by that license:
-
-  - the name "Leser"
-  - the app icon and the document icon
-  - the monograms
-  - scripts/make_icon.swift, which draws those icons
-
-They are marks of Stefan Radermacher. The Apache License grants no rights in
-them (see section 6 of the license). Modified versions of this software must
-use a different name and their own icons.
+The name "Leser", the app and document icons, the monograms and
+scripts/make_icon.swift, which draws those icons, are not part of the licensed
+work. TRADEMARKS.md says what may be done with them.

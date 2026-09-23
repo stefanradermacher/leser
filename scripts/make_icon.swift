@@ -2,7 +2,7 @@
 //
 // NOT covered by the Apache License 2.0 that applies to the rest of Leser.
 // This file draws the app icon, the document icon and the monograms, which
-// are marks of Stefan Radermacher and are reserved. See NOTICE.
+// are marks of Stefan Radermacher and are reserved. See TRADEMARKS.md.
 
 import AppKit
 
