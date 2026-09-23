@@ -63,7 +63,20 @@ struct AboutView: View {
                 .multilineTextAlignment(.center)
                 .fixedSize(horizontal: false, vertical: true)
                 .padding(.top, 4)
+            if let nameNote {
+                Text(nameNote)
+                    .font(.callout)
+                    .foregroundStyle(.secondary)
+                    .multilineTextAlignment(.center)
+                    .fixedSize(horizontal: false, vertical: true)
+            }
         }
+    }
+
+    /// Only for English readers: what the German app name means.
+    private var nameNote: String? {
+        guard Bundle.main.preferredLocalizations.first?.hasPrefix("en") == true else { return nil }
+        return "“Leser” [ˈleːzɐ] is the German word for “reader”."
     }
 
     /// What Leser promises: free, open, without ads, without collecting data.
