@@ -7,20 +7,11 @@ cd "${0:A:h}"
 install=true
 [[ "${1:-}" == "--no-install" ]] && install=false
 
-# Build number: written to Config/BuildNumber.xcconfig and additionally passed to
-# xcodebuild, so it is right even if that file is missing. Info.plist takes CFBundleVersion
-# from CURRENT_PROJECT_VERSION, and the substitution happens while the plist is processed --
-# patching the built plist afterwards does not work, it gets overwritten.
-build_number=$(./scripts/build-number.sh)
-version=()
-[[ -n "$build_number" ]] && version=(CURRENT_PROJECT_VERSION="$build_number")
-
 # Local build without a developer account: ad-hoc signed, with the same sandbox as in the App Store.
 mkdir -p .build
 if ! xcodebuild -project Leser.xcodeproj -scheme Leser -configuration Release \
     -derivedDataPath .build/xcode \
     CODE_SIGN_IDENTITY=- CODE_SIGN_STYLE=Manual DEVELOPMENT_TEAM= \
-    "${version[@]}" \
     build > .build/xcodebuild.log 2>&1; then
     grep -E "error:" .build/xcodebuild.log >&2 || tail -20 .build/xcodebuild.log >&2
     echo "Build fehlgeschlagen, vollständiges Protokoll: $PWD/.build/xcodebuild.log" >&2
@@ -38,6 +29,8 @@ lsregister=/System/Library/Frameworks/CoreServices.framework/Frameworks/LaunchSe
 "$lsregister" -u "$built" 2>/dev/null || true
 "$lsregister" -u "$app" 2>/dev/null || true
 
+# The build number comes from Config/Leser.xcconfig, the same source Xcode reads.
+build_number=$(sed -n 's/^CURRENT_PROJECT_VERSION = \([0-9][0-9]*\)$/\1/p' Config/Leser.xcconfig)
 echo "Gebaut: $PWD/$app (Build ${build_number:-?})"
 
 $install || exit 0

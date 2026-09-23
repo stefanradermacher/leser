@@ -130,4 +130,5 @@ Screenshots hängen in App Store Connect an der jeweiligen Lokalisierung: Der de
 - [ ] App-Eintrag angelegt, Name verfügbar
 - [ ] Drei Verbrauchsartikel angelegt und zur Prüfung eingereicht
 - [ ] Support- und Datenschutzseite online (liegen fertig im Webprojekt unter `projects/leser/`)
+- [ ] `./scripts/bump-build.sh` ausgeführt und mitcommittet (jeder Upload braucht eine höhere Build-Nummer)
 - [ ] In Xcode: Team gewählt, Archiv erstellt, Validierung ohne Fehler

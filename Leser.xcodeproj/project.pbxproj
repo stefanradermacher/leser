@@ -78,7 +78,6 @@
 				0F78FE532035D122ED352DBA /* Sources */,
 				DAF6AA633395B1B76148E35B /* Frameworks */,
 				943E4BBD9B51C81965501BA3 /* Resources */,
-				D24DFFCACAC7E0336DFB68D6 /* Build-Nummer aus Git */,
 			);
 			buildRules = (
 			);
@@ -139,29 +138,6 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
-
-/* Begin PBXShellScriptBuildPhase section */
-		D24DFFCACAC7E0336DFB68D6 /* Build-Nummer aus Git */ = {
-			isa = PBXShellScriptBuildPhase;
-			alwaysOutOfDate = 1;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-			);
-			inputPaths = (
-			);
-			name = "Build-Nummer prüfen";
-			outputFileListPaths = (
-			);
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "# Warns when the build number does not match the state of the repository.\n# It is set by scripts/build-number.sh, which build.sh runs by itself; before\n# archiving in Xcode it has to be run by hand.\nif git -C \"$SRCROOT\" rev-parse --is-inside-work-tree > /dev/null 2>&1; then\n    build=$(git -C \"$SRCROOT\" rev-list --count HEAD 2> /dev/null || echo \"\")\n    if [ -n \"$build\" ] && [ \"$build\" != \"$CURRENT_PROJECT_VERSION\" ]; then\n        echo \"warning: Build-Nummer ist $CURRENT_PROJECT_VERSION, das Repository steht bei $build. Vor dem Archivieren scripts/build-number.sh ausführen.\"\n    fi\nfi\n";
-			showEnvVarsInLog = 0;
-		};
-/* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		0F78FE532035D122ED352DBA /* Sources */ = {
