@@ -227,33 +227,42 @@ private struct GoToPageView: View {
     @State private var input = ""
     @FocusState private var focused: Bool
 
+    private var page: Int? {
+        guard let number = Int(input.trimmingCharacters(in: .whitespaces)),
+              (1...model.pageCount).contains(number)
+        else { return nil }
+        return number
+    }
+
     var body: some View {
         HStack(spacing: 8) {
             Text("Seite")
-            TextField("Seite", text: $input)
-                .textFieldStyle(.roundedBorder)
-                .multilineTextAlignment(.trailing)
-                .monospacedDigit()
-                .frame(width: 56)
-                .focused($focused)
-                .onSubmit(go)
+            // The field stays empty; the current page is only a hint, so typing
+            // never appends to it.
+            TextField(text: $input, prompt: Text(verbatim: "\(model.pageIndex + 1)")) {
+                Text("Seite")
+            }
+            .labelsHidden()
+            .textFieldStyle(.roundedBorder)
+            .multilineTextAlignment(.trailing)
+            .monospacedDigit()
+            .frame(width: 56)
+            .focused($focused)
+            .onSubmit(go)
             Text("von \(model.pageCount)")
                 .monospacedDigit()
                 .foregroundStyle(.secondary)
             Button("Gehe zu", action: go)
                 .keyboardShortcut(.defaultAction)
+                .disabled(page == nil)
         }
         .padding(12)
-        .onAppear {
-            input = "\(model.pageIndex + 1)"
-            focused = true
-        }
+        .onAppear { focused = true }
     }
 
     private func go() {
-        if let number = Int(input.trimmingCharacters(in: .whitespaces)) {
-            model.goToPage(number - 1)
-        }
+        guard let page else { return }
+        model.goToPage(page - 1)
         close()
         model.focusDocument()
     }
