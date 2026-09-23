@@ -147,7 +147,7 @@ struct TipJarView: View {
                 .padding(.vertical, 4)
                 .transition(.opacity.combined(with: .scale(scale: 0.9)))
             } else {
-                Text("Leser ist ein nicht-kommerzielles Hobby-Projekt und bleibt für dich kostenlos. Wenn du mir für die Weiterentwicklung etwas ausgeben möchtest, freue ich mich:")
+                Text("Leser ist ein unabhängiges Open-Source-Projekt und bleibt vollständig kostenlos. Wenn du mir für die Weiterentwicklung etwas ausgeben möchtest, würde ich mich freuen:")
                     .font(.callout)
                     .multilineTextAlignment(.center)
                     .fixedSize(horizontal: false, vertical: true)

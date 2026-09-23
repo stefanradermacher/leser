@@ -903,13 +903,13 @@
         }
       }
     },
-    "Leser ist ein nicht-kommerzielles Hobby-Projekt und bleibt für dich kostenlos. Wenn du mir für die Weiterentwicklung etwas ausgeben möchtest, freue ich mich:": {
+    "Leser ist ein unabhängiges Open-Source-Projekt und bleibt vollständig kostenlos. Wenn du mir für die Weiterentwicklung etwas ausgeben möchtest, würde ich mich freuen:": {
       "extractionState": "manual",
       "localizations": {
         "en": {
           "stringUnit": {
             "state": "translated",
-            "value": "Leser is a non-commercial hobby project and will always stay free for you. If you would like to buy me something for the continued work, I would appreciate it:"
+            "value": "Leser is an independent open-source project and will stay completely free. If you would like to buy me something for the continued development, I would appreciate it:"
           }
         }
       }
