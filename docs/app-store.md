@@ -82,6 +82,8 @@ Die Anzeigenamen und Beschreibungen der drei Artikel sollten in App Store Connec
 
 „Es werden keine Daten erfasst.“ Leser sendet nichts an eigene oder fremde Server. Einstellungen und Lesepositionen liegen ausschließlich lokal. Käufe wickelt Apple ab.
 
+Dieselbe Aussage steht maschinenlesbar in `Resources/PrivacyInfo.xcprivacy`: kein Tracking, keine Tracking-Domains, keine erfassten Datentypen. Begründungen für „Required Reason APIs“ (Leser benutzt UserDefaults) verlangt Apple nur auf iOS, iPadOS, tvOS, visionOS und watchOS — auf macOS bleibt die Liste leer.
+
 ## Hinweise für die Prüfung
 
 Leser ist ein reiner PDF-Betrachter und verändert Dokumente nie. Es gibt keine Anmeldung, kein Konto und keine Testzugangsdaten.

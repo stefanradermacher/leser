@@ -33,7 +33,7 @@ Das App-Icon und das Dokumentsymbol werden von `scripts/make_icon.swift` gezeich
 ### Projektstruktur
 
 - `Sources/Leser/`: Quellcode; neue Dateien gehören automatisch zum Projekt
-- `Resources/`: Asset-Katalog mit App-Icon, Monogramme, deutsche Lokalisierung
+- `Resources/`: Asset-Katalog mit App-Icon, Monogramme, Lokalisierung, `PrivacyInfo.xcprivacy`
 - `Config/Info.plist`, `Config/Leser.entitlements`: App-Einstellungen und Sandbox-Berechtigungen (nur Lesezugriff auf selbst gewählte Dateien und Drucken)
 - `Config/Leser.xcconfig`: Build-Einstellungen; bindet optional `Config/Local.xcconfig` ein
 
