@@ -151,14 +151,14 @@
 			);
 			inputPaths = (
 			);
-			name = "Build-Nummer aus Git";
+			name = "Build-Nummer prüfen";
 			outputFileListPaths = (
 			);
 			outputPaths = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "# Build number = number of Git commits, so every build of a new state counts up.\n# Without a Git repository the value from the project (CURRENT_PROJECT_VERSION) stays.\nif git -C \"$SRCROOT\" rev-parse --is-inside-work-tree > /dev/null 2>&1; then\n    build=$(git -C \"$SRCROOT\" rev-list --count HEAD 2> /dev/null || echo \"\")\n    if [ -n \"$build\" ]; then\n        /usr/libexec/PlistBuddy -c \"Set :CFBundleVersion $build\" \"$TARGET_BUILD_DIR/$INFOPLIST_PATH\"\n        echo \"Build-Nummer: $build\"\n    fi\nfi\n";
+			shellScript = "# Warns when the build number does not match the state of the repository.\n# It is set by scripts/build-number.sh, which build.sh runs by itself; before\n# archiving in Xcode it has to be run by hand.\nif git -C \"$SRCROOT\" rev-parse --is-inside-work-tree > /dev/null 2>&1; then\n    build=$(git -C \"$SRCROOT\" rev-list --count HEAD 2> /dev/null || echo \"\")\n    if [ -n \"$build\" ] && [ \"$build\" != \"$CURRENT_PROJECT_VERSION\" ]; then\n        echo \"warning: Build-Nummer ist $CURRENT_PROJECT_VERSION, das Repository steht bei $build. Vor dem Archivieren scripts/build-number.sh ausführen.\"\n    fi\nfi\n";
 			showEnvVarsInLog = 0;
 		};
 /* End PBXShellScriptBuildPhase section */
@@ -206,7 +206,6 @@
 				CODE_SIGN_ENTITLEMENTS = Config/Leser.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 1;
 				ENABLE_APP_SANDBOX = YES;
 				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_USER_SCRIPT_SANDBOXING = NO;
@@ -254,7 +253,6 @@
 				CODE_SIGN_ENTITLEMENTS = Config/Leser.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 1;
 				ENABLE_APP_SANDBOX = YES;
 				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_USER_SCRIPT_SANDBOXING = NO;

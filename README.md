@@ -22,7 +22,9 @@ Ohne Xcode-Oberfläche und ohne Entwicklerkonto:
 
 Das baut `build/Leser.app` mit `xcodebuild` (lokal ad hoc signiert, mit derselben Sandbox wie im App Store) und installiert die App nach `/Applications`. Läuft Leser gerade, wird es vorher beendet und danach wieder geöffnet. Nur bauen, ohne zu installieren: `./build.sh --no-install`.
 
-Die Versionsnummer (z. B. 1.0) steht im Projekt unter „Version“ (`MARKETING_VERSION`) und wird von Hand erhöht. Die Build-Nummer in Klammern setzt ein Build-Schritt automatisch auf die Anzahl der Git-Commits; ohne Git-Repository bleibt sie 1.
+Die Versionsnummer (z. B. 1.0) steht im Projekt unter „Version“ (`MARKETING_VERSION`) und wird von Hand erhöht. Die Build-Nummer in Klammern ist die Anzahl der Git-Commits. Sie kommt aus `CURRENT_PROJECT_VERSION`, das `scripts/build-number.sh` in die (nicht eingecheckte) Datei `Config/BuildNumber.xcconfig` schreibt; `build.sh` ruft das Skript selbst auf. **Vor dem Archivieren in Xcode muss `scripts/build-number.sh` von Hand laufen**, sonst trägt das Archiv die Nummer des letzten Laufs — ein Build-Schritt warnt, wenn Nummer und Repository auseinanderlaufen. Ohne Git-Repository bleibt sie 1.
+
+Nachträglich lässt sich die Nummer nicht setzen: `CFBundleVersion` wird beim Verarbeiten der `Info.plist` eingesetzt, und ein Skript, das die fertige Plist im Produkt ändert, wird von Xcode danach wieder überschrieben.
 
 Das App-Icon und das Dokumentsymbol werden von `scripts/make_icon.swift` gezeichnet: das App-Icon in den Asset-Katalog, das Dokumentsymbol nach `Resources/PDFDocument.icns`. Nach Änderungen an der Zeichnung im Projektordner `swift scripts/make_icon.swift` ausführen. Das Dokumentsymbol zeigt macOS nur, wenn Leser die Standard-App für PDFs ist, und auch dann meist nur dort, wo es keine Seitenvorschau gibt.
 

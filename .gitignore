@@ -12,3 +12,6 @@ xcuserdata/
 
 # Lokale Signierung
 Config/Local.xcconfig
+
+# Erzeugte Build-Nummer
+Config/BuildNumber.xcconfig

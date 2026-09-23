@@ -5,3 +5,9 @@
 // Config/Local.xcconfig.example. Fehlt die Datei, baut Xcode ohne Team;
 // build.sh signiert ohnehin ad hoc.
 #include? "Local.xcconfig"
+
+// Build-Nummer. Der Wert hier ist nur die Rückfallebene; die eigentliche Nummer
+// erzeugt scripts/build-number.sh (build.sh ruft es selbst auf), und der Include
+// weiter unten überschreibt sie. Info.plist setzt CFBundleVersion daraus.
+CURRENT_PROJECT_VERSION = 1
+#include? "BuildNumber.xcconfig"
