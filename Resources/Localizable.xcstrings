@@ -716,6 +716,17 @@
         }
       }
     },
+    "Hilfe zu Leser …": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Leser Help…"
+          }
+        }
+      }
+    },
     "Hochformat": {
       "extractionState": "manual",
       "localizations": {
@@ -866,6 +877,17 @@
           "stringUnit": {
             "state": "translated",
             "value": "Leser has no tracking, no analytics and no advertising, and it never connects to the internet on its own; only a voluntary tip goes through the App Store. Your documents and settings stay on your Mac."
+          }
+        }
+      }
+    },
+    "Leser im Web": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Leser on the Web"
           }
         }
       }

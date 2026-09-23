@@ -15,9 +15,9 @@ Vorbereitete Texte und Angaben für den Eintrag in App Store Connect. Zeichenzah
 | Altersfreigabe | 4+ |
 | Preis | Kostenlos, mit In-App-Käufen |
 | Copyright | 2026 Stefan Radermacher |
-| Support-URL | https://stefanradermacher.com/leser/support |
-| Marketing-URL | https://stefanradermacher.com/projects |
-| Datenschutz-URL | https://stefanradermacher.com/leser/datenschutz |
+| Support-URL | https://stefanradermacher.com/projects/leser/support |
+| Marketing-URL | https://stefanradermacher.com/projects/leser |
+| Datenschutz-URL | https://stefanradermacher.com/projects/leser/datenschutz |
 
 Ist der Name „Leser“ schon vergeben, sind „Leser PDF“ oder „Leser – PDF“ die nächsten Kandidaten.
 
@@ -124,5 +124,5 @@ Screenshots hängen in App Store Connect an der jeweiligen Lokalisierung: Der de
 - [ ] Vertrag für kostenpflichtige Apps aktiv, Steuer- und Bankdaten hinterlegt
 - [ ] App-Eintrag angelegt, Name verfügbar
 - [ ] Drei Verbrauchsartikel angelegt und zur Prüfung eingereicht
-- [ ] Support- und Datenschutzseite online
+- [ ] Support- und Datenschutzseite online (liegen fertig im Webprojekt unter `projects/leser/`)
 - [ ] In Xcode: Team gewählt, Archiv erstellt, Validierung ohne Fehler

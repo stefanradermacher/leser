@@ -20,6 +20,8 @@ enum AppLinks {
     static let sourceCode = URL(string: "https://github.com/stefanradermacher/leser")!
     static let reportIssue = URL(string: "https://github.com/stefanradermacher/leser/issues/new")!
     static let moreProjects = URL(string: "https://stefanradermacher.com/projects")!
+    static let productPage = URL(string: "https://stefanradermacher.com/projects/leser")!
+    static let help = URL(string: "https://stefanradermacher.com/projects/leser/support")!
 }
 
 extension Color {
