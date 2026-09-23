@@ -245,6 +245,8 @@ struct SettingsView: View {
             }
         }
         .formStyle(.grouped)
+        // The window is as tall as its content, so nothing scrolls and no scroller appears.
+        .scrollDisabled(true)
         .frame(width: 520)
         .fixedSize(horizontal: false, vertical: true)
     }
