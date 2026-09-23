@@ -42,10 +42,17 @@ enum MenuCleaner {
         "paste:",
         "delete:",
     ]
-    private static let identifiers: Set<String> = [
-        "__NSTextViewContextSubmenuIdentifierWritingTools",
-        "_NSMenuItemAutoFillIdentifier",
-    ]
+    /// Writing Tools and AutoFill. AppKit puts both into the Edit menu of any app that can
+    /// show text, and there is no public way to keep them out: `writingToolsBehavior` sits on
+    /// NSTextView, while Leser shows its text in a PDFView. Left alone, a viewer that never
+    /// changes a document would offer to rephrase and summarise text, and to fill in a credit
+    /// card.
+    ///
+    /// They are recognised by a fragment of their menu item identifier. Reading `identifier`
+    /// is public API; its value is an AppKit implementation detail and not documented. If
+    /// Apple renames it, the two submenus simply reappear — nothing else depends on the match,
+    /// and matching a fragment rather than the whole name survives small renamings.
+    private static let identifierFragments = ["writingtools", "autofill"]
     private static var observers: [NSObjectProtocol] = []
     private static var cleanupScheduled = false
 
@@ -86,7 +93,7 @@ enum MenuCleaner {
                 if removeNext && item.submenu != nil {
                     // "Revert To…", which follows the hidden "Revert To Saved".
                     menu.removeItem(item)
-                } else if actions.contains(action) || identifiers.contains(item.identifier?.rawValue ?? "") {
+                } else if actions.contains(action) || hasUnwantedIdentifier(item) {
                     menu.removeItem(item)
                 } else if hiddenActions.contains(action), !item.isHidden {
                     item.isHidden = true
@@ -96,6 +103,11 @@ enum MenuCleaner {
             }
             removeDoubleSeparators(in: menu)
         }
+    }
+
+    private static func hasUnwantedIdentifier(_ item: NSMenuItem) -> Bool {
+        guard let identifier = item.identifier?.rawValue.lowercased() else { return false }
+        return identifierFragments.contains { identifier.contains($0) }
     }
 
     /// Removing and hiding items can leave separators next to each other or at the ends.
