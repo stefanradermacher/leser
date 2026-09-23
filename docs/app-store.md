@@ -51,7 +51,7 @@ Leser ist ein schlichter, schneller PDF-Betrachter für den Mac. Er zeigt Dokume
 • Passwortgeschützte PDFs fragen beim Öffnen nach dem Passwort
 
 **Ehrlich und offen**
-• Kostenlos und quelloffen unter MIT-Lizenz
+• Kostenlos und quelloffen unter der Apache-Lizenz 2.0
 • Keine Werbung, kein Tracking, keine Analyse
 • Leser baut von sich aus keine Verbindung ins Internet auf; deine Dokumente und Einstellungen bleiben auf deinem Mac
 • Wer mag, kann die Entwicklung mit einem freiwilligen Trinkgeld unterstützen. Es schaltet nichts frei, Leser bleibt vollständig kostenlos.

@@ -2,7 +2,9 @@
 
 Schlichter PDF-Betrachter für macOS 15+, gebaut mit SwiftUI und PDFKit. Er kann nur anzeigen, nichts bearbeiten.
 
-Leser ist kostenlos, quelloffen (MIT-Lizenz, siehe `LICENSE`), werbefrei und sammelt keine Daten: kein Tracking, keine Analyse, keine Netzwerkverbindungen. Es nutzt ausschließlich Apple-Frameworks. Wer die Entwicklung unterstützen möchte, kann unter **Leser → Über Leser** ein freiwilliges Trinkgeld über den App Store geben; es schaltet nichts frei.
+Leser ist kostenlos, quelloffen (Apache-Lizenz 2.0, siehe `LICENSE`), werbefrei und sammelt keine Daten: kein Tracking, keine Analyse, keine Netzwerkverbindungen. Es nutzt ausschließlich Apple-Frameworks. Wer die Entwicklung unterstützen möchte, kann unter **Leser → Über Leser** ein freiwilliges Trinkgeld über den App Store geben; es schaltet nichts frei.
+
+Nicht von der Lizenz erfasst sind die Kennzeichen des Projekts: der Name „Leser“, das App- und das Dokumentsymbol, die Monogramme und `scripts/make_icon.swift`, das die Symbole zeichnet. Die Einzelheiten stehen in `NOTICE`, das nach Abschnitt 4(d) der Lizenz bei jeder Weitergabe mitzuführen ist. Veränderte Fassungen brauchen also einen eigenen Namen und eigene Symbole — der Code selbst bleibt frei verwendbar.
 
 Für die Veröffentlichung im Mac App Store liegen unter `docs/` die vorbereiteten Texte (`app-store.md`), die Datenschutzerklärung (`datenschutz.md`), die Support-Seite (`support.md`) und die Screenshots.
 

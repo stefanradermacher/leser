@@ -45,13 +45,13 @@
         }
       }
     },
-    "%@ · MIT-Lizenz": {
+    "%@ · Apache-Lizenz 2.0": {
       "extractionState": "manual",
       "localizations": {
         "en": {
           "stringUnit": {
             "state": "translated",
-            "value": "%@ · MIT License"
+            "value": "%@ · Apache License 2.0"
           }
         }
       }
@@ -1068,13 +1068,13 @@
         }
       }
     },
-    "Open Source (MIT)": {
+    "Open Source (Apache 2.0)": {
       "extractionState": "manual",
       "localizations": {
         "en": {
           "stringUnit": {
             "state": "translated",
-            "value": "Open source (MIT)"
+            "value": "Open source (Apache 2.0)"
           }
         }
       }

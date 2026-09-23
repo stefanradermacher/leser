@@ -52,4 +52,4 @@ Oder per E-Mail an leser@stefanradermacher.com. Hilfreich sind die Version aus â
 
 ## Quellcode
 
-Leser ist quelloffen unter MIT-Lizenz: https://github.com/stefanradermacher/leser
+Leser ist quelloffen unter der Apache-Lizenz 2.0: https://github.com/stefanradermacher/leser

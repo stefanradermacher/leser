@@ -82,10 +82,10 @@ struct AboutView: View {
     /// What Leser promises: free, open, without ads, without collecting data.
     private var promises: some View {
         VStack(alignment: .leading, spacing: 10) {
-            Grid(alignment: .leading, horizontalSpacing: 18, verticalSpacing: 8) {
+            Grid(alignment: .leading, horizontalSpacing: 14, verticalSpacing: 8) {
                 GridRow {
                     promise("Kostenlos", "gift")
-                    promise("Open Source (MIT)", "chevron.left.forwardslash.chevron.right")
+                    promise("Open Source (Apache 2.0)", "chevron.left.forwardslash.chevron.right")
                 }
                 GridRow {
                     promise("Werbefrei", "rectangle.slash")
@@ -110,8 +110,8 @@ struct AboutView: View {
                 .foregroundStyle(.tint)
                 .frame(width: 18)
         }
-        // Both columns share the width evenly.
-        .frame(maxWidth: .infinity, alignment: .leading)
+        // Each column is only as wide as its longest entry, so nothing wraps.
+        .fixedSize(horizontal: true, vertical: false)
     }
 
     private var support: some View {
@@ -148,7 +148,7 @@ struct AboutView: View {
 
     private var footer: some View {
         VStack(spacing: 2) {
-            Text("\(copyright) · MIT-Lizenz")
+            Text("\(copyright) · Apache-Lizenz 2.0")
             Text("Nur Apple-Frameworks, keine Fremdkomponenten.")
         }
         .font(.caption)
