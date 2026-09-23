@@ -276,6 +276,17 @@
         }
       }
     },
+    "Datenschutz": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Privacy"
+          }
+        }
+      }
+    },
     "Der Kauf ist nicht zustande gekommen.": {
       "extractionState": "manual",
       "localizations": {
@@ -1574,13 +1585,13 @@
         }
       }
     },
-    "Weitere Werkzeuge von mir:": {
+    "Weitere Werkzeuge von mir": {
       "extractionState": "manual",
       "localizations": {
         "en": {
           "stringUnit": {
             "state": "translated",
-            "value": "More tools by me:"
+            "value": "More tools by me"
           }
         }
       }
@@ -1669,17 +1680,6 @@
           "stringUnit": {
             "state": "translated",
             "value": "Back"
-          }
-        }
-      }
-    },
-    "stefanradermacher.com/projects": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "stefanradermacher.com/projects"
           }
         }
       }

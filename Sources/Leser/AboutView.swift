@@ -22,6 +22,7 @@ enum AppLinks {
     static let moreProjects = URL(string: "https://stefanradermacher.com/projects")!
     static let productPage = URL(string: "https://stefanradermacher.com/projects/leser")!
     static let help = URL(string: "https://stefanradermacher.com/projects/leser/support")!
+    static let privacy = URL(string: "https://stefanradermacher.com/projects/leser/datenschutz")!
 }
 
 extension Color {
@@ -135,18 +136,24 @@ struct AboutView: View {
     }
 
     private var links: some View {
-        VStack(spacing: 8) {
-            Link(destination: AppLinks.sourceCode) {
-                Label("Quellcode auf GitHub", systemImage: "chevron.left.forwardslash.chevron.right")
-            }
+        VStack(spacing: 6) {
             HStack(spacing: 6) {
                 monogram
-                Text("Weitere Werkzeuge von mir:")
-                    .foregroundStyle(.secondary)
-                Link("stefanradermacher.com/projects", destination: AppLinks.moreProjects)
+                Link("Leser im Web", destination: AppLinks.productPage)
+                separator
+                Link("Weitere Werkzeuge von mir", destination: AppLinks.moreProjects)
+            }
+            HStack(spacing: 6) {
+                Link("Quellcode auf GitHub", destination: AppLinks.sourceCode)
+                separator
+                Link("Datenschutz", destination: AppLinks.privacy)
             }
         }
         .font(.callout)
+    }
+
+    private var separator: some View {
+        Text(verbatim: "·").foregroundStyle(.secondary)
     }
 
     @ViewBuilder
