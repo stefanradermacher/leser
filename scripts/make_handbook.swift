@@ -159,7 +159,7 @@ let blocksDE: [Block] = [
     ]),
 
     .chapter("Datenschutz"),
-    .body("Leser sammelt keine Daten. Es gibt kein Tracking, keine Analyse und keine Werbung, und die App baut von sich aus keine Verbindung ins Internet auf. Deine Dokumente werden ausschließlich auf deinem Mac gelesen und angezeigt."),
+    .body("Leser sammelt keine Daten. Es gibt kein Tracking, keine Analyse und keine Werbung, und die App baut selbst keine Verbindung ins Internet auf; nur ein freiwilliges Trinkgeld läuft über den App Store. Deine Dokumente werden ausschließlich auf deinem Mac gelesen und angezeigt."),
     .heading("Was lokal gespeichert wird"),
     .bullet("Deine Einstellungen"),
     .bullet("Größe und Position des zuletzt benutzten Fensters"),
@@ -250,13 +250,13 @@ let blocksEN: [Block] = [
     ]),
 
     .chapter("Privacy"),
-    .body("Leser collects no data. There is no tracking, no analytics and no advertising, and the app opens no connection to the internet of its own accord. Your documents are read and shown on your Mac and nowhere else."),
+    .body("Leser collects no data. There is no tracking, no analytics and no advertising, and the app itself never connects to the internet; only a voluntary tip goes through the App Store. Your documents are read and shown on your Mac and nowhere else."),
     .heading("What is stored locally"),
     .bullet("Your settings"),
     .bullet("Size and position of the last window used"),
     .bullet("The place you last read, for up to 200 documents"),
     .body("None of this leaves your Mac. The stored places can be deleted again with a switch in the settings."),
-    .note("If you like, you can support the continued work with a voluntary tip. It unlocks nothing: Leser stays free in full."),
+    .note("If you like, you can support the continued development with a voluntary tip. It unlocks nothing: Leser stays free in full."),
 ]
 
 let blocks = english ? blocksEN : blocksDE
