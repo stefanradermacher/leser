@@ -76,7 +76,7 @@ Typ für alle drei: Verbrauchsartikel. Sie schalten nichts frei.
 
 Als Prüfbild für jeden Artikel dient `screenshots/trinkgeld.png`.
 
-Die Anzeigenamen und Beschreibungen der drei Artikel sollten in App Store Connect auch auf Englisch hinterlegt werden: „A coffee“, „A breakfast“, „A dinner“ mit „A small/medium/generous tip for the continued work on Leser.“ Sie erscheinen in der App genau so, wie sie dort stehen.
+Die Anzeigenamen und Beschreibungen der drei Artikel sollten in App Store Connect auch auf Englisch hinterlegt werden: „Coffee“, „Breakfast“, „Dinner“ mit „A small/medium/generous tip for the continued work on Leser.“ Sie erscheinen in der App genau so, wie sie dort stehen.
 
 ## Datenschutzangaben im Fragebogen
 

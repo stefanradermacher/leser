@@ -8,7 +8,8 @@ import SwiftUI
 final class TipJar {
     static let shared = TipJar()
 
-    /// The tips, cheapest first. Emoji and wording are part of the app; name and price come from the App Store.
+    /// The tips, cheapest first. Emoji and name belong to the app, so they follow its language;
+    /// only the price comes from the App Store, which uses the language of the App Store account.
     enum Tip: String, CaseIterable {
         case coffee = "com.stefanradermacher.leser.tip.coffee"
         case breakfast = "com.stefanradermacher.leser.tip.breakfast"
@@ -22,7 +23,7 @@ final class TipJar {
             }
         }
 
-        var fallbackName: String {
+        var name: String {
             switch self {
             case .coffee: String(localized: "Ein Kaffee")
             case .breakfast: String(localized: "Ein Frühstück")
@@ -172,7 +173,7 @@ struct TipJarView: View {
         } label: {
             VStack(spacing: 3) {
                 Text(tip.emoji).font(.system(size: 24))
-                Text(product?.displayName ?? tip.fallbackName)
+                Text(tip.name)
                     .font(.callout)
                     .lineLimit(1)
                     .minimumScaleFactor(0.8)
@@ -192,7 +193,7 @@ struct TipJarView: View {
         }
         .buttonStyle(.bordered)
         .disabled(product == nil || jar.purchasing != nil)
-        .help(product?.description ?? tip.fallbackName)
+        .help(tip.name)
     }
 }
 

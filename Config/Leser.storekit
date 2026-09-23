@@ -1,80 +1,89 @@
 {
-  "appPolicies" : {
-    "eula" : "",
-    "policies" : [
+  "appPolicies": {
+    "eula": "",
+    "policies": [
       {
-        "locale" : "de_DE",
-        "policyText" : "",
-        "policyURL" : ""
+        "locale": "de_DE",
+        "policyText": "",
+        "policyURL": ""
       }
     ]
   },
-  "identifier" : "5E1A2B3C",
-  "nonRenewingSubscriptions" : [
-
-  ],
-  "products" : [
+  "identifier": "5E1A2B3C",
+  "nonRenewingSubscriptions": [],
+  "products": [
     {
-      "displayPrice" : "1.99",
-      "familyShareable" : false,
-      "internalID" : "6740000001",
-      "localizations" : [
+      "displayPrice": "1.99",
+      "familyShareable": false,
+      "internalID": "6740000001",
+      "localizations": [
         {
-          "description" : "Ein kleines Trinkgeld für die Weiterentwicklung von Leser.",
-          "displayName" : "Ein Kaffee",
-          "locale" : "de_DE"
+          "description": "Ein kleines Trinkgeld für die Weiterentwicklung von Leser.",
+          "displayName": "Ein Kaffee",
+          "locale": "de_DE"
+        },
+        {
+          "description": "A small tip for the continued work on Leser.",
+          "displayName": "Coffee",
+          "locale": "en_US"
         }
       ],
-      "productID" : "com.stefanradermacher.leser.tip.coffee",
-      "referenceName" : "Trinkgeld Kaffee",
-      "type" : "Consumable"
+      "productID": "com.stefanradermacher.leser.tip.coffee",
+      "referenceName": "Trinkgeld Kaffee",
+      "type": "Consumable"
     },
     {
-      "displayPrice" : "4.99",
-      "familyShareable" : false,
-      "internalID" : "6740000002",
-      "localizations" : [
+      "displayPrice": "4.99",
+      "familyShareable": false,
+      "internalID": "6740000002",
+      "localizations": [
         {
-          "description" : "Ein mittleres Trinkgeld für die Weiterentwicklung von Leser.",
-          "displayName" : "Ein Frühstück",
-          "locale" : "de_DE"
+          "description": "Ein mittleres Trinkgeld für die Weiterentwicklung von Leser.",
+          "displayName": "Ein Frühstück",
+          "locale": "de_DE"
+        },
+        {
+          "description": "A medium tip for the continued work on Leser.",
+          "displayName": "Breakfast",
+          "locale": "en_US"
         }
       ],
-      "productID" : "com.stefanradermacher.leser.tip.breakfast",
-      "referenceName" : "Trinkgeld Frühstück",
-      "type" : "Consumable"
+      "productID": "com.stefanradermacher.leser.tip.breakfast",
+      "referenceName": "Trinkgeld Frühstück",
+      "type": "Consumable"
     },
     {
-      "displayPrice" : "9.99",
-      "familyShareable" : false,
-      "internalID" : "6740000003",
-      "localizations" : [
+      "displayPrice": "9.99",
+      "familyShareable": false,
+      "internalID": "6740000003",
+      "localizations": [
         {
-          "description" : "Ein großzügiges Trinkgeld für die Weiterentwicklung von Leser.",
-          "displayName" : "Ein Abendessen",
-          "locale" : "de_DE"
+          "description": "Ein großzügiges Trinkgeld für die Weiterentwicklung von Leser.",
+          "displayName": "Ein Abendessen",
+          "locale": "de_DE"
+        },
+        {
+          "description": "A generous tip for the continued work on Leser.",
+          "displayName": "Dinner",
+          "locale": "en_US"
         }
       ],
-      "productID" : "com.stefanradermacher.leser.tip.dinner",
-      "referenceName" : "Trinkgeld Abendessen",
-      "type" : "Consumable"
+      "productID": "com.stefanradermacher.leser.tip.dinner",
+      "referenceName": "Trinkgeld Abendessen",
+      "type": "Consumable"
     }
   ],
-  "settings" : {
-    "_applicationInternalID" : "6740000000",
-    "_developerTeamID" : "",
-    "_failTransactionsEnabled" : false,
-    "_locale" : "de_DE",
-    "_storefront" : "DEU",
-    "_storeKitErrors" : [
-
-    ]
+  "settings": {
+    "_applicationInternalID": "6740000000",
+    "_developerTeamID": "",
+    "_failTransactionsEnabled": false,
+    "_locale": "de_DE",
+    "_storefront": "DEU",
+    "_storeKitErrors": []
   },
-  "subscriptionGroups" : [
-
-  ],
-  "version" : {
-    "major" : 4,
-    "minor" : 0
+  "subscriptionGroups": [],
+  "version": {
+    "major": 4,
+    "minor": 0
   }
 }
