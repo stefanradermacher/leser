@@ -93,7 +93,9 @@ Das Über-Fenster bietet drei freiwillige Trinkgelder als In-App-Käufe (StoreKi
 | `com.stefanradermacher.leser.tip.breakfast` | Ein Frühstück 🥐 | 4,99 € |
 | `com.stefanradermacher.leser.tip.dinner` | Ein Abendessen 🍝 | 9,99 € |
 
-Name, Beschreibung und Preis kommen aus dem App Store; genau diese Produkte müssen in App Store Connect als „Verbrauchsartikel“ angelegt werden. Zum Testen ohne echtes Geld liegt `Config/Leser.storekit` bei; das Schema „Leser“ nutzt sie, wenn die App in Xcode mit ⌘R gestartet wird. Builds, die nicht aus dem App Store oder Xcode kommen (z. B. über `build.sh`), zeigen statt der Knöpfe einen Hinweis.
+Namen und Emoji stehen in der App und folgen deshalb ihrer Sprache; aus dem App Store kommt nur der Preis, der sich nach dem Land des Kontos richtet. Anzeigename und Beschreibung aus App Store Connect zeigt Leser nicht selbst — sie erscheinen in Apples Kaufdialog und im Store-Eintrag. Angelegt werden müssen genau diese Produkte dort trotzdem, als „Verbrauchsartikel“.
+
+Zum Testen ohne echtes Geld liegt `Config/Leser.storekit` bei; das Schema „Leser“ nutzt sie, wenn die App in Xcode mit ⌘R gestartet wird. Builds, die nicht aus dem App Store oder Xcode kommen (z. B. über `build.sh`), zeigen statt der Knöpfe einen Hinweis.
 
 Dieselben Trinkgelder gibt es in einem eigenen kleinen Fenster über **Hilfe → Leser unterstützen …**. Das Hilfe-Menü enthält außerdem Links zur Projektseite auf GitHub und zum Melden von Fehlern und Ideen.
 

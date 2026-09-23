@@ -25,7 +25,7 @@
           "locale" : "de"
         },
         {
-          "description" : "A small tip for the continued work on Leser.",
+          "description" : "A small tip for the continued development of Leser.",
           "displayName" : "Coffee",
           "locale" : "en_US"
         }
@@ -45,7 +45,7 @@
           "locale" : "de"
         },
         {
-          "description" : "A medium tip for the continued work on Leser.",
+          "description" : "A medium tip for the continued development of Leser.",
           "displayName" : "Breakfast",
           "locale" : "en_US"
         }
@@ -65,7 +65,7 @@
           "locale" : "de"
         },
         {
-          "description" : "A generous tip for the continued work on Leser.",
+          "description" : "A generous tip for the continued development of Leser.",
           "displayName" : "Dinner",
           "locale" : "en_US"
         }
