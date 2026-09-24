@@ -119,13 +119,13 @@ Typ für alle drei: Verbrauchsartikel. Sie schalten nichts frei.
 
 | Referenzname | Produkt-ID | Anzeigename | Beschreibung | Preis |
 |---|---|---|---|---|
-| Trinkgeld Kaffee | com.stefanradermacher.leser.tip.coffee | Ein Kaffee | Ein kleines Trinkgeld für die Weiterentwicklung von Leser. | 1,99 € |
-| Trinkgeld Frühstück | com.stefanradermacher.leser.tip.breakfast | Ein Frühstück | Ein mittleres Trinkgeld für die Weiterentwicklung von Leser. | 4,99 € |
-| Trinkgeld Abendessen | com.stefanradermacher.leser.tip.dinner | Ein Abendessen | Ein großzügiges Trinkgeld für die Weiterentwicklung von Leser. | 9,99 € |
+| Trinkgeld Kaffee | com.stefanradermacher.leser.tip.coffee | Ein Kaffee | Ein kleines Trinkgeld für Leser. | 1,99 € |
+| Trinkgeld Frühstück | com.stefanradermacher.leser.tip.breakfast | Ein Frühstück | Ein mittleres Trinkgeld für Leser. | 4,99 € |
+| Trinkgeld Abendessen | com.stefanradermacher.leser.tip.dinner | Ein Abendessen | Ein großzügiges Trinkgeld für Leser. | 9,99 € |
 
 Als Prüfbild für jeden Artikel dient `screenshots/trinkgeld.png`.
 
-Die Anzeigenamen und Beschreibungen der drei Artikel sollten in App Store Connect auch auf Englisch hinterlegt werden: „Coffee“, „Breakfast“, „Dinner“ mit „A small/medium/generous tip for the continued development of Leser.“
+Die Beschreibung darf in App Store Connect höchstens 45 Zeichen lang sein, der Anzeigename 30. Auf Englisch (USA und UK) heißen die Artikel „Coffee“, „Breakfast“ und „Dinner“ mit „A small/medium/generous tip for Leser.“
 
 Im Trinkgeldfenster erscheinen sie nicht — dort stehen die Namen aus der App, damit sie der Sprache der App folgen und nicht der des App-Store-Kontos. Aus dem Store kommt nur der Preis. Die Namen hier sollten trotzdem mit denen in der App übereinstimmen, sonst steht in Apples Kaufbestätigung etwas anderes als auf dem Knopf, den man gerade gedrückt hat.
 
