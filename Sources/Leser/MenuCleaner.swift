@@ -91,7 +91,15 @@ enum MenuCleaner {
             for item in menu.items {
                 let action = item.action.map(NSStringFromSelector) ?? ""
                 if removeNext && item.submenu != nil {
-                    // "Revert To…", which follows the hidden "Revert To Saved".
+                    // "Revert To ▸", which follows the hidden "Revert To Saved". Its position is
+                    // the only public thing that sets it apart from "Share ▸": both have the
+                    // action submenuAction:, tag 0 and no identifier, and both submenus are still
+                    // empty here — AppKit fills them only when they open, and calling their
+                    // delegate's menuNeedsUpdate(_:) does not fill them either. Replacing SwiftUI's
+                    // .saveItem group would drop them, but also Close (⌘W), Close All, Open Recent
+                    // and Share. So the anchor is the public action revertDocumentToSaved:. Should
+                    // AppKit ever reorder this menu, the rule may miss "Revert To ▸" or hit another
+                    // submenu — worth a look at the File menu after a major macOS update.
                     menu.removeItem(item)
                 } else if actions.contains(action) || hasUnwantedIdentifier(item) {
                     menu.removeItem(item)
