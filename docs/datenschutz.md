@@ -1,12 +1,12 @@
 # Datenschutz für Leser
 
-Stand: 23. September 2026
+Stand: 24. September 2026
 
 Leser ist ein PDF-Betrachter für macOS. Diese Erklärung beschreibt, welche Daten die App verarbeitet. Die kurze Antwort: keine, die deinen Mac verlassen.
 
-## Keine Datenerhebung
+## Nichts verlässt deinen Mac
 
-Leser erhebt, speichert und überträgt keine personenbezogenen Daten. Es gibt kein Tracking, keine Analyse, keine Werbung und keine Konten. Die App baut selbst keine Verbindung ins Internet auf; nur ein freiwilliges Trinkgeld läuft über den App Store.
+Leser übermittelt keine personenbezogenen Daten an den Entwickler oder an Dritte. Es gibt kein Tracking, keine Analyse, keine Werbung und keine Konten. Die App baut selbst keine Verbindung ins Internet auf; nur ein freiwilliges Trinkgeld läuft über den App Store.
 
 ## Deine Dokumente
 

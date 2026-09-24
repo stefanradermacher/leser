@@ -2,7 +2,7 @@
 
 Schlichter PDF-Betrachter für macOS 15+, gebaut mit SwiftUI und PDFKit. Er kann nur anzeigen, nichts bearbeiten.
 
-Leser ist kostenlos, quelloffen (Apache-Lizenz 2.0, siehe `LICENSE`), werbefrei und sammelt keine Daten: kein Tracking, keine Analyse, keine eigenen Netzwerkverbindungen. Es nutzt ausschließlich Apple-Frameworks. Wer die Entwicklung unterstützen möchte, kann unter **Leser → Über Leser** ein freiwilliges Trinkgeld über den App Store geben; es schaltet nichts frei.
+Leser ist kostenlos, quelloffen (Apache-Lizenz 2.0, siehe `LICENSE`), werbefrei und übermittelt keine Daten: kein Tracking, keine Analyse, keine eigenen Netzwerkverbindungen. Es nutzt ausschließlich Apple-Frameworks. Wer die Entwicklung unterstützen möchte, kann unter **Leser → Über Leser** ein freiwilliges Trinkgeld über den App Store geben; es schaltet nichts frei.
 
 Nicht Teil des lizenzierten Werks sind die Kennzeichen des Projekts: der Name „Leser“, das App- und das Dokumentsymbol, die Monogramme und `scripts/make_icon.swift`, das die Symbole zeichnet. Was damit erlaubt ist, steht in `TRADEMARKS.md` — kurz gesagt: über Leser reden und die unveränderte App weitergeben ja, eine Abspaltung unter diesem Namen nein. `NOTICE` hält den Umfang fest und ist nach Abschnitt 4(d) der Lizenz bei jeder Weitergabe mitzuführen. Der Code selbst bleibt frei verwendbar.
 
@@ -12,7 +12,7 @@ Die Oberfläche gibt es auf Deutsch und Englisch. Die Texte liegen im String-Kat
 
 ## Bauen
 
-Leser ist ein Xcode-Projekt (`Leser.xcodeproj`, Xcode 26 oder neuer, macOS 15+). In Xcode öffnen und mit ⌘R starten; für einen signierten Build unter „Signing & Capabilities“ das eigene Team eintragen.
+Leser ist ein Xcode-Projekt (`Leser.xcodeproj`, Xcode 27 oder neuer, macOS 15+). In Xcode öffnen und mit ⌘R starten; für einen signierten Build unter „Signing & Capabilities“ das eigene Team eintragen.
 
 Ohne Xcode-Oberfläche und ohne Entwicklerkonto:
 
