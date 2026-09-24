@@ -6,7 +6,7 @@ Vorbereitete Texte und Angaben für den Eintrag in App Store Connect. Zeichenzah
 
 | Feld | Wert |
 |---|---|
-| Name (30) | Leser |
+| Name (30) | Leser (Deutsch), Leser PDF (Englisch) |
 | Untertitel (30) | PDFs lesen, sonst nichts |
 | Bundle-ID | com.stefanradermacher.leser |
 | SKU | leser-macos |
@@ -19,7 +19,7 @@ Vorbereitete Texte und Angaben für den Eintrag in App Store Connect. Zeichenzah
 | Marketing-URL | https://stefanradermacher.com/projects/leser |
 | Datenschutz-URL | https://stefanradermacher.com/projects/leser/datenschutz |
 
-Ist der Name „Leser“ schon vergeben, sind „Leser PDF“ oder „Leser – PDF“ die nächsten Kandidaten.
+Für Englisch (USA) ist „Leser“ in App Store Connect bereits reserviert. Beide englischen Fassungen, USA und UK, heißen deshalb einheitlich „Leser PDF“; auf dem Mac und im deutschen Eintrag bleibt es „Leser“.
 
 ## Werbetext (170)
 
@@ -66,7 +66,9 @@ Erste Version.
 
 ## Englische Texte
 
-Für die Sprache „Englisch“ in App Store Connect. Der Name bleibt „Leser“.
+Für die Sprachen „Englisch (USA)“ und „Englisch (UK)“ in App Store Connect, beide mit denselben Texten und Screenshots.
+
+**Name (30):** Leser PDF
 
 **Untertitel (30):** Read PDFs, nothing else
 
