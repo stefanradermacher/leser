@@ -14,9 +14,9 @@
 
 // Creates the small manual about Leser, used for the App Store screenshots and as a
 // sample document with an outline. The texts live in docs/handbuch/de.md and en.md.
-// Usage (from the project folder): swift scripts/make_handbook.swift [en]
+// Usage (from the project folder): swift scripts/make_manual.swift [en]
 //   without an argument: docs/handbuch/de.md → docs/Leser-Handbuch.pdf (German)
-//   with "en":           docs/handbuch/en.md → docs/Leser-Handbook.pdf (English)
+//   with "en":           docs/handbuch/en.md → docs/Leser-Manual.pdf (English)
 
 import AppKit
 import PDFKit
@@ -26,7 +26,7 @@ import PDFKit
 let english = CommandLine.arguments.contains("en")
 
 let sourcePath = english ? "docs/handbuch/en.md" : "docs/handbuch/de.md"
-let outputPath = english ? "docs/Leser-Handbook.pdf" : "docs/Leser-Handbuch.pdf"
+let outputPath = english ? "docs/Leser-Manual.pdf" : "docs/Leser-Handbuch.pdf"
 
 // MARK: - Look
 
@@ -71,7 +71,8 @@ enum Block {
 }
 
 /// Reads the handbook text, see the comment at the top of the file for its format:
-/// the fields for the title page first, then the chapters.
+/// the fields for the title page first, then the chapters. A field may go on over several
+/// lines; every line that does not start with a new field name continues the previous one.
 func readHandbook(_ path: String) -> (fields: [String: String], blocks: [Block]) {
     guard var source = try? String(contentsOfFile: path, encoding: .utf8) else {
         fatalError("\(path) nicht gefunden – aus dem Projektordner aufrufen")
@@ -84,6 +85,7 @@ func readHandbook(_ path: String) -> (fields: [String: String], blocks: [Block])
     var paragraph: [String] = []
     var rows: [(String, String)] = []
     var inContent = false
+    var lastField = ""
 
     func flush() {
         if !paragraph.isEmpty {
@@ -112,9 +114,12 @@ func readHandbook(_ path: String) -> (fields: [String: String], blocks: [Block])
             inContent = true
             blocks.append(.chapter(String(line.dropFirst(2))))
         } else if !inContent {
-            let parts = line.split(separator: ":", maxSplits: 1)
-            if parts.count == 2 {
-                fields[String(parts[0])] = parts[1].trimmingCharacters(in: .whitespaces)
+            if let colon = line.firstIndex(of: ":"),
+               line[..<colon].allSatisfy(\.isLetter), !line[..<colon].isEmpty {
+                lastField = String(line[..<colon])
+                fields[lastField] = line[line.index(after: colon)...].trimmingCharacters(in: .whitespaces)
+            } else if !lastField.isEmpty {
+                fields[lastField, default: ""] += " " + line
             }
         } else if line.hasPrefix("## ") {
             flush()

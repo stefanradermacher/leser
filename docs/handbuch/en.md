@@ -1,40 +1,42 @@
 <!--
-Texte des Handbuchs. Daraus erzeugt `swift scripts/make_handbook.swift` das PDF
+Texte des Handbuchs. Daraus erzeugt `swift scripts/make_manual.swift` das PDF
 (mit „en“ die englische Fassung).
 
 Oben stehen die Angaben für Titelseite und Dokumentinformationen, danach der Inhalt:
   # Kapitel             beginnt eine neue Seite und einen Eintrag in der Gliederung
   ## Überschrift        Zwischenüberschrift
   Text                  Absatz; Zeilenumbrüche sind egal, eine Leerzeile trennt Absätze
+                        (das gilt auch für die Angaben oben)
   - Punkt               Aufzählungspunkt
   > Hinweis             Text im farbigen Kasten
   | Befehl | Kürzel |   Zeile der Tastaturkürzel-Tabelle
 -->
 
-Dokumenttitel: Leser – Handbook
+Dokumenttitel: Leser – Manual
 Thema: PDF viewer for macOS
-Untertitel: Handbook for the macOS PDF viewer
+Untertitel: Manual for the macOS PDF viewer
 Leitsatz: Made for reading.
-Einleitung: Tidy, fast and free of distractions: with an outline, thumbnails, full-text search and a split view. Free, ad-free and collecting no data.
+Einleitung: Tidy, fast and free of distractions: with outline, thumbnails, full-text search and split view.
+Free, ad-free and collecting no data.
 
-# About This Handbook
+# About This Manual
 
-Leser is a plain PDF viewer for macOS, made for reading. This handbook describes in a few short chapters what Leser can do and how it is used.
+Leser is a plain PDF viewer for macOS, made for reading. This manual describes in a few short chapters what Leser can do and how it is used.
 
-It is also a sample document: several chapters with an outline, so that the sidebar, the search and the split view have something to work with.
+It is also a sample document: several chapters with an outline, so sidebar, search and split view have something to work with.
 
 > “Leser” [ˈleːzɐ] is the German word for “reader”.
 
 ## What Leser stands for
 
-- Free and open source under the Apache 2.0 licence
+- Free and open source under Apache 2.0 licence
 - No ads, no tracking, no data collection
 - Apple frameworks only, no third-party components
 - English and German
 
 # Reading and Navigating
 
-You open a document by double-clicking it, through “File → Open …” or by dropping it onto the icon in the Dock. Leser remembers where you left off and opens the document there the next time.
+You open a document by double-clicking it, with “File → Open …” or by dropping it onto the icon in the Dock. Leser remembers where you left off and opens the document there the next time.
 
 ## Turning pages
 
@@ -45,11 +47,11 @@ The left and right arrow keys turn one page at a time; the up and down keys and 
 On the left, Leser shows either the outline of the document or thumbnails of every page. A single click switches between them. In the outline the highlight follows your reading position, so you can always see which chapter you are in.
 
 - Outline: jumps to chapters and sections
-- Thumbnails: shows every page with the current one highlighted
+- Thumbnails: shows every page with the current page highlighted
 
 ## Zoom
 
-The zoom can be changed in steps or fitted to the page width, the page height or the whole page. The chosen fit is kept even when you resize the window.
+The zoom factor can be changed in steps or fitted to the page width, the page height or the whole page. The chosen fit is kept even when you resize the window.
 
 ## Tabs and windows
 
@@ -87,11 +89,11 @@ Clicking the cross in the header of the second half ends the split view, and so 
 
 # Display and Settings
 
-Leser knows four ways to arrange pages: continuous, single page, two pages, or two pages with the first one alone, the way a book with a title page reads.
+Leser knows four ways to arrange pages: continuous, single page, two pages, or two pages with a single first page, the way a book with a title page reads.
 
 ## How documents open
 
-The settings decide what a document opens with: which page layout, which zoom and whether the sidebar appears. They also decide whether new documents open as a tab or in a window of their own.
+The settings decide what a document opens with: which page layout, which zoom factor and whether the sidebar appears. They also decide whether new documents open as a tab or in a window of their own.
 
 ## Reloading automatically
 
@@ -109,7 +111,7 @@ No. Leser is a viewer only. For notes, forms or merging documents, other program
 
 ## Why is the outline missing?
 
-Because the document has none. Many PDFs from word processors do not bring one along. In that case Leser shows thumbnails of the pages instead.
+Because the document doesn't have one. Many PDFs from word processors do not bring one along. In that case Leser shows thumbnails of the pages instead.
 
 ## Can I copy text?
 
@@ -117,7 +119,7 @@ Yes. Text can be selected and copied with the mouse as usual, as long as the doc
 
 ## What happens to my documents?
 
-Nothing, other than being shown. Leser never writes into a document and never uploads anything.
+Nothing, other than being shown. Leser never modifies documents and never uploads anything.
 
 # Keyboard Shortcuts
 
@@ -138,7 +140,7 @@ The most useful commands are all within reach without the mouse:
 
 # Privacy
 
-Leser sends no data anywhere. There is no tracking, no analytics and no advertising, and the app itself never connects to the internet; only a voluntary tip goes through the App Store. Your documents are read and shown on your Mac and nowhere else.
+Leser sends no data anywhere. There is no tracking, no analytics and no advertising, and the app itself never connects to the internet; only a voluntary tip goes through the App Store. Your documents are read and shown on your Mac only.
 
 ## What is stored locally
 

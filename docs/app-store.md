@@ -108,7 +108,7 @@ In `docs/screenshots/`, 2880 × 1800 Pixel:
 | 4-miniaturen.png | Miniaturen in der Seitenleiste, aktuelle Seite hervorgehoben |
 | trinkgeld.png | Fenster „Leser unterstützen“ als Prüfbild für die In-App-Käufe |
 
-Gezeigt wird darin `docs/Leser-Handbuch.pdf`, das Handbuch zu Leser, das `scripts/make_handbook.swift` erzeugt.
+Gezeigt wird darin `docs/Leser-Handbuch.pdf`, das Handbuch zu Leser, das `scripts/make_manual.swift` erzeugt.
 
 Für den englischen Eintrag liegt derselbe Satz mit englischer Oberfläche in `docs/screenshots/en/`, ebenfalls 2880 × 1800:
 
@@ -119,7 +119,7 @@ Für den englischen Eintrag liegt derselbe Satz mit englischer Oberfläche in `d
 | en/3-split.png | Geteilte Ansicht mit zwei Kapiteln nebeneinander |
 | en/4-thumbnails.png | Miniaturen in der Seitenleiste, aktuelle Seite hervorgehoben |
 
-Gezeigt wird darin `docs/Leser-Handbook.pdf`, die englische Fassung des Handbuchs (`swift scripts/make_handbook.swift en`).
+Gezeigt wird darin `docs/Leser-Manual.pdf`, die englische Fassung des Handbuchs (`swift scripts/make_manual.swift en`).
 
 Screenshots hängen in App Store Connect an der jeweiligen Lokalisierung: Der deutsche Satz gehört zu „Deutsch“, der englische zu „Englisch“. Lädt man für eine Sprache keine eigenen hoch, zeigt der Store die der primären Sprache.
 

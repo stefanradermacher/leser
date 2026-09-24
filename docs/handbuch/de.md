@@ -1,11 +1,12 @@
 <!--
-Texte des Handbuchs. Daraus erzeugt `swift scripts/make_handbook.swift` das PDF
+Texte des Handbuchs. Daraus erzeugt `swift scripts/make_manual.swift` das PDF
 (mit „en“ die englische Fassung).
 
 Oben stehen die Angaben für Titelseite und Dokumentinformationen, danach der Inhalt:
   # Kapitel             beginnt eine neue Seite und einen Eintrag in der Gliederung
   ## Überschrift        Zwischenüberschrift
   Text                  Absatz; Zeilenumbrüche sind egal, eine Leerzeile trennt Absätze
+                        (das gilt auch für die Angaben oben)
   - Punkt               Aufzählungspunkt
   > Hinweis             Text im farbigen Kasten
   | Befehl | Kürzel |   Zeile der Tastaturkürzel-Tabelle
@@ -15,7 +16,8 @@ Dokumenttitel: Leser – Handbuch
 Thema: PDF-Betrachter für macOS
 Untertitel: Handbuch zum PDF-Betrachter für macOS
 Leitsatz: Gemacht zum Lesen.
-Einleitung: Aufgeräumt, schnell und ohne Ablenkung: mit Gliederung, Miniaturen, Volltextsuche und geteilter Ansicht. Kostenlos, werbefrei und ohne Datensammlung.
+Einleitung: Aufgeräumt, schnell und ohne Ablenkung: mit Gliederung, Miniaturen, Volltextsuche und geteilter Ansicht.
+Kostenlos, werbefrei und ohne Datensammlung.
 
 # Über dieses Handbuch
 
@@ -111,7 +113,7 @@ Weil das Dokument keine enthält. Viele PDFs aus Textverarbeitungen bringen kein
 
 ## Kann ich Text kopieren?
 
-Ja. Text lässt sich wie gewohnt mit der Maus markieren und kopieren, sofern das Dokument es erlaubt. Ob es das tut, steht unter „Dokumentinformationen“.
+Ja. Text lässt sich wie gewohnt mit der Maus markieren und kopieren, sofern das Dokument es erlaubt. Ob das so ist, steht unter „Dokumentinformationen“.
 
 ## Was passiert mit meinen Dokumenten?
 
