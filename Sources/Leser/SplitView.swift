@@ -356,15 +356,11 @@ struct SplitPanes: View {
         if state.isSplit {
             switch state.axis {
             case .sideBySide:
-                HSplitView {
-                    primaryPane.frame(minWidth: 200, maxWidth: .infinity)
-                    secondaryPane.frame(minWidth: 200, maxWidth: .infinity)
-                }
+                SplitContainer(axis: .sideBySide, minimum: 200, first: primaryPane, second: secondaryPane)
+                    .frame(minWidth: 2 * 200 + 1)
             case .stacked:
-                VSplitView {
-                    primaryPane.frame(minHeight: 150, maxHeight: .infinity)
-                    secondaryPane.frame(minHeight: 150, maxHeight: .infinity)
-                }
+                SplitContainer(axis: .stacked, minimum: 150, first: primaryPane, second: secondaryPane)
+                    .frame(minHeight: 2 * 150 + 1)
             }
         } else {
             PDFKitView(pdfView: state.primary.pdfView)
@@ -385,6 +381,89 @@ struct SplitPanes: View {
                 PaneHeader(state: state, title: locked.url.lastPathComponent, isSecondary: true, isActive: false) {}
                 UnlockView(document: locked.document) { state.finishUnlocking() }
             }
+        }
+    }
+}
+
+/// Two views with a movable divider between them, side by side or stacked.
+///
+/// AppKit's split view rather than SwiftUI's HSplitView and VSplitView: those let each half
+/// claim far more room than its minimum. Splitting a window with the search results open made
+/// it several hundred points wider, and a split window could not be made narrower than about
+/// 1150 points.
+private struct SplitContainer<First: View, Second: View>: NSViewRepresentable {
+    let axis: SplitAxis
+    /// Smallest width, or height when stacked, of each half.
+    let minimum: CGFloat
+    let first: First
+    let second: Second
+
+    func makeCoordinator() -> Coordinator { Coordinator() }
+
+    func makeNSView(context: Context) -> NSSplitView {
+        let view = NSSplitView()
+        view.isVertical = axis == .sideBySide
+        view.dividerStyle = .thin
+        view.delegate = context.coordinator
+        for content in [AnyView(first), AnyView(second)] {
+            let host = NSHostingView(rootView: content)
+            // The split view alone decides the sizes of the halves; their content must not
+            // pass its sizes on to the window.
+            host.sizingOptions = []
+            view.addSubview(host)
+        }
+        context.coordinator.minimum = minimum
+        return view
+    }
+
+    func updateNSView(_ view: NSSplitView, context: Context) {
+        let hosts = view.subviews.compactMap { $0 as? NSHostingView<AnyView> }
+        hosts.first?.rootView = AnyView(first)
+        hosts.last?.rootView = AnyView(second)
+        context.coordinator.minimum = minimum
+    }
+
+    final class Coordinator: NSObject, NSSplitViewDelegate {
+        var minimum: CGFloat = 0
+        /// The halves start out equal. Switching between side by side and stacked creates a
+        /// new split view, so this also holds after a switch.
+        var startsHalved = true
+
+        func splitView(_ splitView: NSSplitView, constrainMinCoordinate proposedMinimumPosition: CGFloat,
+                       ofSubviewAt dividerIndex: Int) -> CGFloat {
+            max(proposedMinimumPosition, minimum)
+        }
+
+        func splitView(_ splitView: NSSplitView, constrainMaxCoordinate proposedMaximumPosition: CGFloat,
+                       ofSubviewAt dividerIndex: Int) -> CGFloat {
+            min(proposedMaximumPosition, length(of: splitView) - splitView.dividerThickness - minimum)
+        }
+
+        /// Keeps the share of each half when the window is resized, without letting either
+        /// become smaller than the minimum.
+        func splitView(_ splitView: NSSplitView, resizeSubviewsWithOldSize oldSize: NSSize) {
+            let views = splitView.subviews
+            guard views.count == 2 else { return splitView.adjustSubviews() }
+            let vertical = splitView.isVertical
+            let divider = splitView.dividerThickness
+            let available = max(length(of: splitView) - divider, 0)
+            let oldAvailable = (vertical ? oldSize.width : oldSize.height) - divider
+            let oldFirst = vertical ? views[0].frame.width : views[0].frame.height
+            let share = startsHalved || oldAvailable <= 0 ? 0.5 : oldFirst / oldAvailable
+            if available > 0 { startsHalved = false }
+            let first = min(max((available * share).rounded(), minimum), max(available - minimum, 0))
+            let bounds = splitView.bounds
+            if vertical {
+                views[0].frame = NSRect(x: 0, y: 0, width: first, height: bounds.height)
+                views[1].frame = NSRect(x: first + divider, y: 0, width: available - first, height: bounds.height)
+            } else {
+                views[0].frame = NSRect(x: 0, y: 0, width: bounds.width, height: first)
+                views[1].frame = NSRect(x: 0, y: first + divider, width: bounds.width, height: available - first)
+            }
+        }
+
+        private func length(of splitView: NSSplitView) -> CGFloat {
+            splitView.isVertical ? splitView.bounds.width : splitView.bounds.height
         }
     }
 }
