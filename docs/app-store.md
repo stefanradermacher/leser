@@ -58,7 +58,7 @@ Ehrlich und offen
 
 ## Schlüsselwörter (100, mit Komma, ohne Leerzeichen)
 
-PDF,Viewer,Betrachter,lesen,Dokument,Gliederung,Miniaturen,Suche,Vorschau,werbefrei,Datenschutz,schlicht
+PDF,Viewer,Betrachter,lesen,Dokument,Gliederung,Miniaturen,Suche,Vorschau,werbefrei,Datenschutz
 
 ## Neue Funktionen (4000)
 
