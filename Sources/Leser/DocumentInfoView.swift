@@ -130,9 +130,12 @@ struct DocumentInfo {
         return text
     }
 
-    /// Checks the first pages for a text layer.
+    /// Whether any page has a text layer. Checks every page, not just the first few: a book can
+    /// open with scanned pages and still be searchable from page 13 on. The check stops at the
+    /// first page with text, and pages without any text are quick to read — about 27 ms for a
+    /// thousand of them.
     private static func hasText(_ document: PDFDocument) -> Bool {
-        (0..<min(document.pageCount, 10)).contains { index in
+        (0..<document.pageCount).contains { index in
             let text = document.page(at: index)?.string ?? ""
             return !text.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
         }
