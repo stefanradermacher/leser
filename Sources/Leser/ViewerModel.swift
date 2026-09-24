@@ -122,6 +122,11 @@ final class ViewerModel {
     private(set) var matches: [SearchMatch] = []
     private(set) var currentMatchIndex: Int?
     private(set) var isFinding = false
+    /// Matches found but not yet shown. Every change to `matches` makes SwiftUI compare the whole
+    /// results list again, so with tens of thousands of matches one change per match kept the
+    /// interface busy for over a minute. They are handed over in batches instead.
+    @ObservationIgnored private var pendingMatches: [SearchMatch] = []
+    @ObservationIgnored private var flushScheduled = false
 
 
     @ObservationIgnored private var outlineItems: [Int: PDFOutline] = [:]
@@ -465,6 +470,7 @@ final class ViewerModel {
 
         activeQuery = query
         matches = []
+        pendingMatches = []
         currentMatchIndex = nil
         pdfView.highlightedSelections = nil
         pdfView.setCurrentSelection(nil, animate: false)
@@ -509,16 +515,35 @@ final class ViewerModel {
 
         selection.color = .findHighlightColor
         let index = document.index(for: page)
-        matches.append(SearchMatch(
-            id: matches.count,
+        let match = SearchMatch(
+            id: matches.count + pendingMatches.count,
             selection: selection,
             pageLabel: page.label ?? "\(index + 1)",
             context: Self.context(for: selection)
-        ))
-        if matches.count == 1 { goToMatch(0) }
+        )
+        // The first match right away, so the view jumps there without delay.
+        if matches.isEmpty && pendingMatches.isEmpty {
+            matches.append(match)
+            goToMatch(0)
+            return
+        }
+        pendingMatches.append(match)
+        guard !flushScheduled else { return }
+        flushScheduled = true
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) { [weak self] in
+            MainActor.assumeIsolated { self?.flushMatches() }
+        }
+    }
+
+    private func flushMatches() {
+        flushScheduled = false
+        guard !pendingMatches.isEmpty else { return }
+        matches.append(contentsOf: pendingMatches)
+        pendingMatches = []
     }
 
     private func finishSearch() {
+        flushMatches()
         isFinding = false
         pdfView.highlightedSelections = matches.isEmpty ? nil : matches.map(\.selection)
     }
@@ -615,6 +640,7 @@ extension ViewerModel: DocumentSearchClient {
         // The search runs again once the other view's search has finished; until then the
         // results pane shows that it is still searching.
         matches = []
+        pendingMatches = []
         currentMatchIndex = nil
         pdfView.highlightedSelections = nil
     }
