@@ -180,7 +180,7 @@ final class ViewerModel {
 
     /// Ends this view's work when it is removed from a window.
     func stop() {
-        if isFinding { document.cancelFindString() }
+        DocumentSearch.stop(in: document, for: self)
         observers.forEach(NotificationCenter.default.removeObserver)
         observers = []
         pdfView.onFocus = nil
@@ -463,7 +463,6 @@ final class ViewerModel {
         let query = searchText.trimmingCharacters(in: .whitespacesAndNewlines)
         guard query != activeQuery else { return }
 
-        if document.isFinding { document.cancelFindString() }
         activeQuery = query
         matches = []
         currentMatchIndex = nil
@@ -472,10 +471,13 @@ final class ViewerModel {
 
         guard !query.isEmpty else {
             isFinding = false
+            DocumentSearch.stop(in: document, for: self)
             return
         }
         isFinding = true
-        document.beginFindString(query, withOptions: [.caseInsensitive, .diacriticInsensitive])
+        // The document is shared with the other half of a split window; DocumentSearch keeps
+        // the two searches apart.
+        DocumentSearch.start(query, options: [.caseInsensitive, .diacriticInsensitive], in: document, for: self)
     }
 
     func goToMatch(_ index: Int) {
@@ -601,12 +603,20 @@ final class ViewerModel {
         ) { [weak self] _ in
             MainActor.assumeIsolated { self?.applyFit(scrollToPage: false) }
         })
-        observe(.PDFDocumentDidFindMatch, of: document) { model, note in
-            if let selection = note.userInfo?["PDFDocumentFoundSelection"] as? PDFSelection {
-                model.addMatch(selection)
-            }
-        }
-        observe(.PDFDocumentDidEndFind, of: document) { model, _ in model.finishSearch() }
+    }
+}
+
+extension ViewerModel: DocumentSearchClient {
+    func searchDidFind(_ selection: PDFSelection) { addMatch(selection) }
+
+    func searchDidFinish() { finishSearch() }
+
+    func searchWasInterrupted() {
+        // The search runs again once the other view's search has finished; until then the
+        // results pane shows that it is still searching.
+        matches = []
+        currentMatchIndex = nil
+        pdfView.highlightedSelections = nil
     }
 }
 
