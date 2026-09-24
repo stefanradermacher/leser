@@ -14,16 +14,16 @@ Oben stehen die Angaben für Titelseite und Dokumentinformationen, danach der In
 Dokumenttitel: Leser – Handbook
 Thema: PDF viewer for macOS
 Untertitel: Handbook for the macOS PDF viewer
-Leitsatz: View documents. Nothing else.
-Einleitung: Leser shows PDFs and never changes them: with an outline, thumbnails, full-text search and a split view. Free, ad-free and collecting no data.
+Leitsatz: Made for reading.
+Einleitung: Tidy, fast and free of distractions: with an outline, thumbnails, full-text search and a split view. Free, ad-free and collecting no data.
 
 # About This Handbook
 
-Leser is a plain PDF viewer for macOS. It shows documents and never changes them. This handbook describes in a few short chapters what Leser can do and how it is used.
+Leser is a plain PDF viewer for macOS, made for reading. This handbook describes in a few short chapters what Leser can do and how it is used.
 
 It is also a sample document: several chapters with an outline, so that the sidebar, the search and the split view have something to work with.
 
-> “Leser” [ˈleːzɐ] is the German word for “reader”. Leser does not edit documents. Anyone who wants to add notes, rotate pages or fill in forms needs a different program. That very limitation is what keeps Leser fast and uncluttered.
+> “Leser” [ˈleːzɐ] is the German word for “reader”.
 
 ## What Leser stands for
 
@@ -105,7 +105,7 @@ If you want Leser to open PDFs from now on, one click in the settings is enough.
 
 ## Can I edit PDFs with Leser?
 
-No, and it will stay that way. Leser is deliberately a viewer only. For notes, forms or merging documents, other programs are the right tool.
+No. Leser is a viewer only. For notes, forms or merging documents, other programs such as Preview are the right tool.
 
 ## Why is the outline missing?
 

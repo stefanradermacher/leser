@@ -518,13 +518,13 @@
         }
       }
     },
-    "Ein schlichter, schneller PDF-Betrachter für macOS.\nLeser zeigt Dokumente an, verändert sie aber nie.": {
+    "Ein schlichter PDF-Betrachter für macOS.\nAufgeräumt, schnell und ohne Ablenkung.": {
       "extractionState": "manual",
       "localizations": {
         "en": {
           "stringUnit": {
             "state": "translated",
-            "value": "A simple, fast PDF viewer for macOS.\nLeser shows documents and never changes them."
+            "value": "A plain PDF viewer for macOS.\nTidy, fast and free of distractions."
           }
         }
       }

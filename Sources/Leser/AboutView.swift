@@ -76,7 +76,7 @@ struct AboutView: View {
                 .font(.callout)
                 .foregroundStyle(.secondary)
                 .textSelection(.enabled)
-            Text("Ein schlichter, schneller PDF-Betrachter für macOS.\nLeser zeigt Dokumente an, verändert sie aber nie.")
+            Text("Ein schlichter PDF-Betrachter für macOS.\nAufgeräumt, schnell und ohne Ablenkung.")
                 .multilineTextAlignment(.center)
                 .fixedSize(horizontal: false, vertical: true)
                 .padding(.top, 4)

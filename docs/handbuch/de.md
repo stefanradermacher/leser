@@ -14,16 +14,14 @@ Oben stehen die Angaben für Titelseite und Dokumentinformationen, danach der In
 Dokumenttitel: Leser – Handbuch
 Thema: PDF-Betrachter für macOS
 Untertitel: Handbuch zum PDF-Betrachter für macOS
-Leitsatz: Dokumente ansehen. Sonst nichts.
-Einleitung: Leser zeigt PDFs und verändert sie nie: mit Gliederung, Miniaturen, Volltextsuche und geteilter Ansicht. Kostenlos, werbefrei und ohne Datensammlung.
+Leitsatz: Gemacht zum Lesen.
+Einleitung: Aufgeräumt, schnell und ohne Ablenkung: mit Gliederung, Miniaturen, Volltextsuche und geteilter Ansicht. Kostenlos, werbefrei und ohne Datensammlung.
 
 # Über dieses Handbuch
 
-Leser ist ein schlichter PDF-Betrachter für macOS. Er zeigt Dokumente an und verändert sie nie. Dieses Handbuch beschreibt in wenigen Kapiteln, was Leser kann und wie es sich bedienen lässt.
+Leser ist ein schlichter PDF-Betrachter für macOS, gemacht zum Lesen. Dieses Handbuch beschreibt in wenigen Kapiteln, was Leser kann und wie es sich bedienen lässt.
 
 Es ist zugleich ein Beispieldokument: mehrere Kapitel mit Gliederung, damit sich die Seitenleiste, die Suche und die geteilte Ansicht daran ausprobieren lassen.
-
-> Leser bearbeitet keine Dokumente. Wer Anmerkungen machen, Seiten drehen oder Formulare ausfüllen möchte, braucht ein anderes Programm. Genau diese Beschränkung macht Leser schnell und übersichtlich.
 
 ## Was Leser ausmacht
 
@@ -105,7 +103,7 @@ Soll Leser PDFs immer öffnen, genügt ein Klick in den Einstellungen. Die Umste
 
 ## Kann ich mit Leser PDFs bearbeiten?
 
-Nein, und das bleibt so. Leser ist bewusst nur ein Betrachter. Für Anmerkungen, Formulare oder das Zusammenfügen von Dokumenten eignen sich andere Programme.
+Nein. Leser ist ein reiner Betrachter. Für Anmerkungen, Formulare oder das Zusammenfügen von Dokumenten eignen sich andere Programme, etwa Vorschau.
 
 ## Warum fehlt die Gliederung?
 

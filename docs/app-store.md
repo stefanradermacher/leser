@@ -23,11 +23,11 @@ Ist der Name „Leser“ schon vergeben, sind „Leser PDF“ oder „Leser – 
 
 ## Werbetext (170)
 
-Leser zeigt PDFs, schnell und ohne Ballast: Gliederung, Miniaturen, Suche, geteilte Ansicht. Kostenlos, werbefrei, ohne Datensammlung. Verändert deine Dokumente nie.
+Leser zeigt PDFs, schnell und ohne Ballast: Gliederung, Miniaturen, Suche, geteilte Ansicht. Kostenlos, werbefrei, ohne Datensammlung. Gemacht zum Lesen.
 
 ## Beschreibung (4000)
 
-Leser ist ein schlichter, schneller PDF-Betrachter für den Mac. Er zeigt Dokumente an und verändert sie nie. Kein Werkzeugkasten zum Bearbeiten, keine Anmeldung, keine Werbung.
+Leser ist ein schlichter PDF-Betrachter für den Mac, gemacht zum Lesen: aufgeräumt, schnell und ohne Ablenkung. Keine Anmeldung, keine Werbung.
 
 **Lesen und navigieren**
 • Gliederung und Seitenminiaturen in der Seitenleiste, beides mit einem Klick umschaltbar
