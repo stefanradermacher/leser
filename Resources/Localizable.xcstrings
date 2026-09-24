@@ -122,6 +122,17 @@
         }
       }
     },
+    "Alte Fassung behalten": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Keep Old Version"
+          }
+        }
+      }
+    },
     "An der zuletzt gelesenen Stelle weiterlesen": {
       "extractionState": "manual",
       "localizations": {
@@ -1189,6 +1200,17 @@
         }
       }
     },
+    "Passwort eingeben …": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Enter Password…"
+          }
+        }
+      }
+    },
     "Praktisch für PDFs, die ein anderes Programm erzeugt, etwa beim Export oder mit LaTeX. Seite, Zoom und Anzeige bleiben dabei erhalten.": {
       "extractionState": "manual",
       "localizations": {
@@ -1724,6 +1746,17 @@
           "stringUnit": {
             "state": "translated",
             "value": "About Leser"
+          }
+        }
+      }
+    },
+    "„%@“ wurde geändert und ist durch ein Passwort geschützt.": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "“%@” has changed and is protected by a password."
           }
         }
       }

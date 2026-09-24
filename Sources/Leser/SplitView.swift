@@ -27,6 +27,17 @@ enum SplitAxis: String {
     }
 }
 
+/// A changed file that is encrypted and waits for its password before its new version is shown.
+struct LockedChange: Identifiable {
+    let url: URL
+    let name: String
+    fileprivate let document: PDFDocument
+    /// Shows the unlocked document, the way an unencrypted change would have been shown.
+    fileprivate let apply: (PDFDocument) -> Void
+
+    var id: URL { url }
+}
+
 /// The views of one document window: the main view and an optional second view
 /// showing the same document or another one. Toolbar, sidebar, search and menu
 /// commands act on the active view, the one that last had keyboard focus.
@@ -37,6 +48,9 @@ final class ReaderState {
     private(set) var secondary: ViewerModel?
     /// Another document chosen for the second view that still needs its password.
     private(set) var lockedSecondary: (document: PDFDocument, url: URL)?
+    /// Changed files that are encrypted and need their password again before the new version
+    /// can be shown. The current version stays on screen meanwhile.
+    private(set) var lockedChanges: [LockedChange] = []
     private(set) var isSecondaryActive = false
     private(set) var axis = SplitAxis.preferred
     var sidebarMode: SidebarMode
@@ -197,6 +211,7 @@ final class ReaderState {
     }
 
     private func stopWatchingSecondary() {
+        if let secondaryURL { dropLockedChange(for: secondaryURL) }
         secondaryWatcher?.stop()
         secondaryWatcher = nil
         secondaryURL = nil
@@ -218,7 +233,7 @@ final class ReaderState {
 
     private func reloadPrimary() {
         guard Preferences.reloadOnChange, let url = primaryURL else { return }
-        loadChangedDocument(at: url) { [weak self] document in
+        loadChangedDocument(at: url, name: primary.displayName) { [weak self] document in
             guard let self else { return }
             let old = self.primary
             let focus = self.focusedModel()
@@ -241,8 +256,8 @@ final class ReaderState {
     }
 
     private func reloadSecondary() {
-        guard Preferences.reloadOnChange, let url = secondaryURL else { return }
-        loadChangedDocument(at: url) { [weak self] document in
+        guard Preferences.reloadOnChange, let url = secondaryURL, let name = secondary?.displayName else { return }
+        loadChangedDocument(at: url, name: name) { [weak self] document in
             guard let self, let old = self.secondary, self.secondaryURL == url else { return }
             let replacement = ViewerModel(
                 document: document, fileURL: nil, displayName: old.displayName, restoring: old.snapshot()
@@ -269,14 +284,49 @@ final class ReaderState {
     }
 
     /// Loads the changed file; a program may still be writing it, so try again a few times.
-    private func loadChangedDocument(at url: URL, attempt: Int = 1, then use: @escaping (PDFDocument) -> Void) {
-        if let document = PDFDocument(url: url), document.pageCount > 0, !document.isLocked {
-            use(document)
+    /// A half-written file does not load at all. An encrypted file does, only locked: it is
+    /// complete, and waiting will not unlock it, so its password is asked for instead.
+    private func loadChangedDocument(at url: URL, name: String, attempt: Int = 1,
+                                     then use: @escaping (PDFDocument) -> Void) {
+        if let document = PDFDocument(url: url), document.pageCount > 0 {
+            if document.isLocked {
+                // A newer version replaces one that is still waiting for its password.
+                let change = LockedChange(url: url, name: name, document: document, apply: use)
+                if let index = lockedChanges.firstIndex(where: { $0.url == url }) {
+                    lockedChanges[index] = change
+                } else {
+                    lockedChanges.append(change)
+                }
+            } else {
+                dropLockedChange(for: url)
+                use(document)
+            }
         } else if attempt < 6 {
             DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) { [weak self] in
-                self?.loadChangedDocument(at: url, attempt: attempt + 1, then: use)
+                self?.loadChangedDocument(at: url, name: name, attempt: attempt + 1, then: use)
             }
         }
+    }
+
+    /// Unlocks the waiting version of a changed file and shows it. The password is used for
+    /// this one attempt and not kept.
+    func unlockChange(at url: URL, password: String) -> Bool {
+        guard let index = lockedChanges.firstIndex(where: { $0.url == url }) else { return false }
+        let change = lockedChanges[index]
+        guard change.document.unlock(withPassword: password) else { return false }
+        lockedChanges.remove(at: index)
+        change.apply(change.document)
+        return true
+    }
+
+    /// Leaves the version on screen as it is; a later change of the file asks again.
+    func keepCurrentVersion(of url: URL) {
+        dropLockedChange(for: url)
+        active.focusDocument()
+    }
+
+    private func dropLockedChange(for url: URL) {
+        lockedChanges.removeAll { $0.url == url }
     }
 
     private func watchFocus(of model: ViewerModel) {

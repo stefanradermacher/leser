@@ -72,13 +72,20 @@ struct ReaderView: View {
         } detail: {
             SplitPanes(state: state)
                 .safeAreaInset(edge: .top, spacing: 0) {
-                    if showDefaultAppBanner {
-                        DefaultAppBanner {
-                            withAnimation { showDefaultAppBanner = false }
-                            model.focusDocument()
+                    VStack(spacing: 0) {
+                        ForEach(state.lockedChanges) { change in
+                            LockedChangeBanner(change: change, state: state)
+                                .transition(.move(edge: .top).combined(with: .opacity))
                         }
-                        .transition(.move(edge: .top).combined(with: .opacity))
+                        if showDefaultAppBanner {
+                            DefaultAppBanner {
+                                withAnimation { showDefaultAppBanner = false }
+                                model.focusDocument()
+                            }
+                            .transition(.move(edge: .top).combined(with: .opacity))
+                        }
                     }
+                    .animation(.default, value: state.lockedChanges.map(\.id))
                 }
                 // Attached to the document area, so it starts below the toolbar.
                 .inspector(isPresented: Binding(
