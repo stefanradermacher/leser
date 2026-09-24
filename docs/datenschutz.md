@@ -21,11 +21,15 @@ Auf deinem Mac merkt sich Leser, damit es beim nächsten Start dort weitermacht,
 - die zuletzt gelesene Stelle für bis zu 200 Dokumente, gespeichert als Dateipfad mit Seitenzahl
 - wenige Zählwerte für die gelegentliche Frage, ob Leser die Standard-App für PDFs werden soll
 
-Diese Angaben liegen im Bereich der App auf deinem Mac, verlassen ihn nicht und werden mit der App gelöscht. Die gespeicherten Lesepositionen kannst du jederzeit entfernen, indem du in den Einstellungen „An der zuletzt gelesenen Stelle weiterlesen“ ausschaltest.
+Diese Angaben liegen im Bereich der App auf deinem Mac und verlassen ihn nicht. Die Dateipfade enthalten die Namen deiner Ordner und Dateien, so wie sie auf deinem Mac heißen.
+
+### So löschst du sie
+
+Die gespeicherten Lesestellen verschwinden, wenn du in den Einstellungen „An der zuletzt gelesenen Stelle weiterlesen“ ausschaltest. Alles zusammen entfernst du, indem du Leser beendest und den Ordner `~/Library/Containers/com.stefanradermacher.leser` löschst. Die Liste unter „Ablage → Benutzte Dokumente“ führt macOS selbst; sie lässt sich dort mit „Menü leeren“ löschen.
 
 ## Freiwillige Trinkgelder
 
-In Leser kannst du freiwillig ein Trinkgeld geben. Diese Käufe wickelt ausschließlich Apple über den App Store ab. Leser erfährt dabei nur, ob ein Kauf erfolgreich war; Zahlungsdaten bekommt die App nie zu sehen. Für die Zahlung gilt Apples Datenschutzerklärung.
+In Leser kannst du freiwillig ein Trinkgeld geben. Damit die Preise im Fenster stehen, fragt Leser sie beim Öffnen beim App Store ab. Diese Käufe wickelt ausschließlich Apple über den App Store ab. Leser erfährt dabei nur, ob ein Kauf erfolgreich war; Zahlungsdaten bekommt die App nie zu sehen. Für die Zahlung gilt Apples Datenschutzerklärung.
 
 ## Links nach außen
 
