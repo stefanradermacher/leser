@@ -29,28 +29,28 @@ Leser zeigt PDFs, schnell und ohne Ballast: Gliederung, Miniaturen, Suche, getei
 
 Leser ist ein schlichter PDF-Betrachter für den Mac, gemacht zum Lesen: aufgeräumt, schnell und ohne Ablenkung. Keine Anmeldung, keine Werbung.
 
-**Lesen und navigieren**
+Lesen und navigieren
 • Gliederung und Seitenminiaturen in der Seitenleiste, beides mit einem Klick umschaltbar
 • Blättern mit den Pfeiltasten, Sprung zu einer Seitenzahl, zurück und vorwärts nach Links im Dokument
 • Fortlaufend, Einzelseite, Doppelseite oder Doppelseite mit einzelner erster Seite
 • Zoomstufen sowie Anpassen an Seitenbreite, Seitenhöhe oder ganze Seite
 
-**Suchen**
+Suchen
 • Volltextsuche mit allen Fundstellen in einer eigenen Seitenleiste rechts, mit Textausschnitt und Seitenzahl
 • Alle Treffer im Dokument hervorgehoben, Sprung von Treffer zu Treffer
 
-**Zwei Stellen gleichzeitig**
+Zwei Stellen gleichzeitig
 • Geteilte Ansicht nebeneinander oder untereinander
 • Beide Hälften mit eigener Position, eigenem Zoom und eigener Anzeige
 • In der zweiten Hälfte lässt sich auch ein anderes Dokument öffnen
 
-**Angenehm im Alltag**
+Angenehm im Alltag
 • Merkt sich die zuletzt gelesene Stelle und die Fenstergröße
 • Lädt ein Dokument automatisch neu, wenn ein anderes Programm die Datei ändert, etwa beim Export oder bei LaTeX
 • Text markieren und kopieren, drucken, Dokumentinformationen einsehen
 • Passwortgeschützte PDFs fragen beim Öffnen nach dem Passwort
 
-**Ehrlich und offen**
+Ehrlich und offen
 • Kostenlos und quelloffen unter der Apache-Lizenz 2.0
 • Keine Werbung, kein Tracking, keine Analyse
 • Leser baut selbst keine Verbindung ins Internet auf; nur das freiwillige Trinkgeld läuft über den App Store. Deine Dokumente und Einstellungen bleiben auf deinem Mac
@@ -63,6 +63,53 @@ PDF,Viewer,Betrachter,lesen,Dokument,Gliederung,Miniaturen,Suche,Vorschau,werbef
 ## Neue Funktionen (4000)
 
 Erste Version.
+
+## Englische Texte
+
+Für die Sprache „Englisch“ in App Store Connect. Der Name bleibt „Leser“.
+
+**Untertitel (30):** Read PDFs, nothing else
+
+**Werbetext (170):**
+
+Leser shows PDFs, fast and without clutter: outline, thumbnails, search, split view. Free, ad-free, no data collection. Made for reading.
+
+**Beschreibung (4000):**
+
+Leser is a plain PDF viewer for the Mac, made for reading: tidy, fast and free of distractions. No sign-in, no ads.
+
+Reading and navigating
+• Outline and page thumbnails in the sidebar, switched with a single click
+• Turn pages with the arrow keys, jump to a page number, go back and forward after following links in the document
+• Continuous, single page, two pages, or two pages with the first page alone
+• Zoom in steps or fit to page width, page height or the whole page
+
+Searching
+• Full-text search with every match in a sidebar of its own on the right, with a snippet of text and the page number
+• All matches highlighted in the document, jump from match to match
+
+Two places at once
+• Split view side by side or stacked
+• Each half keeps its own position, zoom and page layout
+• The second half can also show a different document
+
+Pleasant every day
+• Remembers the place you last read and the window size
+• Reloads a document by itself when another program changes the file, after an export or when a LaTeX document is typeset
+• Select and copy text, print, view document information
+• Password-protected PDFs ask for the password when opened
+
+Honest and open
+• Free and open source under the Apache License 2.0
+• No ads, no tracking, no analytics
+• Leser itself never connects to the internet; only the voluntary tip goes through the App Store. Your documents and settings stay on your Mac
+• If you like, you can support the development with a voluntary tip. It unlocks nothing; Leser stays completely free.
+
+**Schlüsselwörter (100):**
+
+PDF,viewer,reader,document,outline,thumbnails,search,split view,preview,ad-free,privacy,simple
+
+**Neue Funktionen:** First release.
 
 ## In-App-Käufe
 
