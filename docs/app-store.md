@@ -174,10 +174,21 @@ Screenshots hängen in App Store Connect an der jeweiligen Lokalisierung: Der de
 
 ## Vor dem Hochladen
 
-- [ ] Vertrag für kostenpflichtige Apps aktiv, Steuer- und Bankdaten hinterlegt
-- [ ] Händlerstatus für die EU erklärt (DSA). Ohne die Angabe nimmt Apple die App aus den EU-Storefronts; wer In-App-Käufe anbietet, gilt in aller Regel als Händler. Name, Anschrift, Telefonnummer und E-Mail werden dann im App Store öffentlich angezeigt.
-- [ ] App-Eintrag angelegt, Name verfügbar
-- [ ] Drei Verbrauchsartikel angelegt und zur Prüfung eingereicht
-- [ ] Support- und Datenschutzseite online (liegen fertig im Webprojekt unter `projects/leser/`)
-- [ ] `./scripts/bump-build.sh` ausgeführt und mitcommittet (jeder Upload braucht eine höhere Build-Nummer)
-- [ ] In Xcode: Team gewählt, Archiv erstellt, Validierung ohne Fehler
+- [x] Vertrag für kostenpflichtige Apps aktiv, Steuer- und Bankdaten hinterlegt
+- [x] Händlerstatus für die EU erklärt (DSA). Ohne die Angabe nimmt Apple die App aus den EU-Storefronts; wer In-App-Käufe anbietet, gilt in aller Regel als Händler. Name, Anschrift, Telefonnummer und E-Mail werden dann im App Store öffentlich angezeigt.
+- [x] DAC7-Angaben unter „Geschäftliches → Compliance“ (Leser bietet keine persönlichen Dienste an)
+- [x] App-Eintrag angelegt; die Bundle-ID musste vorher auf developer.apple.com unter „Identifiers“ registriert werden
+- [x] Drei Verbrauchsartikel angelegt
+- [x] Support- und Datenschutzseite online
+- [x] Build-Nummer höher als beim letzten Upload
+- [x] Archiv erstellt, validiert und hochgeladen
+
+## Einreichen
+
+Die Reihenfolge ist wichtig, weil der erste Verbrauchsartikel nur zusammen mit einer App-Version geprüft wird:
+
+1. Auf der Versionsseite den Build auswählen und „Zur Prüfung hinzufügen“. Das legt einen Übermittlungsentwurf an. Dafür müssen unter „App-Informationen“ Kategorie und Inhaltsrechte gesetzt sein.
+2. Auf der Seite jedes In-App-Kaufs „Zur Prüfung hinzufügen“. Sein Status „In Vorbereitung zur Übermittlung“ ist dabei normal.
+3. Im Entwurf prüfen, dass Version und alle Käufe enthalten sind, dann „Zur Prüfung übermitteln“.
+
+Version 1.0 (Build 26) mit den drei Trinkgeldern wurde am 25. September 2026 eingereicht.
