@@ -958,6 +958,16 @@
         }
       }
     },
+    "Leser-Handbuch": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Leser Manual"
+          }
+        }
+      }
+    },
     "Letzte Seite": {
       "extractionState": "manual",
       "localizations": {

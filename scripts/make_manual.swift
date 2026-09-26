@@ -17,6 +17,7 @@
 // Usage (from the project folder): swift scripts/make_manual.swift [en]
 //   without an argument: docs/handbuch/de.md → docs/Leser-Handbuch.pdf (German)
 //   with "en":           docs/handbuch/en.md → docs/Leser-Manual.pdf (English)
+// A copy goes to Resources/, from where "Help → Leser Manual" opens it in Leser itself.
 
 import AppKit
 import PDFKit
@@ -345,4 +346,8 @@ if let document = PDFDocument(url: url) {
         try? FileManager.default.moveItem(at: temporary, to: url)
     }
 }
-print("\(outputPath) — \(pageNumber) Seiten, \(outline.count) Kapitel")
+// The same file in the app bundle, so the manual in the app always matches the one in docs/.
+let bundleCopy = URL(fileURLWithPath: "Resources").appendingPathComponent(url.lastPathComponent)
+try? FileManager.default.removeItem(at: bundleCopy)
+try? FileManager.default.copyItem(at: url, to: bundleCopy)
+print("\(outputPath) — \(pageNumber) Seiten, \(outline.count) Kapitel, Kopie in \(bundleCopy.relativePath)")

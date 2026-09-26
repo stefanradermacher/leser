@@ -28,6 +28,7 @@ struct ViewerCommands: Commands {
         CommandGroup(replacing: .help) {
             Button("Hilfe zu Leser …") { NSWorkspace.shared.open(AppLinks.help) }
                 .keyboardShortcut("?")
+            Button("Leser-Handbuch") { AppLinks.openManual() }
             Button("Leser im Web") { NSWorkspace.shared.open(AppLinks.productPage) }
             Divider()
             Button("Leser auf GitHub") { NSWorkspace.shared.open(AppLinks.sourceCode) }

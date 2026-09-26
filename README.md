@@ -30,7 +30,7 @@ Nachträglich lässt sich die Nummer nicht setzen: `CFBundleVersion` wird beim V
 
 Das App-Icon und das Dokumentsymbol werden von `scripts/make_icon.swift` gezeichnet: das App-Icon in den Asset-Katalog, das Dokumentsymbol nach `Resources/PDFDocument.icns`. Nach Änderungen an der Zeichnung im Projektordner `swift scripts/make_icon.swift` ausführen. Das Dokumentsymbol zeigt macOS nur, wenn Leser die Standard-App für PDFs ist, und auch dann meist nur dort, wo es keine Seitenvorschau gibt.
 
-`scripts/make_manual.swift` zeichnet `docs/Leser-Handbuch.pdf`, ein neunseitiges Handbuch mit Gliederung. Es erklärt die Bedienung, dient zugleich als Beispieldokument und ist in den Screenshots für den App Store zu sehen. Die Texte stehen in `docs/handbuch/de.md` und `docs/handbuch/en.md`, das Format ist oben in den Dateien beschrieben. Nach Änderungen im Projektordner `swift scripts/make_manual.swift` ausführen; `swift scripts/make_manual.swift en` schreibt die englische Fassung nach `docs/Leser-Manual.pdf`.
+`scripts/make_manual.swift` zeichnet `docs/Leser-Handbuch.pdf`, ein neunseitiges Handbuch mit Gliederung. Es erklärt die Bedienung, dient zugleich als Beispieldokument und ist in den Screenshots für den App Store zu sehen. Die Texte stehen in `docs/handbuch/de.md` und `docs/handbuch/en.md`, das Format ist oben in den Dateien beschrieben. Nach Änderungen im Projektordner `swift scripts/make_manual.swift` ausführen; `swift scripts/make_manual.swift en` schreibt die englische Fassung nach `docs/Leser-Manual.pdf`. Beide Fassungen kopiert das Skript außerdem nach `Resources/`: Sie liegen im App-Bundle, und „Hilfe → Leser-Handbuch“ öffnet die zur App-Sprache passende direkt in Leser, offline und immer zur installierten Version passend.
 
 ### Projektstruktur
 

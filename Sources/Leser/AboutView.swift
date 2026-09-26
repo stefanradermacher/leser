@@ -23,6 +23,15 @@ enum AppLinks {
     static let productPage = URL(string: "https://stefanradermacher.com/projects/leser")!
     static let help = URL(string: "https://stefanradermacher.com/projects/leser/support")!
     static let privacy = URL(string: "https://stefanradermacher.com/projects/leser/datenschutz")!
+
+    /// Opens the manual that comes with the app, in the language of the app, in Leser itself.
+    /// It lives in the bundle, so it matches this version and needs no network.
+    static func openManual() {
+        let german = Bundle.main.preferredLocalizations.first?.hasPrefix("de") == true
+        guard let url = Bundle.main.url(forResource: german ? "Leser-Handbuch" : "Leser-Manual", withExtension: "pdf")
+        else { return }
+        NSDocumentController.shared.openDocument(withContentsOf: url, display: true) { _, _, _ in }
+    }
 }
 
 extension Color {
