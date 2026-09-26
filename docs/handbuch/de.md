@@ -9,6 +9,8 @@ Oben stehen die Angaben für Titelseite und Dokumentinformationen, danach der In
                         (das gilt auch für die Angaben oben)
   - Punkt               Aufzählungspunkt
   > Hinweis             Text im farbigen Kasten
+  ![Text](Pfad)         Bildschirmfoto über die ganze Breite, darunter der Text;
+                        fehlt die Datei, wird es ausgelassen
   | Befehl | Kürzel |   Zeile der Tastaturkürzel-Tabelle
 -->
 
@@ -36,6 +38,8 @@ Es ist zugleich ein Beispieldokument: mehrere Kapitel mit Gliederung, damit sich
 
 Ein Dokument öffnest du per Doppelklick, über „Ablage → Öffnen …“ oder indem du es auf das Symbol im Dock ziehst. Leser merkt sich, an welcher Stelle du zuletzt warst, und öffnet das Dokument beim nächsten Mal genau dort.
 
+![Die Gliederung in der Seitenleiste, rechts die ganze Seite](docs/screenshots/1-dokument.png)
+
 ## Blättern
 
 Mit den Pfeiltasten nach links und rechts blätterst du seitenweise, mit den Tasten nach oben und unten sowie mit dem Trackpad scrollst du fortlaufend. Über „Gehe zu Seite …“ springst du direkt zu einer Seitenzahl; die aktuelle Seite steht immer als Untertitel im Fenster.
@@ -59,6 +63,8 @@ Mehrere Dokumente öffnet Leser wahlweise als Tabs in einem Fenster oder in eige
 
 Die Suche findet Wörter im gesamten Dokument. Die Fundstellen erscheinen in einer eigenen Seitenleiste rechts, jeweils mit einem Textausschnitt und der Seitenzahl. Ein Klick darauf springt zur Stelle, und alle Treffer sind im Dokument farbig hervorgehoben.
 
+![Die Suche nach „Leser“ mit der Trefferliste rechts](docs/screenshots/2-suche.png)
+
 ## Von Treffer zu Treffer
 
 Mit der Eingabetaste oder mit „Weitersuchen“ wanderst du durch die Fundstellen, rückwärts geht es ebenso. Leser achtet dabei weder auf Groß- und Kleinschreibung noch auf Akzente, sodass auch „Ubergrosse“ die Stelle „Übergröße“ findet.
@@ -72,6 +78,8 @@ Gesucht wird im Text des Dokuments, nicht in den Namen der Kapitel. Ein Dokument
 # Zwei Stellen gleichzeitig
 
 Mit der geteilten Ansicht zeigt Leser dasselbe Dokument zweimal, nebeneinander oder untereinander. So lassen sich eine Tabelle und ihre Erläuterung, ein Vertragstext und seine Anlage oder zwei weit auseinanderliegende Kapitel zusammen lesen.
+
+![Zwei Kapitel nebeneinander in der geteilten Ansicht](docs/screenshots/3-geteilt.png)
 
 ## Zwei Dokumente
 

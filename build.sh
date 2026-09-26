@@ -36,6 +36,13 @@ echo "Gebaut: $PWD/$app (Build ${build_number:-?})"
 $install || exit 0
 
 target=/Applications/Leser.app
+# A copy from the App Store stays untouched: it belongs to the App Store, which updates it,
+# and replacing it would lose its receipt. The new build is then only in build/.
+if [[ -e "$target/Contents/_MASReceipt/receipt" ]]; then
+    echo "Nicht installiert: $target stammt aus dem App Store und bleibt, wie es ist."
+    echo "Zum Ausprobieren: open -a \"$PWD/$app\""
+    exit 0
+fi
 # The installed Leser has to quit before it can be replaced; it is reopened afterwards.
 # Other copies, e.g. one started from Xcode, are left alone.
 is_running() { pgrep -qf "^$target/Contents/MacOS/Leser"; }

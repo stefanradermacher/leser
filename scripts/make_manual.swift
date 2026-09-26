@@ -13,7 +13,8 @@
 // limitations under the License.
 
 // Creates the small manual about Leser, used for the App Store screenshots and as a
-// sample document with an outline. The texts live in docs/handbuch/de.md and en.md.
+// sample document with an outline. The texts live in docs/handbuch/de.md and en.md;
+// screenshots are taken from docs/screenshots.
 // Usage (from the project folder): swift scripts/make_manual.swift [en]
 //   without an argument: docs/handbuch/de.md → docs/Leser-Handbuch.pdf (German)
 //   with "en":           docs/handbuch/en.md → docs/Leser-Manual.pdf (English)
@@ -31,7 +32,8 @@ let outputPath = english ? "docs/Leser-Manual.pdf" : "docs/Leser-Handbuch.pdf"
 
 // MARK: - Look
 
-let brick = NSColor(srgbRed: 0.69, green: 0.23, blue: 0.18, alpha: 1)
+/// The brick red of the app icon.
+let accent = NSColor(srgbRed: 0.69, green: 0.23, blue: 0.18, alpha: 1)
 let ink = NSColor(white: 0.1, alpha: 1)
 let quiet = NSColor(white: 0.42, alpha: 1)
 let paper = NSColor.white
@@ -68,6 +70,7 @@ enum Block {
     case body(String)
     case bullet(String)
     case note(String)           // text in a tinted box
+    case picture(path: String, caption: String)
     case shortcuts([(String, String)])
 }
 
@@ -125,6 +128,12 @@ func readHandbook(_ path: String) -> (fields: [String: String], blocks: [Block])
         } else if line.hasPrefix("## ") {
             flush()
             blocks.append(.heading(String(line.dropFirst(3))))
+        } else if line.hasPrefix("!["), let close = line.firstIndex(of: "]"),
+                  let open = line[close...].firstIndex(of: "("), line.hasSuffix(")") {
+            flush()
+            let caption = String(line[line.index(line.startIndex, offsetBy: 2)..<close])
+            let path = String(line[line.index(after: open)..<line.index(before: line.endIndex)])
+            blocks.append(.picture(path: path, caption: caption))
         } else if line.hasPrefix("|") {
             let cells = line.split(separator: "|").map { $0.trimmingCharacters(in: .whitespaces) }
             if cells.count == 2 { rows.append((cells[0], cells[1])) }
@@ -190,7 +199,7 @@ func endPage() {
     if !runningHead.isEmpty {
         text(runningHead, size: 8.5, color: quiet)
             .draw(at: NSPoint(x: margin, y: pageSize.height - margin + 24))
-        brick.withAlphaComponent(0.25).setFill()
+        accent.withAlphaComponent(0.25).setFill()
         CGRect(x: margin, y: pageSize.height - margin + 18, width: contentWidth, height: 0.7).fill()
     }
     let number = text("\(pageNumber)", size: 9, color: quiet)
@@ -225,7 +234,7 @@ func place(_ string: NSAttributedString, indent: CGFloat = 0, gap: CGFloat = 0) 
 
 func titlePage() {
     beginPage()
-    brick.setFill()
+    accent.setFill()
     CGRect(x: 0, y: pageSize.height - 250, width: pageSize.width, height: 250).fill()
 
     let title = text("Leser", size: 54, weight: .bold, color: .white)
@@ -237,7 +246,7 @@ func titlePage() {
         icon.draw(in: CGRect(x: (pageSize.width - 190) / 2, y: 380, width: 190, height: 190))
     }
 
-    let claim = text(coverClaim, size: 19, weight: .semibold, color: brick, alignment: .center)
+    let claim = text(coverClaim, size: 19, weight: .semibold, color: accent, alignment: .center)
     claim.draw(with: CGRect(x: margin, y: 310, width: contentWidth, height: 40), options: [.usesLineFragmentOrigin])
 
     let intro = text(coverIntro,
@@ -261,7 +270,7 @@ func shortcutTable(_ rows: [(String, String)]) {
             CGRect(x: margin - 8, y: y - rowHeight + 4, width: contentWidth + 16, height: rowHeight).fill()
         }
         text(row.0, size: 11).draw(at: NSPoint(x: margin, y: y - rowHeight + 10))
-        let keys = text(row.1, size: 11, weight: .medium, color: brick)
+        let keys = text(row.1, size: 11, weight: .medium, color: accent)
         keys.draw(at: NSPoint(x: pageSize.width - margin - keys.size().width, y: y - rowHeight + 10))
         y -= rowHeight
     }
@@ -279,33 +288,103 @@ func noteBox(_ string: String) {
     let box = CGRect(x: margin, y: y - needed, width: contentWidth, height: needed)
     NSColor(srgbRed: 0.98, green: 0.94, blue: 0.93, alpha: 1).setFill()
     NSBezierPath(roundedRect: box, xRadius: 7, yRadius: 7).fill()
-    brick.setFill()
+    accent.setFill()
     CGRect(x: box.minX, y: box.minY, width: 3.5, height: box.height).fill()
     content.draw(with: CGRect(x: box.minX + 20, y: box.minY + 14, width: inner, height: needed - 28),
                  options: [.usesLineFragmentOrigin, .usesFontLeading])
     y -= needed + 16
 }
 
+/// The screenshot at 1800 pixels wide as a JPEG, so that the PDF stays small: a JPEG image is
+/// embedded as it is, a PNG screenshot would be embedded at full size without loss.
+func compressed(_ path: String) -> CGImage? {
+    guard let source = CGImageSourceCreateWithURL(URL(fileURLWithPath: path) as CFURL, nil),
+          let small = CGImageSourceCreateThumbnailAtIndex(source, 0, [
+              kCGImageSourceCreateThumbnailFromImageAlways: true,
+              kCGImageSourceThumbnailMaxPixelSize: 1800,
+          ] as CFDictionary)
+    else { return nil }
+    let data = NSMutableData()
+    guard let destination = CGImageDestinationCreateWithData(data, "public.jpeg" as CFString, 1, nil) else { return nil }
+    CGImageDestinationAddImage(destination, small, [kCGImageDestinationLossyCompressionQuality: 0.82] as CFDictionary)
+    guard CGImageDestinationFinalize(destination),
+          let jpeg = CGImageSourceCreateWithData(data, nil)
+    else { return nil }
+    return CGImageSourceCreateImageAtIndex(jpeg, 0, nil)
+}
+
+/// A screenshot across the text width with a thin frame and a caption. A missing file is
+/// skipped with a warning, so the manual can be made before the screenshots exist.
+func picture(_ path: String, caption: String) {
+    guard let image = compressed(path) else {
+        print("Hinweis: \(path) fehlt, das Bild wird ausgelassen")
+        return
+    }
+    // A little narrower than the text, so that a chapter with a screenshot still fits its page.
+    let width = contentWidth * 0.8
+    let left = margin + (contentWidth - width) / 2
+    let imageHeight = width * CGFloat(image.height) / CGFloat(image.width)
+    let label = text(caption, size: 9.5, color: quiet, alignment: .center)
+    let labelHeight = caption.isEmpty ? 0 : height(label) + 4
+    if y - imageHeight - labelHeight < bottomMargin {
+        endPage()
+        beginPage()
+    }
+    let frame = CGRect(x: left, y: y - imageHeight, width: width, height: imageHeight)
+    ctx.draw(image, in: frame)
+    NSColor(white: 0.82, alpha: 1).setStroke()
+    NSBezierPath(rect: frame.insetBy(dx: -0.25, dy: -0.25)).stroke()
+    y -= imageHeight + 6
+    if !caption.isEmpty {
+        label.draw(with: CGRect(x: left, y: y - labelHeight, width: width, height: labelHeight),
+                   options: [.usesLineFragmentOrigin, .usesFontLeading])
+        y -= labelHeight
+    }
+    y -= 12
+}
+
+func isBullet(_ block: Block) -> Bool {
+    if case .bullet = block { return true }
+    return false
+}
+
 titlePage()
 
-for block in blocks {
+for (index, block) in blocks.enumerated() {
+    // A list is not torn apart: if its points do not all fit, it starts on the next page.
+    if case .bullet = block, index == 0 || !isBullet(blocks[index - 1]) {
+        let run = blocks[index...].prefix(while: isBullet)
+        let needed = run.reduce(CGFloat(0)) { total, next in
+            guard case .bullet(let string) = next else { return total }
+            return total + height(text(string, size: 11.5, lineSpacing: 3.5), width: contentWidth - 18) + 7
+        }
+        if y - needed < bottomMargin && needed < pageSize.height - margin - bottomMargin {
+            endPage()
+            beginPage()
+        }
+    }
     switch block {
     case .chapter(let title):
         endPage()
         runningHead = title
         beginPage()
         outline.append((title, pageNumber))
-        place(text(title, size: 27, weight: .bold, color: brick), gap: 6)
-        brick.withAlphaComponent(0.3).setFill()
+        place(text(title, size: 27, weight: .bold, color: accent), gap: 6)
+        accent.withAlphaComponent(0.3).setFill()
         CGRect(x: margin, y: y + 2, width: 70, height: 2.5).fill()
         y -= 18
     case .heading(let title):
         y -= 6
+        // A heading never stays alone at the foot of a page: it needs room for a few lines below.
+        if y - 90 < bottomMargin {
+            endPage()
+            beginPage()
+        }
         place(text(title, size: 14, weight: .semibold), gap: 6)
     case .body(let string):
         place(text(string, size: 11.5, alignment: .justified, lineSpacing: 3.5), gap: 12)
     case .bullet(let string):
-        let dot = text("•", size: 11.5, color: brick)
+        let dot = text("•", size: 11.5, color: accent)
         let line = text(string, size: 11.5, lineSpacing: 3.5)
         let needed = height(line, width: contentWidth - 18)
         if y - needed < bottomMargin {
@@ -319,6 +398,8 @@ for block in blocks {
     case .note(let string):
         y -= 4
         noteBox(string)
+    case .picture(let path, let caption):
+        picture(path, caption: caption)
     case .shortcuts(let rows):
         shortcutTable(rows)
     }

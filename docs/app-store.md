@@ -143,7 +143,7 @@ Die drei In-App-Käufe sind freiwillige Trinkgelder für die Weiterentwicklung. 
 
 Leser fragt an seltenen Stellen, ob es die Standard-App für PDFs werden soll. Die Frage erscheint als schmale Leiste im Dokumentfenster, erst nachdem an drei verschiedenen Tagen PDFs geöffnet wurden, höchstens zweimal insgesamt, und die eigentliche Umstellung bestätigt macOS selbst.
 
-Zum Testen eignet sich jedes beliebige PDF; im Quellcode liegt `docs/Leser-Handbuch.pdf` mit Gliederung und neun Seiten. Es ist zugleich das Dokument, das in den Screenshots zu sehen ist.
+Zum Testen eignet sich jedes beliebige PDF; im Quellcode liegt `docs/Leser-Handbuch.pdf` mit Gliederung und zehn Seiten. Es ist zugleich das Dokument, das in den Screenshots zu sehen ist.
 
 ## Screenshots
 

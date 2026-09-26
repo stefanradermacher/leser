@@ -38,6 +38,8 @@ It is also a sample document: several chapters with an outline, so sidebar, sear
 
 You open a document by double-clicking it, with “File → Open …” or by dropping it onto the icon in the Dock. Leser remembers where you left off and opens the document there the next time.
 
+![The outline in the sidebar, the whole page on the right](docs/screenshots/en/1-document.png)
+
 ## Turning pages
 
 The left and right arrow keys turn one page at a time; the up and down keys and the trackpad scroll continuously. “Go to Page …” jumps straight to a page number, and the current page is always shown as the window subtitle.
@@ -61,6 +63,8 @@ Leser opens several documents either as tabs in one window or in windows of thei
 
 The search looks through the whole document. Every match appears in a sidebar of its own on the right, each with a snippet of text and the page number. Clicking one jumps to that spot, and all matches are highlighted in the document.
 
+![Searching for “Leser” with the list of matches on the right](docs/screenshots/en/2-search.png)
+
 ## From match to match
 
 The return key, or “Find Next”, walks you through the matches, and backwards works just as well. Leser ignores both capitalisation and accents, so “Ubergrosse” will find “Übergröße”.
@@ -74,6 +78,8 @@ Leser searches the text of the document, not the names of its chapters. A docume
 # Two Places at Once
 
 With the split view Leser shows the same document twice, side by side or stacked. That way a table and its explanation, a contract and its appendix, or two chapters far apart can be read together.
+
+![Two chapters side by side in split view](docs/screenshots/en/3-split.png)
 
 ## Two documents
 
