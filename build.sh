@@ -53,6 +53,9 @@ fi
 
 rm -rf "$target"
 ditto "$app" "$target"
+# ditto keeps the bundle's old date; macOS caches app and document icons by that date and would
+# go on showing icons from an earlier build.
+touch "$target"
 "$lsregister" -f "$target"
 echo "Installiert: $target"
 
