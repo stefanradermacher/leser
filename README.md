@@ -14,17 +14,19 @@ Die Oberfläche gibt es auf Deutsch und Englisch. Die Texte liegen im String-Kat
 
 Leser ist ein Xcode-Projekt (`Leser.xcodeproj`, Xcode 27 oder neuer, macOS 15+). In Xcode öffnen und mit ⌘R starten; für einen signierten Build unter „Signing & Capabilities“ das eigene Team eintragen.
 
-Ohne Xcode-Oberfläche und ohne Entwicklerkonto:
+Ohne Xcode-Oberfläche:
 
 ```
 ./build.sh
 ```
 
-Das baut `build/Leser.app` mit `xcodebuild` (lokal ad hoc signiert, mit derselben Sandbox wie im App Store) und installiert die App nach `/Applications`. Läuft Leser gerade, wird es vorher beendet und danach wieder geöffnet. Nur bauen, ohne zu installieren: `./build.sh --no-install`.
+Das baut `build/Leser.app` mit `xcodebuild` (mit derselben Sandbox wie im App Store) und installiert die App nach `/Applications`. Läuft Leser gerade, wird es vorher beendet und danach wieder geöffnet. Stammt die installierte App aus dem App Store, lässt `build.sh` sie unangetastet und meldet nur den Build. Nur bauen, ohne zu installieren: `./build.sh --no-install`.
+
+Nennt `Config/Local.xcconfig` eine Team-ID, signiert `build.sh` mit diesem Team wie beim Archiv für den App Store; Xcode legt das Entwicklungsprofil bei Bedarf an. Ohne Team-ID, oder mit `--adhoc`, signiert es ad hoc und braucht kein Entwicklerkonto.
 
 Die Versionsnummer (z. B. 1.0) steht im Projekt unter „Version“ (`MARKETING_VERSION`) und wird von Hand erhöht. Die Build-Nummer in Klammern steht als `CURRENT_PROJECT_VERSION` in `Config/Leser.xcconfig` und ist damit eingecheckter Zustand: Xcode und `build.sh` lesen dieselbe Zahl, sie kann nicht sinken, und im Verlauf sieht man, welcher Commit welchen Build ergeben hat.
 
-**Vor jedem Upload in den App Store einmal `./scripts/bump-build.sh` ausführen und mitcommitten** — App Store Connect verlangt für jeden Upload eine höhere Nummer als für den vorigen. Lokale Builds brauchen das nicht.
+**Vor jedem Upload in den App Store einmal `./scripts/bump-build.sh` ausführen und mitcommitten** — App Store Connect verlangt für jeden Upload eine höhere Nummer als für den vorigen. Die eingereichten Stände tragen Tags wie `v1.0-build26`.
 
 Nachträglich lässt sich die Nummer nicht setzen: `CFBundleVersion` wird beim Verarbeiten der `Info.plist` eingesetzt, und ein Skript, das die fertige Plist im Produkt ändert, wird von Xcode danach wieder überschrieben.
 
@@ -39,7 +41,7 @@ Das App-Icon und das Dokumentsymbol werden von `scripts/make_icon.swift` gezeich
 - `Config/Info.plist`, `Config/Leser.entitlements`: App-Einstellungen und Sandbox-Berechtigungen (nur Lesezugriff auf selbst gewählte Dateien und Drucken)
 - `Config/Leser.xcconfig`: Build-Einstellungen; bindet optional `Config/Local.xcconfig` ein
 
-Zum Signieren mit eigenem Entwicklerkonto `Config/Local.xcconfig.example` nach `Config/Local.xcconfig` kopieren und die eigene Team-ID eintragen. Die Datei bleibt lokal. Ohne sie baut Xcode ohne Team, und `./build.sh` signiert wie immer ad hoc.
+Zum Signieren mit eigenem Entwicklerkonto `Config/Local.xcconfig.example` nach `Config/Local.xcconfig` kopieren und die eigene Team-ID eintragen. Die Datei bleibt lokal. Ohne sie baut Xcode ohne Team, und `./build.sh` signiert ad hoc.
 
 PDFs öffnen per Doppelklick („Öffnen mit“), per Drag & Drop aufs Dock-Symbol oder mit ⌘O.
 
