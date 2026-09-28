@@ -127,6 +127,11 @@ final class ViewerModel {
     /// interface busy for over a minute. They are handed over in batches instead.
     @ObservationIgnored private var pendingMatches: [SearchMatch] = []
     @ObservationIgnored private var flushScheduled = false
+    /// The page the search started on. The view goes to the first match on it or after it;
+    /// only if there is none, to the first match of the document.
+    @ObservationIgnored private var searchStartPage = 0
+    /// The view has not gone to a match of the current search yet.
+    @ObservationIgnored private var awaitsFirstMatch = false
 
 
     @ObservationIgnored private var outlineItems: [Int: PDFOutline] = [:]
@@ -485,6 +490,8 @@ final class ViewerModel {
             return
         }
         isFinding = true
+        searchStartPage = Preferences.searchFromCurrentPage ? pageIndex : 0
+        awaitsFirstMatch = true
         // The document is shared with the other half of a split window; DocumentSearch keeps
         // the two searches apart.
         DocumentSearch.start(query, options: [.caseInsensitive, .diacriticInsensitive], in: document, for: self)
@@ -525,10 +532,13 @@ final class ViewerModel {
             pageLabel: page.label ?? "\(index + 1)",
             context: Self.context(for: selection)
         )
-        // The first match right away, so the view jumps there without delay.
-        if matches.isEmpty && pendingMatches.isEmpty {
+        // PDFKit finds the matches in page order. The first one on the start page or after it
+        // is shown right away, so the view goes there without delay.
+        if awaitsFirstMatch, index >= searchStartPage {
+            awaitsFirstMatch = false
+            flushMatches()
             matches.append(match)
-            goToMatch(0)
+            goToMatch(matches.count - 1)
             return
         }
         pendingMatches.append(match)
@@ -549,6 +559,11 @@ final class ViewerModel {
     private func finishSearch() {
         flushMatches()
         isFinding = false
+        // All matches lie before the start page: back to the first one, as searching wraps around.
+        if awaitsFirstMatch, !matches.isEmpty {
+            awaitsFirstMatch = false
+            goToMatch(0)
+        }
         pdfView.highlightedSelections = matches.isEmpty ? nil : matches.map(\.selection)
     }
 
@@ -648,6 +663,7 @@ extension ViewerModel: DocumentSearchClient {
         pendingMatches = []
         currentMatchIndex = nil
         pdfView.highlightedSelections = nil
+        awaitsFirstMatch = true
     }
 }
 

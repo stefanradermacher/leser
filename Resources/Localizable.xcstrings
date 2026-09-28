@@ -958,6 +958,17 @@
         }
       }
     },
+    "Leser zeigt den ersten Treffer auf der aktuellen Seite oder danach und erst dann die davor. Ausgeschaltet beginnt die Suche immer am Anfang des Dokuments.": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Leser displays the first match on the current page or after it, and only then the ones before. When off, the search always starts at the beginning of the document."
+          }
+        }
+      }
+    },
     "Leser-Handbuch": {
       "localizations": {
         "en": {
@@ -1437,6 +1448,17 @@
           "stringUnit": {
             "state": "translated",
             "value": "Keywords"
+          }
+        }
+      }
+    },
+    "Suche auf der aktuellen Seite beginnen": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Start search on the current page"
           }
         }
       }

@@ -25,6 +25,7 @@ enum Preferences {
     static let rememberPositionKey = "rememberPosition"
     static let showSingleTabBarKey = "showSingleTabBar"
     static let reloadOnChangeKey = "reloadOnChange"
+    static let searchFromCurrentPageKey = "searchFromCurrentPage"
     private static let positionsKey = "readingPositions"
 
     /// Value of `layoutKey` meaning "use the layout chosen last".
@@ -40,6 +41,7 @@ enum Preferences {
             rememberPositionKey: true,
             showSingleTabBarKey: false,
             reloadOnChangeKey: true,
+            searchFromCurrentPageKey: true,
         ])
     }
 
@@ -73,6 +75,10 @@ enum Preferences {
 
     static var reloadOnChange: Bool {
         UserDefaults.standard.bool(forKey: reloadOnChangeKey)
+    }
+
+    static var searchFromCurrentPage: Bool {
+        UserDefaults.standard.bool(forKey: searchFromCurrentPageKey)
     }
 
     static var rememberPosition: Bool {
@@ -215,6 +221,7 @@ struct SettingsView: View {
     @AppStorage(Preferences.rememberPositionKey) private var rememberPosition = true
     @AppStorage(Preferences.showSingleTabBarKey) private var showSingleTabBar = false
     @AppStorage(Preferences.reloadOnChangeKey) private var reloadOnChange = true
+    @AppStorage(Preferences.searchFromCurrentPageKey) private var searchFromCurrentPage = true
 
     var body: some View {
         Form {
@@ -255,6 +262,13 @@ struct SettingsView: View {
                 Toggle("Dokument neu laden, wenn sich die Datei ändert", isOn: $reloadOnChange)
             } footer: {
                 Text("Praktisch für PDFs, die ein anderes Programm erzeugt, etwa beim Export oder mit LaTeX. Seite, Zoom und Anzeige bleiben dabei erhalten.")
+                    .font(.callout)
+                    .foregroundStyle(.secondary)
+            }
+            Section {
+                Toggle("Suche auf der aktuellen Seite beginnen", isOn: $searchFromCurrentPage)
+            } footer: {
+                Text("Leser zeigt den ersten Treffer auf der aktuellen Seite oder danach und erst dann die davor. Ausgeschaltet beginnt die Suche immer am Anfang des Dokuments.")
                     .font(.callout)
                     .foregroundStyle(.secondary)
             }
