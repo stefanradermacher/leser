@@ -22,6 +22,12 @@ struct WindowFrameKeeper: NSViewRepresentable {
     /// The document windows, so that only they count when a new window avoids covering one.
     @MainActor private static let documentWindows = NSHashTable<NSWindow>.weakObjects()
 
+    /// Whether the window takes up the whole usable area of its screen, as after zooming.
+    @MainActor static func fillsScreen(_ window: NSWindow) -> Bool {
+        guard let visible = (window.screen ?? NSScreen.main)?.visibleFrame else { return false }
+        return window.frame.width >= visible.width - 2 && window.frame.height >= visible.height - 2
+    }
+
     func makeNSView(context: Context) -> NSView {
         FrameView()
     }
@@ -58,10 +64,11 @@ struct WindowFrameKeeper: NSViewRepresentable {
             // Don't stack a new window exactly on top of another document window. Other windows do not
             // count: opening from the Open panel at launch, a window that is not a document window
             // sits at the same place for a moment and would push the new window aside.
+            // A window that fills the screen stays where it is: offset, it would be cut off or shrunk.
             let others = WindowFrameKeeper.documentWindows.allObjects.filter {
                 $0 !== window && $0.isVisible && $0.frame.origin == window.frame.origin
             }
-            if !others.isEmpty {
+            if !others.isEmpty, !WindowFrameKeeper.fillsScreen(window) {
                 var frame = window.frame
                 frame.origin.x += 24
                 frame.origin.y -= 24
