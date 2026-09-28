@@ -227,6 +227,10 @@ struct OutlineRow: View {
         }
         .help(node.title)
         .tag(node.id)
+        // A click on the row that is already selected changes no selection; it still goes to
+        // the start of the entry, for instance back to the beginning of the current chapter.
+        .contentShape(Rectangle())
+        .simultaneousGesture(TapGesture().onEnded { model.selectOutline(node.id) })
     }
 }
 

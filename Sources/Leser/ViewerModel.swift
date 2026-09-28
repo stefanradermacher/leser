@@ -443,8 +443,14 @@ final class ViewerModel {
 
     // MARK: - Outline
 
+    /// The last jump from the outline, so a click that both selects a row and is seen as a tap
+    /// on it goes there only once.
+    @ObservationIgnored private var lastOutlineJump: (id: Int, date: Date)?
+
     func selectOutline(_ id: Int) {
         selectedOutlineID = id
+        if let last = lastOutlineJump, last.id == id, Date.now.timeIntervalSince(last.date) < 0.5 { return }
+        lastOutlineJump = (id, .now)
         guard let item = outlineItems[id] else { return }
         if let destination = item.destination {
             pdfView.go(to: destination)
