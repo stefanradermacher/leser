@@ -217,6 +217,13 @@ final class ViewerModel {
         document.page(at: index)?.label ?? "\(index + 1)"
     }
 
+    /// Room for the longest page label in the toolbar, so the page buttons keep their size.
+    @ObservationIgnored lazy var pageLabelWidth: CGFloat = {
+        let font = NSFont.systemFont(ofSize: NSFont.systemFontSize)
+        let widest = pageLabels.map { ($0 as NSString).size(withAttributes: [.font: font]).width }.max() ?? 0
+        return ceil(max(widest, 16)) + 16
+    }()
+
     /// Whether the document numbers its pages differently from their position, for instance
     /// with roman numerals for the front matter.
     var hasPageLabels: Bool {

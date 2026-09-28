@@ -183,11 +183,14 @@ struct ReaderView: View {
             : String(localized: "Seite \(label) (\(number) von \(count))")
     }
 
-    /// Previous and next page; "Go to page" opens below it.
+    /// Previous page | the page as labelled in the document | next page, as in Preview.
+    /// A click on the page opens "Go to page" below it.
     private var navigationGroup: some View {
         ToolbarSegments(segments: [
             ToolbarSegment(symbol: "chevron.up", label: String(localized: "Vorherige Seite"),
                            isEnabled: model.pageIndex > 0, action: { model.previousPage() }),
+            ToolbarSegment(title: model.pageLabel, label: String(localized: "Gehe zu Seite …"),
+                           width: model.pageLabelWidth, action: { showsGoToPage = true }),
             ToolbarSegment(symbol: "chevron.down", label: String(localized: "Nächste Seite"),
                            isEnabled: model.pageIndex < model.pageCount - 1, action: { model.nextPage() }),
         ])

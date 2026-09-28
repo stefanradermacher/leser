@@ -21,6 +21,8 @@ struct ToolbarSegment {
     var title: String?
     var label: String
     var isEnabled = true
+    /// A fixed width, for a text that changes and should not make the group jump; nil fits the content.
+    var width: CGFloat?
     var action: (() -> Void)?
     /// Built each time the control updates, so check marks stay current.
     var menu: (() -> NSMenu)?
@@ -57,7 +59,7 @@ struct ToolbarSegments: NSViewRepresentable {
             control.setLabel(segment.title ?? "", forSegment: index)
             control.setToolTip(segment.label, forSegment: index)
             control.setEnabled(segment.isEnabled, forSegment: index)
-            control.setWidth(0, forSegment: index)
+            control.setWidth(segment.width ?? 0, forSegment: index)
             let menu = segment.menu?()
             control.setMenu(menu, forSegment: index)
             control.setShowsMenuIndicator(menu != nil, forSegment: index)
