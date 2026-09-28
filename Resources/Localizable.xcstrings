@@ -67,6 +67,17 @@
         }
       }
     },
+    "%lld von %lld": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%lld of %lld"
+          }
+        }
+      }
+    },
     "%lld × %lld mm": {
       "extractionState": "manual",
       "localizations": {

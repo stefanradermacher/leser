@@ -173,14 +173,9 @@ struct ReaderView: View {
         }
     }
 
+    /// The position of the page in the document; its label stands between the page buttons.
     private var pageSubtitle: String {
-        let number = model.pageIndex + 1
-        let label = model.pageLabel
-        // Some documents number their pages differently, e.g. with roman numerals.
-        let count = model.pageCount
-        return label == "\(number)"
-            ? String(localized: "Seite \(number) von \(count)")
-            : String(localized: "Seite \(label) (\(number) von \(count))")
+        String(localized: "\(model.pageIndex + 1) von \(model.pageCount)")
     }
 
     /// Previous page | the page as labelled in the document | next page, as in Preview.
