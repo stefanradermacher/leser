@@ -174,8 +174,13 @@ struct OutlineListView: View {
                 get: { model.selectedOutlineID },
                 set: { if let id = $0 { model.selectOutline(id) } }
             )) {
-                ForEach(model.outline) { node in
-                    OutlineRow(node: node, model: model)
+                // In a sidebar list, SwiftUI turns expandable rows at the top level into section
+                // headings, which cannot be selected, like "Favorites" in the Finder. Inside a
+                // section they stay ordinary rows.
+                Section {
+                    ForEach(model.outline) { node in
+                        OutlineRow(node: node, model: model)
+                    }
                 }
             }
         }
