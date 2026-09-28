@@ -19,6 +19,8 @@ import SwiftUI
 /// and opens new windows (also after a restart) with the same frame.
 struct WindowFrameKeeper: NSViewRepresentable {
     private static let frameName = "LeserDocumentWindow"
+    /// The document windows, so that only they count when a new window avoids covering one.
+    @MainActor private static let documentWindows = NSHashTable<NSWindow>.weakObjects()
 
     func makeNSView(context: Context) -> NSView {
         FrameView()
@@ -34,6 +36,7 @@ struct WindowFrameKeeper: NSViewRepresentable {
             super.viewDidMoveToWindow()
             guard let window, window !== trackedWindow else { return }
             trackedWindow = window
+            WindowFrameKeeper.documentWindows.add(window)
             window.tabbingMode = Preferences.tabbing.tabbingMode
             observers.forEach(NotificationCenter.default.removeObserver)
             observers = []
@@ -52,8 +55,12 @@ struct WindowFrameKeeper: NSViewRepresentable {
                   window.setFrameUsingName(WindowFrameKeeper.frameName)
             else { return }
 
-            // Don't stack a new window exactly on top of an open one.
-            let others = NSApp.windows.filter { $0 !== window && $0.isVisible && $0.frame.origin == window.frame.origin }
+            // Don't stack a new window exactly on top of another document window. Other windows do not
+            // count: opening from the Open panel at launch, a window that is not a document window
+            // sits at the same place for a moment and would push the new window aside.
+            let others = WindowFrameKeeper.documentWindows.allObjects.filter {
+                $0 !== window && $0.isVisible && $0.frame.origin == window.frame.origin
+            }
             if !others.isEmpty {
                 var frame = window.frame
                 frame.origin.x += 24
