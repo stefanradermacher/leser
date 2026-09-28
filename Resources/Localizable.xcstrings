@@ -78,6 +78,17 @@
         }
       }
     },
+    "(%lld von %lld)": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "(%lld of %lld)"
+          }
+        }
+      }
+    },
     ", Seiten unterschiedlich groß": {
       "extractionState": "manual",
       "localizations": {

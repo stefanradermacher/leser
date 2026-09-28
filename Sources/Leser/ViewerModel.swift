@@ -211,6 +211,30 @@ final class ViewerModel {
         document.page(at: pageIndex)?.label ?? "\(pageIndex + 1)"
     }
 
+    /// The labels of all pages, as printed on them when the PDF says so ("xi", "12"), otherwise
+    /// the page numbers. Read once, when first needed.
+    @ObservationIgnored private lazy var pageLabels: [String] = (0..<pageCount).map { index in
+        document.page(at: index)?.label ?? "\(index + 1)"
+    }
+
+    /// Whether the document numbers its pages differently from their position, for instance
+    /// with roman numerals for the front matter.
+    var hasPageLabels: Bool {
+        pageLabels.enumerated().contains { $0.element != "\($0.offset + 1)" }
+    }
+
+    /// The page for what was typed into "Go to page": a page label first, as printed on the
+    /// page, otherwise the position in the document.
+    func pageIndex(for input: String) -> Int? {
+        let text = input.trimmingCharacters(in: .whitespaces)
+        guard !text.isEmpty else { return nil }
+        if let index = pageLabels.firstIndex(where: { $0.compare(text, options: [.caseInsensitive]) == .orderedSame }) {
+            return index
+        }
+        if let number = Int(text), (1...pageCount).contains(number) { return number - 1 }
+        return nil
+    }
+
     func goToPage(_ index: Int) {
         guard let page = document.page(at: min(max(index, 0), pageCount - 1)) else { return }
         pdfView.go(to: page)

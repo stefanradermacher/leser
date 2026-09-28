@@ -250,11 +250,14 @@ private struct GoToPageView: View {
     @State private var input = ""
     @FocusState private var focused: Bool
 
-    private var page: Int? {
-        guard let number = Int(input.trimmingCharacters(in: .whitespaces)),
-              (1...model.pageCount).contains(number)
-        else { return nil }
-        return number
+    /// The page index for the input: the page with that label, otherwise that position.
+    private var page: Int? { model.pageIndex(for: input) }
+
+    /// After the field: the position of the page, where the labels differ from it.
+    private var positionHint: String {
+        guard model.hasPageLabels else { return String(localized: "von \(model.pageCount)") }
+        let index = page ?? model.pageIndex
+        return String(localized: "(\(index + 1) von \(model.pageCount))")
     }
 
     var body: some View {
@@ -262,17 +265,17 @@ private struct GoToPageView: View {
             Text("Seite")
             // The field stays empty; the current page is only a hint, so typing
             // never appends to it.
-            TextField(text: $input, prompt: Text(verbatim: "\(model.pageIndex + 1)")) {
+            TextField(text: $input, prompt: Text(verbatim: model.pageLabel)) {
                 Text("Seite")
             }
             .labelsHidden()
             .textFieldStyle(.roundedBorder)
             .multilineTextAlignment(.trailing)
             .monospacedDigit()
-            .frame(width: 56)
+            .frame(width: 64)
             .focused($focused)
             .onSubmit(go)
-            Text("von \(model.pageCount)")
+            Text(positionHint)
                 .monospacedDigit()
                 .foregroundStyle(.secondary)
             Button("Gehe zu", action: go)
@@ -285,7 +288,7 @@ private struct GoToPageView: View {
 
     private func go() {
         guard let page else { return }
-        model.goToPage(page - 1)
+        model.goToPage(page)
         close()
         model.focusDocument()
     }
