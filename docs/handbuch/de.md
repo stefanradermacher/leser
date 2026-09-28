@@ -91,7 +91,7 @@ Symbolleiste, Menübefehle, Seitenleiste und Suche wirken immer auf die zuletzt 
 
 ## Wieder schließen
 
-Ein Klick auf das Kreuz in der Kopfzeile der zweiten Hälfte beendet die geteilte Ansicht, ebenso der Knopf in der Symbolleiste oder der Menübefehl. Das Hauptdokument bleibt dabei an seiner Stelle.
+Ein Klick auf das Kreuz in der Kopfzeile der zweiten Hälfte beendet die geteilte Ansicht, ebenso der Knopf in der Symbolleiste oder der Menübefehl. Das Hauptdokument bleibt dabei an seiner Stelle. Schließt du ein Dokument mit geteilter Ansicht, öffnet Leser es beim nächsten Mal wieder geteilt, mit beiden Hälften an ihrer Stelle, sofern „An der zuletzt gelesenen Stelle weiterlesen“ eingeschaltet ist. Das gilt, wenn beide Hälften dasselbe Dokument zeigen.
 
 # Anzeige und Einstellungen
 

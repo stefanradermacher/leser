@@ -86,6 +86,17 @@ enum Preferences {
         var x: Double
         var y: Double
         var date: Date
+        /// The second view, if the window was split showing the same document. Missing in
+        /// positions stored by older versions, which decode as not split.
+        var split: SplitPosition?
+    }
+
+    struct SplitPosition: Codable {
+        var page: Int
+        var x: Double
+        var y: Double
+        var axis: String
+        var secondaryActive: Bool
     }
 
     private static let maxStoredPositions = 200

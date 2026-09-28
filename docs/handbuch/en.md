@@ -91,7 +91,7 @@ The toolbar, the menu commands, the sidebar and the search always act on the hal
 
 ## Closing it again
 
-Clicking the cross in the header of the second half ends the split view, and so does the toolbar button or the menu command. The main document stays exactly where it was.
+Clicking the cross in the header of the second half ends the split view, and so does the toolbar button or the menu command. The main document stays exactly where it was. If you close a document in split view, Leser opens it split again next time, with both halves where they were, as long as “Continue where you left off” is on. This applies when both halves show the same document.
 
 # Display and Settings
 

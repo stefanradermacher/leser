@@ -89,6 +89,42 @@ final class ReaderState {
         if let fileURL {
             primaryWatcher = FileWatcher(url: fileURL) { [weak self] in self?.reloadPrimary() }
         }
+        primary.splitPosition = { [weak self] in self?.splitPosition() }
+        restoreSplit()
+    }
+
+    // MARK: Remembering the split
+
+    /// The second view as stored with the reading position: only a second view of the same
+    /// document, since another file may not be opened again after a restart in the sandbox.
+    private func splitPosition() -> Preferences.SplitPosition? {
+        guard let secondary, secondary.document === primary.document else { return nil }
+        let snapshot = secondary.snapshot()
+        return .init(page: snapshot.page, x: snapshot.point.x, y: snapshot.point.y,
+                     axis: axis.rawValue, secondaryActive: isSecondaryActive)
+    }
+
+    /// Opens the split again if the window was split when the document was last closed.
+    private func restoreSplit() {
+        guard Preferences.rememberPosition, let path = primaryURL?.standardizedFileURL.path,
+              let split = Preferences.readingPosition(for: path)?.split
+        else { return }
+        let model = ViewerModel(
+            document: primary.document,
+            fileURL: nil,
+            displayName: primary.displayName,
+            location: primary.location,
+            restoring: ViewSnapshot(page: split.page, point: CGPoint(x: split.x, y: split.y), scale: primary.scale,
+                                    fitMode: primary.fitMode, layout: primary.pageLayout, searchText: "")
+        )
+        axis = SplitAxis(rawValue: split.axis) ?? axis
+        secondary = model
+        watchFocus(of: model)
+        model.onPageChange = { [weak self] in self?.primary.saveReadingPosition() }
+        isSecondaryActive = split.secondaryActive
+        let focus = split.secondaryActive ? model : primary
+        pendingFocus = focus
+        DispatchQueue.main.async { focus.focusDocument() }
     }
 
     /// Ends file watching when the window closes.
@@ -115,7 +151,9 @@ final class ReaderState {
 
     func activate(_ model: ViewerModel) {
         let secondaryActive = model === secondary
-        if secondaryActive != isSecondaryActive { isSecondaryActive = secondaryActive }
+        guard secondaryActive != isSecondaryActive else { return }
+        isSecondaryActive = secondaryActive
+        primary.saveReadingPosition()
     }
 
     // MARK: Opening and closing
@@ -143,6 +181,7 @@ final class ReaderState {
         lockedSecondary = nil
         isSecondaryActive = false
         primary.focusDocument()
+        primary.saveReadingPosition()
     }
 
     func setAxis(_ newAxis: SplitAxis) {
@@ -155,6 +194,7 @@ final class ReaderState {
         }
         axis = newAxis
         SplitAxis.preferred = newAxis
+        primary.saveReadingPosition()
     }
 
     func chooseOtherDocument() {
@@ -223,6 +263,7 @@ final class ReaderState {
         lockedSecondary = nil
         secondary = model
         watchFocus(of: model)
+        model.onPageChange = { [weak self] in self?.primary.saveReadingPosition() }
         // The new view becomes active once it is on screen.
         isSecondaryActive = true
         pendingFocus = model
@@ -250,6 +291,7 @@ final class ReaderState {
             }
             old.stop()
             self.primary = replacement
+            replacement.splitPosition = { [weak self] in self?.splitPosition() }
             self.watchFocus(of: replacement)
             if focus === old { self.focusSoon(replacement) }
         }
@@ -270,6 +312,7 @@ final class ReaderState {
         secondary?.stop()
         secondary = model
         watchFocus(of: model)
+        model.onPageChange = { [weak self] in self?.primary.saveReadingPosition() }
         if focus { focusSoon(model) }
     }
 

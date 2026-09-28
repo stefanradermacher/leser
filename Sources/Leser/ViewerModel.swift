@@ -140,6 +140,10 @@ final class ViewerModel {
     @ObservationIgnored private let startPage: Int
     /// State to restore after reloading the document.
     @ObservationIgnored private let restoring: ViewSnapshot?
+    /// The second view of a split window, stored with the reading position of the main view.
+    @ObservationIgnored var splitPosition: (() -> Preferences.SplitPosition?)?
+    /// Called when the shown page changes, for a second view to have the position stored.
+    @ObservationIgnored var onPageChange: (() -> Void)?
     let displayName: String
     /// File the document comes from, for the document information.
     let location: URL?
@@ -389,7 +393,7 @@ final class ViewerModel {
         let index = document.index(for: page)
         guard index != NSNotFound else { return }
         Preferences.setReadingPosition(
-            .init(page: index, x: destination.point.x, y: destination.point.y, date: .now),
+            .init(page: index, x: destination.point.x, y: destination.point.y, date: .now, split: splitPosition?()),
             for: filePath
         )
     }
@@ -589,6 +593,7 @@ final class ViewerModel {
             if index != NSNotFound, index != model.pageIndex { model.pageIndex = index }
             model.syncOutlineSelection()
             model.saveReadingPosition()
+            model.onPageChange?()
         }
         observe(.PDFViewScaleChanged) { model, _ in model.scaleDidChange() }
         observe(.PDFViewDisplayModeChanged) { model, _ in

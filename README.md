@@ -118,7 +118,7 @@ Unter **Leser → Einstellungen …** (⌘,) steht ganz oben, welche App gerade 
 - **Neue Dokumente öffnen:** wie in den Systemeinstellungen (Standard), als Tab oder in einem neuen Fenster
 - **Dokument neu laden, wenn sich die Datei ändert:** Standard: an. Seite, Zoom, Anzeige und eine laufende Suche bleiben erhalten; das gilt auch für ein zweites Dokument in der geteilten Ansicht.
 - **Tableiste auch bei nur einem Dokument anzeigen:** Standard: aus. Die Leiste erscheint dann erst ab zwei Tabs.
-- **An der zuletzt gelesenen Stelle weiterlesen:** merkt sich für bis zu 200 Dokumente die letzte Position (Standard: an). Beim Ausschalten werden die gespeicherten Stellen gelöscht.
+- **An der zuletzt gelesenen Stelle weiterlesen:** merkt sich für bis zu 200 Dokumente die letzte Position (Standard: an), auch eine geteilte Ansicht desselben Dokuments mit Anordnung, Position der zweiten Hälfte und aktiver Hälfte. Zeigte die zweite Hälfte ein anderes Dokument, öffnet Leser wieder ungeteilt: Die Sandbox erlaubt nicht, eine andere Datei ohne erneute Auswahl zu öffnen. Beim Ausschalten werden die gespeicherten Stellen gelöscht.
 
 ### Nachfrage nach der Standard-App
 
