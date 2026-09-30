@@ -732,6 +732,44 @@ final class ReaderPDFView: PDFView {
         return accepted
     }
 
+    /// Copies the selected text with its paragraphs rejoined instead of one line break per
+    /// line of the page, so it can be pasted into a word processor as running text. Fonts,
+    /// and with them bold and italic, are kept as PDFKit's own copy keeps them.
+    override func copy(_ sender: Any?) {
+        guard let selection = currentSelection, document?.allowsCopying == true else {
+            super.copy(sender)
+            return
+        }
+        let text = Self.readableOnWhite(ParagraphText.text(of: selection))
+        guard text.length > 0 else {
+            super.copy(sender)
+            return
+        }
+        // Formatted for word processors, which keep bold and italic, and plain for the rest.
+        let pasteboard = NSPasteboard.general
+        pasteboard.clearContents()
+        if let rtf = try? text.data(from: NSRange(location: 0, length: text.length),
+                                    documentAttributes: [.documentType: NSAttributedString.DocumentType.rtf]) {
+            pasteboard.setData(rtf, forType: .rtf)
+        }
+        pasteboard.setString(text.string, forType: .string)
+    }
+
+    /// Text that is white or nearly so, as on the coloured bands of headings, turns black:
+    /// pasted into a document it would otherwise be invisible on the white page.
+    private static func readableOnWhite(_ text: NSAttributedString) -> NSAttributedString {
+        let result = NSMutableAttributedString(attributedString: text)
+        text.enumerateAttribute(.foregroundColor, in: NSRange(location: 0, length: text.length)) { value, range, _ in
+            guard let color = (value as? NSColor)?.usingColorSpace(.sRGB) else { return }
+            let luminance = 0.2126 * color.redComponent + 0.7152 * color.greenComponent
+                + 0.0722 * color.blueComponent
+            if luminance > 0.85 {
+                result.addAttribute(.foregroundColor, value: NSColor.black, range: range)
+            }
+        }
+        return result
+    }
+
     override func keyDown(with event: NSEvent) {
         let modifiers = event.modifierFlags.intersection([.command, .option, .control, .shift])
         guard modifiers.isEmpty, let key = event.specialKey else {
