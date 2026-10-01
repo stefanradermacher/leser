@@ -815,6 +815,52 @@ final class ReaderPDFView: PDFView {
     /// Called to add a bookmark at a point on a page (page index, point in page coordinates).
     var onAddBookmark: ((Int, CGPoint) -> Void)?
 
+    /// Shows where a link in the document leads while the pointer rests on it.
+    private lazy var linkPreview = LinkPreview(view: self)
+
+    override func mouseMoved(with event: NSEvent) {
+        super.mouseMoved(with: event)
+        linkPreview.pointerMoved(to: convert(event.locationInWindow, from: nil))
+    }
+
+    override func mouseExited(with event: NSEvent) {
+        super.mouseExited(with: event)
+        linkPreview.close()
+    }
+
+    override func mouseDown(with event: NSEvent) {
+        linkPreview.close()
+        super.mouseDown(with: event)
+    }
+
+    override func scrollWheel(with event: NSEvent) {
+        linkPreview.close()
+        super.scrollWheel(with: event)
+    }
+
+    /// The side buttons of a mouse go back and forward, as in a browser, for instance after
+    /// following a link. Mouse drivers send them in different forms: as buttons 4 and 5, or –
+    /// like SteerMouse's "Back" and "Forward" – as the swipe of a trackpad or Magic Mouse.
+    override func otherMouseDown(with event: NSEvent) {
+        switch event.buttonNumber {
+        case 3: goBackOrForward(-1)
+        case 4: goBackOrForward(1)
+        default: super.otherMouseDown(with: event)
+        }
+    }
+
+    override func swipe(with event: NSEvent) {
+        // A swipe to the right, like turning a page back.
+        if event.deltaX > 0 { goBackOrForward(-1) }
+        else if event.deltaX < 0 { goBackOrForward(1) }
+        else { super.swipe(with: event) }
+    }
+
+    private func goBackOrForward(_ direction: Int) {
+        linkPreview.close()
+        if direction < 0 { goBack(nil) } else { goForward(nil) }
+    }
+
     /// PDFKit's context menu, with a bookmark for the place clicked at.
     override func menu(for event: NSEvent) -> NSMenu? {
         let menu = super.menu(for: event) ?? NSMenu()
@@ -893,6 +939,7 @@ final class ReaderPDFView: PDFView {
     }
 
     override func keyDown(with event: NSEvent) {
+        linkPreview.close()
         let modifiers = event.modifierFlags.intersection([.command, .option, .control, .shift])
         guard modifiers.isEmpty, let key = event.specialKey else {
             super.keyDown(with: event)
