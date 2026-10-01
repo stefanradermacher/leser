@@ -70,6 +70,14 @@ final class ReaderState {
     /// Incremented to open the "Go to page" field.
     private(set) var goToPageRequest = 0
 
+    /// A bookmark being added, while its name is asked for.
+    var bookmarkDraft: BookmarkDraft?
+
+    /// Asks for a bookmark at the place shown at the top of the active view.
+    func requestBookmark() {
+        bookmarkDraft = active.bookmarkDraftForCurrentPlace()
+    }
+
     func requestSearchFocus() { searchFocusRequest += 1 }
     func requestGoToPage() { goToPageRequest += 1 }
     /// View that should get the focus while the split is being set up.
@@ -106,9 +114,7 @@ final class ReaderState {
 
     /// Opens the split again if the window was split when the document was last closed.
     private func restoreSplit() {
-        guard Preferences.rememberPosition, let path = primaryURL?.standardizedFileURL.path,
-              let split = Preferences.readingPosition(for: path)?.split
-        else { return }
+        guard let split = primary.savedReadingPosition()?.split else { return }
         let model = ViewerModel(
             document: primary.document,
             fileURL: nil,
@@ -289,6 +295,7 @@ final class ReaderState {
                 )
                 self.replaceSecondary(with: newSecondary, focus: focus === secondary)
             }
+            BookmarkList.carryOver(from: old.documentKey, to: replacement.documentKey)
             old.stop()
             self.primary = replacement
             replacement.splitPosition = { [weak self] in self?.splitPosition() }
@@ -302,8 +309,10 @@ final class ReaderState {
         loadChangedDocument(at: url, name: name) { [weak self] document in
             guard let self, let old = self.secondary, self.secondaryURL == url else { return }
             let replacement = ViewerModel(
-                document: document, fileURL: nil, displayName: old.displayName, restoring: old.snapshot()
+                document: document, fileURL: nil, displayName: old.displayName, location: url,
+                restoring: old.snapshot()
             )
+            BookmarkList.carryOver(from: old.documentKey, to: replacement.documentKey)
             self.replaceSecondary(with: replacement, focus: self.focusedModel() === old)
         }
     }
@@ -373,6 +382,9 @@ final class ReaderState {
     }
 
     private func watchFocus(of model: ViewerModel) {
+        model.pdfView.onAddBookmark = { [weak self, weak model] page, point in
+            self?.bookmarkDraft = model?.bookmarkDraft(page: page, point: point)
+        }
         model.pdfView.onFocus = { [weak self, weak model] in
             guard let self, let model else { return }
             // While the views are rearranged, the main view may grab the focus back.
@@ -434,17 +446,27 @@ struct SplitPanes: View {
 /// claim far more room than its minimum. Splitting a window with the search results open made
 /// it several hundred points wider, and a split window could not be made narrower than about
 /// 1150 points.
-private struct SplitContainer<First: View, Second: View>: NSViewRepresentable {
+struct SplitContainer<First: View, Second: View>: NSViewRepresentable {
     let axis: SplitAxis
     /// Smallest width, or height when stacked, of each half.
     let minimum: CGFloat
+    /// Share of the first view when the split appears.
+    var initialShare: CGFloat = 0.5
+    /// Sizes the first view to its content instead, up to this share of the whole.
+    var fitsFirstToContent: CGFloat?
+    /// Changes when the content of the first view does, so that a fitted size follows it.
+    var contentRevision = 0
+    /// Told the share of the first view after the reader moved the divider.
+    var dividerMoved: ((CGFloat) -> Void)?
+    /// Called on a double click on the divider.
+    var dividerDoubleClicked: (() -> Void)?
     let first: First
     let second: Second
 
-    func makeCoordinator() -> Coordinator { Coordinator() }
+    func makeCoordinator() -> Coordinator { Coordinator(share: initialShare) }
 
-    func makeNSView(context: Context) -> NSSplitView {
-        let view = NSSplitView()
+    func makeNSView(context: Context) -> ReaderSplitView {
+        let view = ReaderSplitView()
         view.isVertical = axis == .sideBySide
         view.dividerStyle = .thin
         view.delegate = context.coordinator
@@ -455,22 +477,81 @@ private struct SplitContainer<First: View, Second: View>: NSViewRepresentable {
             host.sizingOptions = []
             view.addSubview(host)
         }
-        context.coordinator.minimum = minimum
+        configure(view, context: context)
+        context.coordinator.relayoutSoon(view)
         return view
     }
 
-    func updateNSView(_ view: NSSplitView, context: Context) {
+    func updateNSView(_ view: ReaderSplitView, context: Context) {
         let hosts = view.subviews.compactMap { $0 as? NSHostingView<AnyView> }
         hosts.first?.rootView = AnyView(first)
         hosts.last?.rootView = AnyView(second)
-        context.coordinator.minimum = minimum
+        let coordinator = context.coordinator
+        let fitChanged = coordinator.fitShare != fitsFirstToContent || coordinator.revision != contentRevision
+        configure(view, context: context)
+        if fitChanged { coordinator.relayoutSoon(view) }
+    }
+
+    private func configure(_ view: ReaderSplitView, context: Context) {
+        let coordinator = context.coordinator
+        coordinator.minimum = minimum
+        coordinator.fitShare = fitsFirstToContent
+        coordinator.revision = contentRevision
+        coordinator.dividerMoved = dividerMoved
+        view.dividerDoubleClicked = dividerDoubleClicked
     }
 
     final class Coordinator: NSObject, NSSplitViewDelegate {
         var minimum: CGFloat = 0
-        /// The halves start out equal. Switching between side by side and stacked creates a
-        /// new split view, so this also holds after a switch.
-        var startsHalved = true
+        var fitShare: CGFloat?
+        var revision = 0
+        var dividerMoved: ((CGFloat) -> Void)?
+        /// Share of the first view until the split view has a size. Switching between side by
+        /// side and stacked creates a new split view, so the halves start out equal again.
+        private var startShare: CGFloat?
+        /// Size of the first view when the reader took hold of the divider, as opposed to the
+        /// window being resized. Only a divider that really moved counts: a click, or the
+        /// first click of a double click, does not.
+        private var sizeAtDragStart: CGFloat?
+
+        init(share: CGFloat) {
+            startShare = share
+        }
+
+        /// Lays the views out again once the content has been updated, for a fitted size.
+        func relayoutSoon(_ splitView: NSSplitView) {
+            DispatchQueue.main.async { [weak splitView] in
+                guard let splitView else { return }
+                self.sizeAtDragStart = nil
+                self.splitView(splitView, resizeSubviewsWithOldSize: splitView.bounds.size)
+            }
+        }
+
+        /// Called only while the divider is dragged.
+        func splitView(_ splitView: NSSplitView, constrainSplitPosition proposedPosition: CGFloat,
+                       ofSubviewAt dividerIndex: Int) -> CGFloat {
+            if sizeAtDragStart == nil, let first = splitView.subviews.first {
+                sizeAtDragStart = splitView.isVertical ? first.frame.width : first.frame.height
+            }
+            return proposedPosition
+        }
+
+        func splitViewDidResizeSubviews(_ notification: Notification) {
+            guard let start = sizeAtDragStart, let splitView = notification.object as? NSSplitView,
+                  let first = splitView.subviews.first
+            else { return }
+            sizeAtDragStart = nil
+            let available = length(of: splitView) - splitView.dividerThickness
+            let size = splitView.isVertical ? first.frame.width : first.frame.height
+            guard available > 0, abs(size - start) >= 1 else { return }
+            dividerMoved?(size / available)
+        }
+
+        /// A divider of one point is hard to hit; it can be grabbed a few points either side.
+        func splitView(_ splitView: NSSplitView, effectiveRect proposedEffectiveRect: NSRect,
+                       forDrawnRect drawnRect: NSRect, ofDividerAt dividerIndex: Int) -> NSRect {
+            splitView.isVertical ? drawnRect.insetBy(dx: -4, dy: 0) : drawnRect.insetBy(dx: 0, dy: -4)
+        }
 
         func splitView(_ splitView: NSSplitView, constrainMinCoordinate proposedMinimumPosition: CGFloat,
                        ofSubviewAt dividerIndex: Int) -> CGFloat {
@@ -482,8 +563,8 @@ private struct SplitContainer<First: View, Second: View>: NSViewRepresentable {
             min(proposedMaximumPosition, length(of: splitView) - splitView.dividerThickness - minimum)
         }
 
-        /// Keeps the share of each half when the window is resized, without letting either
-        /// become smaller than the minimum.
+        /// Keeps the share of each half when the window is resized, or the fitted size of the
+        /// first view, without letting either become smaller than the minimum.
         func splitView(_ splitView: NSSplitView, resizeSubviewsWithOldSize oldSize: NSSize) {
             let views = splitView.subviews
             guard views.count == 2 else { return splitView.adjustSubviews() }
@@ -492,9 +573,16 @@ private struct SplitContainer<First: View, Second: View>: NSViewRepresentable {
             let available = max(length(of: splitView) - divider, 0)
             let oldAvailable = (vertical ? oldSize.width : oldSize.height) - divider
             let oldFirst = vertical ? views[0].frame.width : views[0].frame.height
-            let share = startsHalved || oldAvailable <= 0 ? 0.5 : oldFirst / oldAvailable
-            if available > 0 { startsHalved = false }
-            let first = min(max((available * share).rounded(), minimum), max(available - minimum, 0))
+            var wanted: CGFloat
+            if let fitShare, let content = Self.contentLength(of: views[0]) {
+                // A little room below the last row, so it is not taken for the view below.
+                wanted = min(content + 10, available * fitShare)
+            } else {
+                let share = startShare ?? (oldAvailable > 0 ? oldFirst / oldAvailable : 0.5)
+                wanted = (available * share).rounded()
+            }
+            if available > 0 { startShare = nil }
+            let first = min(max(wanted, minimum), max(available - minimum, 0))
             let bounds = splitView.bounds
             if vertical {
                 views[0].frame = NSRect(x: 0, y: 0, width: first, height: bounds.height)
@@ -505,9 +593,48 @@ private struct SplitContainer<First: View, Second: View>: NSViewRepresentable {
             }
         }
 
+        /// Height of the rows of the list in a view, with the room the list keeps above and
+        /// below them, as under the toolbar.
+        private static func contentLength(of view: NSView) -> CGFloat? {
+            guard let scrollView = first(NSScrollView.self, in: view),
+                  let table = first(NSTableView.self, in: scrollView),
+                  table.numberOfRows > 0
+            else { return nil }
+            let rows = table.rect(ofRow: table.numberOfRows - 1).maxY
+            return rows + scrollView.contentInsets.top + scrollView.contentInsets.bottom
+        }
+
+        private static func first<T: NSView>(_ type: T.Type, in view: NSView) -> T? {
+            for subview in view.subviews {
+                if let match = subview as? T { return match }
+                if let match = first(type, in: subview) { return match }
+            }
+            return nil
+        }
+
         private func length(of splitView: NSSplitView) -> CGFloat {
             splitView.isVertical ? splitView.bounds.width : splitView.bounds.height
         }
+    }
+}
+
+/// Split view that reports a double click on its divider.
+final class ReaderSplitView: NSSplitView {
+    var dividerDoubleClicked: (() -> Void)?
+
+    override func mouseDown(with event: NSEvent) {
+        if event.clickCount == 2, let action = dividerDoubleClicked, subviews.count == 2 {
+            let point = convert(event.locationInWindow, from: nil)
+            let first = subviews[0].frame
+            let divider = isVertical
+                ? NSRect(x: first.maxX - 4, y: 0, width: dividerThickness + 8, height: bounds.height)
+                : NSRect(x: 0, y: first.maxY - 4, width: bounds.width, height: dividerThickness + 8)
+            if divider.contains(point) {
+                action()
+                return
+            }
+        }
+        super.mouseDown(with: event)
     }
 }
 

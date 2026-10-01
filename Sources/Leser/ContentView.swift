@@ -143,6 +143,12 @@ struct ReaderView: View {
         }
         .focusedSceneValue(\.viewer, model)
         .focusedSceneValue(\.reader, state)
+        .sheet(item: Binding(
+            get: { state.bookmarkDraft },
+            set: { state.bookmarkDraft = $0 }
+        )) { draft in
+            AddBookmarkView(draft: draft) { state.bookmarkDraft = nil }
+        }
         .sheet(isPresented: Binding(
             get: { state.documentInfo != nil },
             set: { if !$0 { state.documentInfo = nil } }

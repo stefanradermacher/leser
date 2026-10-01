@@ -42,6 +42,7 @@ enum Preferences {
             showSingleTabBarKey: false,
             reloadOnChangeKey: true,
             searchFromCurrentPageKey: true,
+            BookmarkPreferences.showKey: true,
         ])
     }
 
@@ -107,18 +108,30 @@ enum Preferences {
 
     private static let maxStoredPositions = 200
 
-    static func readingPosition(for path: String) -> ReadingPosition? {
-        positions()[path]
+    /// The reading position stored for a document, see `DocumentKey`. Positions stored by older
+    /// versions under the file path move to the document's key the first time it is opened, so
+    /// the paths, with the user's name in them, disappear over time.
+    static func readingPosition(for key: String, legacyPath: String?) -> ReadingPosition? {
+        var all = positions()
+        if let position = all[key] { return position }
+        guard let legacyPath, let position = all.removeValue(forKey: legacyPath) else { return nil }
+        all[key] = position
+        store(all)
+        return position
     }
 
-    static func setReadingPosition(_ position: ReadingPosition, for path: String) {
+    static func setReadingPosition(_ position: ReadingPosition, for key: String) {
         var all = positions()
-        all[path] = position
+        all[key] = position
         if all.count > maxStoredPositions {
             // Forget the documents read longest ago.
             let oldest = all.sorted { $0.value.date < $1.value.date }.prefix(all.count - maxStoredPositions)
             oldest.forEach { all.removeValue(forKey: $0.key) }
         }
+        store(all)
+    }
+
+    private static func store(_ all: [String: ReadingPosition]) {
         if let data = try? JSONEncoder().encode(all) {
             UserDefaults.standard.set(data, forKey: positionsKey)
         }

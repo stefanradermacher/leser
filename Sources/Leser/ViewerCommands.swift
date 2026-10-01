@@ -19,6 +19,7 @@ struct ViewerCommands: Commands {
     @FocusedValue(\.viewer) private var viewer
     @FocusedValue(\.reader) private var reader
     @Environment(\.openWindow) private var openWindow
+    @AppStorage(BookmarkPreferences.showKey) private var showsBookmarks = true
 
     var body: some Commands {
         CommandGroup(replacing: .appInfo) {
@@ -77,6 +78,10 @@ struct ViewerCommands: Commands {
                 .keyboardShortcut(KeyEquivalent(Character("\(index + 1)")), modifiers: [.command, .control])
                 .disabled(reader == nil)
             }
+            Toggle("Lesezeichen", isOn: $showsBookmarks)
+                .keyboardShortcut("3", modifiers: [.command, .control])
+            Button("Lesezeichen-Bereich automatisch anpassen") { viewer?.bookmarks?.setPaneShare(nil) }
+                .disabled(!showsBookmarks || viewer?.bookmarks?.paneShare == nil)
             Divider()
             Button("Originalgröße") { viewer?.setZoom(1) }
                 .keyboardShortcut("0")
@@ -143,6 +148,20 @@ struct ViewerCommands: Commands {
             Button("Gehe zu Seite …") { reader?.requestGoToPage() }
                 .keyboardShortcut("g", modifiers: [.command, .option])
                 .disabled(viewer == nil)
+        }
+
+        CommandMenu("Lesezeichen") {
+            Button("Lesezeichen hinzufügen …") { reader?.requestBookmark() }
+                .keyboardShortcut("d")
+                .disabled(viewer?.bookmarks == nil)
+            if let viewer, let bookmarks = viewer.bookmarks, !bookmarks.items.isEmpty {
+                Divider()
+                ForEach(bookmarks.items) { bookmark in
+                    Button { viewer.goTo(bookmark) } label: {
+                        Text(verbatim: "\(bookmark.name) – \(viewer.label(ofPage: bookmark.page))")
+                    }
+                }
+            }
         }
     }
 

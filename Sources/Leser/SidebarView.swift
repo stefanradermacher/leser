@@ -39,7 +39,33 @@ struct SidebarView: View {
     let model: ViewerModel
     let state: ReaderState
 
+    @AppStorage(BookmarkPreferences.showKey) private var showsBookmarks = true
+
+    /// With bookmarks, they are on top and the outline or the thumbnails below. The area of
+    /// the bookmarks fits itself to them, up to half the sidebar, until the reader moves the
+    /// divider; a double click on it fits it again. Both are kept per document.
     var body: some View {
+        if showsBookmarks, let list = model.bookmarks, !list.items.isEmpty {
+            SplitContainer(
+                axis: .stacked, minimum: 60,
+                initialShare: list.paneShare.map { min(max($0, 0.1), 0.9) } ?? 0.3,
+                fitsFirstToContent: list.paneShare == nil ? 0.5 : nil,
+                contentRevision: list.items.count,
+                dividerMoved: { list.setPaneShare($0) },
+                dividerDoubleClicked: { list.setPaneShare(nil) },
+                // The split view's own divider does not show on the glass of the sidebar.
+                first: BookmarkListView(model: model, list: list)
+                    .overlay(alignment: .bottom) { Divider() },
+                second: contents
+            )
+            // A new split view for another document, so the list starts at its own size.
+            .id(ObjectIdentifier(list))
+        } else {
+            contents
+        }
+    }
+
+    private var contents: some View {
         Group {
             switch state.sidebarMode {
             case .outline: OutlineListView(model: model, state: state)
@@ -231,6 +257,11 @@ struct OutlineRow: View {
         // the start of the entry, for instance back to the beginning of the current chapter.
         .contentShape(Rectangle())
         .simultaneousGesture(TapGesture().onEnded { model.selectOutline(node.id) })
+        .contextMenu {
+            if node.pageIndex != nil, model.bookmarks != nil {
+                Button("Als Lesezeichen hinzufügen") { model.addBookmark(for: node) }
+            }
+        }
     }
 }
 

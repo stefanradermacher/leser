@@ -68,6 +68,8 @@ struct OutlineNode: Identifiable {
     let title: String
     let pageIndex: Int?
     let pageLabel: String?
+    /// Where on the page the entry points, in PDF coordinates, if the PDF says so.
+    let point: CGPoint?
     let children: [OutlineNode]
 }
 
@@ -138,8 +140,14 @@ final class ViewerModel {
     @ObservationIgnored private var outlineNodes: [Int: OutlineNode] = [:]
     @ObservationIgnored private var requestedScale: CGFloat?
     @ObservationIgnored private var didInitialLayout = false
-    /// Path of the PDF file, used to remember the reading position.
-    @ObservationIgnored private let filePath: String?
+    /// Identifies the document for its bookmarks and reading position, see `DocumentKey`.
+    let documentKey: String?
+    /// Whether this view remembers the reading position: only the main view of a window does.
+    @ObservationIgnored private let remembersPosition: Bool
+    /// Path under which older versions stored the reading position, to take it over once.
+    @ObservationIgnored private let legacyPath: String?
+    /// The bookmarks of the document, shared with every other view of it.
+    let bookmarks: BookmarkList?
     @ObservationIgnored nonisolated(unsafe) private var observers: [NSObjectProtocol] = []
     /// Page shown first when no reading position is remembered.
     @ObservationIgnored private let startPage: Int
@@ -164,7 +172,10 @@ final class ViewerModel {
     ) {
         self.document = document
         self.pageCount = document.pageCount
-        self.filePath = fileURL?.standardizedFileURL.path
+        documentKey = DocumentKey.key(for: document, fileURL: fileURL ?? location)
+        remembersPosition = fileURL != nil
+        legacyPath = fileURL?.standardizedFileURL.path
+        bookmarks = documentKey.map(BookmarkList.list(for:))
         self.displayName = displayName ?? fileURL?.lastPathComponent ?? document.documentURL?.lastPathComponent ?? String(localized: "Dokument")
         self.location = location ?? fileURL ?? document.documentURL
         self.startPage = startPage
@@ -379,8 +390,7 @@ final class ViewerModel {
             if let page = document.page(at: index) {
                 pdfView.go(to: PDFDestination(page: page, at: restoring.point))
             }
-        } else if Preferences.rememberPosition, let filePath,
-           let saved = Preferences.readingPosition(for: filePath),
+        } else if let saved = savedReadingPosition(),
            let page = document.page(at: saved.page) {
             pdfView.go(to: PDFDestination(page: page, at: CGPoint(x: saved.x, y: saved.y)))
         } else if let first = document.page(at: startPage) ?? document.page(at: 0) {
@@ -423,8 +433,14 @@ final class ViewerModel {
         }
     }
 
+    /// The stored reading position, if this view remembers one.
+    func savedReadingPosition() -> Preferences.ReadingPosition? {
+        guard Preferences.rememberPosition, remembersPosition, let documentKey else { return nil }
+        return Preferences.readingPosition(for: documentKey, legacyPath: legacyPath)
+    }
+
     func saveReadingPosition() {
-        guard didInitialLayout, Preferences.rememberPosition, let filePath,
+        guard didInitialLayout, Preferences.rememberPosition, remembersPosition, let documentKey,
               let destination = pdfView.currentDestination,
               let page = destination.page
         else { return }
@@ -432,7 +448,7 @@ final class ViewerModel {
         guard index != NSNotFound else { return }
         Preferences.setReadingPosition(
             .init(page: index, x: destination.point.x, y: destination.point.y, date: .now, split: splitPosition?()),
-            for: filePath
+            for: documentKey
         )
     }
 
@@ -471,7 +487,8 @@ final class ViewerModel {
                 let id = nextID
                 nextID += 1
 
-                let page = child.destination?.page ?? (child.action as? PDFActionGoTo)?.destination.page
+                let destination = child.destination ?? (child.action as? PDFActionGoTo)?.destination
+                let page = destination?.page
                 let index = page.map { document.index(for: $0) }.flatMap { $0 == NSNotFound ? nil : $0 }
                 let title = (child.label ?? "")
                     .components(separatedBy: .newlines)
@@ -486,6 +503,7 @@ final class ViewerModel {
                     title: title.isEmpty ? String(localized: "Ohne Titel") : title,
                     pageIndex: index,
                     pageLabel: page?.label ?? index.map { "\($0 + 1)" },
+                    point: destination.flatMap { Self.specifiedPoint(of: $0) },
                     children: children(of: child)
                 )
                 outlineNodes[id] = node
@@ -493,6 +511,77 @@ final class ViewerModel {
             }
         }
         return children(of: root)
+    }
+
+    /// The point of a destination, unless the PDF left it open ("anywhere on the page").
+    private static func specifiedPoint(of destination: PDFDestination) -> CGPoint? {
+        let point = destination.point
+        let unspecified = CGFloat(kPDFDestinationUnspecifiedValue)
+        guard point.y != unspecified, point.y.isFinite else { return nil }
+        return CGPoint(x: point.x == unspecified || !point.x.isFinite ? 0 : point.x, y: point.y)
+    }
+
+    // MARK: - Bookmarks
+
+    /// The label of a page as printed on it, otherwise its number.
+    func label(ofPage index: Int) -> String {
+        index < pageCount ? pageLabels[index] : "\(index + 1)"
+    }
+
+    func goTo(_ bookmark: Bookmark) {
+        guard let page = document.page(at: min(max(bookmark.page, 0), pageCount - 1)) else { return }
+        pdfView.go(to: PDFDestination(page: page, at: CGPoint(x: bookmark.x, y: bookmark.y)))
+    }
+
+    /// Adds the place an outline entry points to, under the entry's name.
+    func addBookmark(for node: OutlineNode) {
+        guard let page = node.pageIndex, let bookmarks else { return }
+        bookmarks.add(name: node.title, page: page, point: node.point ?? topOfPage(page))
+        BookmarkPreferences.reveal()
+    }
+
+    /// A new bookmark for the place shown at the top of the view.
+    func bookmarkDraftForCurrentPlace() -> BookmarkDraft? {
+        guard let destination = pdfView.currentDestination, let page = destination.page else { return nil }
+        let index = document.index(for: page)
+        guard index != NSNotFound else { return nil }
+        return bookmarkDraft(page: index, point: destination.point)
+    }
+
+    /// A new bookmark for a place on a page. Suggested is the outline entry the place belongs
+    /// to; the menu also offers the other entries on the page and the page itself.
+    func bookmarkDraft(page: Int, point: CGPoint) -> BookmarkDraft? {
+        guard bookmarks != nil else { return nil }
+        var entries: [OutlineNode] = []
+        func flatten(_ nodes: [OutlineNode]) {
+            for node in nodes {
+                if node.pageIndex != nil { entries.append(node) }
+                flatten(node.children)
+            }
+        }
+        flatten(outline)
+
+        // An entry is at or before the place if it is on an earlier page, or above it.
+        func isBefore(_ node: OutlineNode) -> Bool {
+            guard let index = node.pageIndex else { return false }
+            if index != page { return index < page }
+            return (node.point?.y ?? .greatestFiniteMagnitude) >= point.y - 2
+        }
+        let current = entries.last(where: isBefore)
+        let onPage = entries.filter { $0.pageIndex == page }
+
+        let pageName = pageLabels[page].allSatisfy(\.isNumber)
+            ? String(localized: "Seite \(pageLabels[page])")
+            : pageLabels[page]
+        var names: [String] = []
+        for name in [current?.title] + onPage.map(\.title) + [pageName] {
+            if let name, !names.contains(name) { names.append(name) }
+        }
+        return BookmarkDraft(model: self, page: page, point: point, names: names)
+    }
+
+    private func topOfPage(_ index: Int) -> CGPoint {
+        CGPoint(x: 0, y: document.page(at: index)?.bounds(for: .cropBox).maxY ?? 0)
     }
 
     /// Highlights the outline entry for the current page among the visible (expanded) entries.
@@ -713,6 +802,27 @@ final class ReaderPDFView: PDFView {
     var onFocus: (() -> Void)?
     /// Called once the view is in a window.
     var onAttach: (() -> Void)?
+    /// Called to add a bookmark at a point on a page (page index, point in page coordinates).
+    var onAddBookmark: ((Int, CGPoint) -> Void)?
+
+    /// PDFKit's context menu, with a bookmark for the place clicked at.
+    override func menu(for event: NSEvent) -> NSMenu? {
+        let menu = super.menu(for: event) ?? NSMenu()
+        let location = convert(event.locationInWindow, from: nil)
+        guard onAddBookmark != nil, let document,
+              let page = page(for: location, nearest: true)
+        else { return menu }
+        let index = document.index(for: page)
+        guard index != NSNotFound else { return menu }
+        // A little above the click, so that the line clicked at is in view when going there.
+        let clicked = convert(location, to: page)
+        let point = CGPoint(x: 0, y: min(clicked.y + 14, page.bounds(for: displayBox).maxY))
+        if !menu.items.isEmpty { menu.addItem(.separator()) }
+        menu.addItem(ActionMenuItem(String(localized: "Lesezeichen hinzufügen …")) { [weak self] in
+            self?.onAddBookmark?(index, point)
+        })
+        return menu
+    }
 
     override func viewDidMoveToWindow() {
         super.viewDidMoveToWindow()

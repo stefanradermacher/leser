@@ -122,6 +122,28 @@
         }
       }
     },
+    "Abbrechen": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Cancel"
+          }
+        }
+      }
+    },
+    "Als Lesezeichen hinzufügen": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Add as Bookmark"
+          }
+        }
+      }
+    },
     "Als Standard festlegen": {
       "extractionState": "manual",
       "localizations": {
@@ -815,6 +837,17 @@
         }
       }
     },
+    "Hinzufügen": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Add"
+          }
+        }
+      }
+    },
     "Hochformat": {
       "extractionState": "manual",
       "localizations": {
@@ -1045,6 +1078,50 @@
         }
       }
     },
+    "Lesezeichen": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Bookmarks"
+          }
+        }
+      }
+    },
+    "Lesezeichen hinzufügen": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Add Bookmark"
+          }
+        }
+      }
+    },
+    "Lesezeichen hinzufügen …": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Add Bookmark…"
+          }
+        }
+      }
+    },
+    "Lesezeichen-Bereich automatisch anpassen": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Fit Bookmarks Area to Contents"
+          }
+        }
+      }
+    },
     "Letzte Seite": {
       "extractionState": "manual",
       "localizations": {
@@ -1052,6 +1129,17 @@
           "stringUnit": {
             "state": "translated",
             "value": "Last Page"
+          }
+        }
+      }
+    },
+    "Löschen": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Delete"
           }
         }
       }
@@ -1085,6 +1173,28 @@
           "stringUnit": {
             "state": "translated",
             "value": "Name"
+          }
+        }
+      }
+    },
+    "Namen aus der Gliederung oder der Seite wählen": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Choose a name from the outline or the page"
+          }
+        }
+      }
+    },
+    "Namensvorschläge": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Name Suggestions"
           }
         }
       }
@@ -1657,6 +1767,17 @@
           "stringUnit": {
             "state": "translated",
             "value": "To make Leser the default, the app has to be in the Applications folder."
+          }
+        }
+      }
+    },
+    "Umbenennen": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Rename"
           }
         }
       }
