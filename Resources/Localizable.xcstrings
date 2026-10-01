@@ -221,6 +221,28 @@
         }
       }
     },
+    "Auf Papierformat skalieren": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Scale to paper size"
+          }
+        }
+      }
+    },
+    "Aus": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Off"
+          }
+        }
+      }
+    },
     "Autor": {
       "extractionState": "manual",
       "localizations": {
@@ -485,6 +507,17 @@
         }
       }
     },
+    "Ein": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "On"
+          }
+        }
+      }
+    },
     "Ein Abendessen": {
       "extractionState": "manual",
       "localizations": {
@@ -745,6 +778,17 @@
           "stringUnit": {
             "state": "translated",
             "value": "Outline, otherwise thumbnails"
+          }
+        }
+      }
+    },
+    "Große Seiten verkleinern": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Shrink large pages"
           }
         }
       }
@@ -1375,6 +1419,17 @@
         }
       }
     },
+    "Seiten automatisch drehen": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Rotate pages automatically"
+          }
+        }
+      }
+    },
     "Seitenbreite": {
       "extractionState": "manual",
       "localizations": {
@@ -1437,6 +1492,28 @@
           "stringUnit": {
             "state": "translated",
             "value": "Sidebar shows"
+          }
+        }
+      }
+    },
+    "Seitenskalierung": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Page scaling"
+          }
+        }
+      }
+    },
+    "Seitenskalierung:": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Page scaling:"
           }
         }
       }

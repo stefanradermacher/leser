@@ -20,6 +20,7 @@ import UniformTypeIdentifiers
 struct LeserApp: App {
     init() {
         Preferences.register()
+        PrintOptions.registerDefaults()
         TipJar.shared.startListening()
         MenuCleaner.install()
     }

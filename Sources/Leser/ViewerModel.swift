@@ -408,12 +408,14 @@ final class ViewerModel {
     func print() {
         let info = (NSPrintInfo.shared.copy() as? NSPrintInfo) ?? NSPrintInfo.shared
         guard canPrint,
-              let operation = document.printOperation(for: info, scalingMode: .pageScaleDownToFit, autoRotate: true)
+              let operation = document.printOperation(for: info, scalingMode: PrintOptions.scaling,
+                                                       autoRotate: PrintOptions.autoRotate)
         else { return }
         operation.jobTitle = displayName
         operation.showsPrintPanel = true
         operation.showsProgressPanel = true
         operation.printPanel.options.formUnion([.showsPageRange, .showsCopies, .showsPaperSize, .showsOrientation, .showsScaling, .showsPreview])
+        operation.printPanel.addAccessoryController(PrintOptions(printInfo: operation.printInfo))
         if let window = pdfView.window {
             operation.runModal(for: window, delegate: nil, didRun: nil, contextInfo: nil)
         } else {
