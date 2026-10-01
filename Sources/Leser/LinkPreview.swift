@@ -16,32 +16,42 @@ import AppKit
 import PDFKit
 
 /// Shows where a link inside the document leads while the pointer rests on it, without going
-/// there: the target page from the place the link points to, in a small popover.
+/// there: the target page from the place the link points to, in a small popover. Page
+/// references in the text, like "(page 359)", count as links too.
 @MainActor
 final class LinkPreview {
-    private weak var view: PDFView?
+    /// Something the pointer can rest on that leads elsewhere in the document.
+    private struct Target {
+        /// Tells targets apart: the link annotation, or the reference's page and position.
+        let id: AnyHashable
+        let page: PDFPage
+        /// The area on the page the popover points at, in page coordinates.
+        let bounds: CGRect
+        let destination: PDFDestination
+    }
+
+    private weak var view: ReaderPDFView?
     private var timer: Timer?
     private var popover: NSPopover?
-    /// The link the pointer is on, or whose preview is shown.
-    private var current: PDFAnnotation?
+    /// The target the pointer is on, or whose preview is shown.
+    private var current: Target?
 
     /// How long the pointer has to rest on a link before its preview appears.
     private static let delay: TimeInterval = 0.5
     /// Width of the preview in points.
     private static let width: CGFloat = 420
 
-    init(view: PDFView) {
+    init(view: ReaderPDFView) {
         self.view = view
     }
 
     /// Follows the pointer: starts the preview for a link it rests on, ends it when it leaves.
     func pointerMoved(to location: NSPoint) {
-        let link = internalLink(at: location)
-        if link != nil { removeLinkToolTips() }
-        guard link !== current else { return }
+        let target = target(at: location)
+        guard target?.id != current?.id else { return }
         close()
-        current = link
-        guard link != nil else { return }
+        current = target
+        guard target != nil else { return }
         timer = Timer.scheduledTimer(withTimeInterval: Self.delay, repeats: false) { [weak self] _ in
             MainActor.assumeIsolated { self?.show() }
         }
@@ -57,9 +67,7 @@ final class LinkPreview {
     }
 
     private func show() {
-        guard let view, let link = current, let page = link.page,
-              let destination = Self.destination(of: link),
-              let image = Self.image(of: destination)
+        guard let view, let target = current, let image = Self.image(of: target.destination)
         else { return }
 
         let imageView = NSImageView(image: image)
@@ -74,7 +82,7 @@ final class LinkPreview {
         popover.contentSize = image.size
         popover.behavior = .applicationDefined
         popover.animates = true
-        let anchor = view.convert(link.bounds, from: page)
+        let anchor = view.convert(target.bounds, from: target.page)
         popover.show(relativeTo: anchor, of: view, preferredEdge: .maxY)
         self.popover = popover
     }
@@ -90,6 +98,24 @@ final class LinkPreview {
             view.subviews.forEach(remove)
         }
         if let documentView = view?.documentView { remove(in: documentView) }
+    }
+
+    /// A link or page reference at a point of the view that leads somewhere in this document.
+    private func target(at location: NSPoint) -> Target? {
+        if let link = internalLink(at: location), let page = link.page,
+           let destination = Self.destination(of: link) {
+            removeLinkToolTips()
+            return Target(id: ObjectIdentifier(link), page: page, bounds: link.bounds,
+                          destination: destination)
+        }
+        guard let view, let (page, reference) = view.pageReference(at: location),
+              let targetPage = view.document?.page(at: reference.target)
+        else { return nil }
+        let unspecified = CGFloat(kPDFDestinationUnspecifiedValue)
+        let bounds = reference.bounds.dropFirst().reduce(reference.bounds[0]) { $0.union($1) }
+        return Target(id: [ObjectIdentifier(page), reference.location] as [AnyHashable],
+                      page: page, bounds: bounds,
+                      destination: PDFDestination(page: targetPage, at: CGPoint(x: unspecified, y: unspecified)))
     }
 
     /// A link at a point of the view that leads somewhere in this document.

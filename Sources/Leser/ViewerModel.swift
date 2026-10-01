@@ -818,9 +818,25 @@ final class ReaderPDFView: PDFView {
     /// Shows where a link in the document leads while the pointer rests on it.
     private lazy var linkPreview = LinkPreview(view: self)
 
+    /// Page references in the text, like "(page 359)", found while the pointer passes them.
+    private var pageReferences: PageReferences?
+    /// The page reference a click started on, followed if the click ends on it too.
+    private var clickedReference: (page: PDFPage, reference: PageReferences.Reference)?
+
+    /// The page reference in the text at a point of the view.
+    func pageReference(at location: NSPoint) -> (page: PDFPage, reference: PageReferences.Reference)? {
+        guard let document, let page = page(for: location, nearest: false) else { return nil }
+        if pageReferences?.document !== document { pageReferences = PageReferences(document: document) }
+        guard let reference = pageReferences?.reference(at: convert(location, to: page), on: page)
+        else { return nil }
+        return (page, reference)
+    }
+
     override func mouseMoved(with event: NSEvent) {
         super.mouseMoved(with: event)
-        linkPreview.pointerMoved(to: convert(event.locationInWindow, from: nil))
+        let location = convert(event.locationInWindow, from: nil)
+        linkPreview.pointerMoved(to: location)
+        if pageReference(at: location) != nil { NSCursor.pointingHand.set() }
     }
 
     override func mouseExited(with event: NSEvent) {
@@ -830,7 +846,32 @@ final class ReaderPDFView: PDFView {
 
     override func mouseDown(with event: NSEvent) {
         linkPreview.close()
+        let location = convert(event.locationInWindow, from: nil)
+        let plainClick = event.clickCount == 1
+            && event.modifierFlags.intersection([.command, .option, .control, .shift]).isEmpty
+        clickedReference = plainClick ? pageReference(at: location) : nil
         super.mouseDown(with: event)
+        // PDFKit may follow the mouse until it is released before returning.
+        if clickedReference != nil, NSEvent.pressedMouseButtons & 1 == 0, let window {
+            followClickedReference(endingAt: convert(window.mouseLocationOutsideOfEventStream, from: nil))
+        }
+    }
+
+    override func mouseUp(with event: NSEvent) {
+        super.mouseUp(with: event)
+        followClickedReference(endingAt: convert(event.locationInWindow, from: nil))
+    }
+
+    /// Goes to the page a reference names if a click on it ends there without selecting text.
+    private func followClickedReference(endingAt location: NSPoint) {
+        guard let clicked = clickedReference else { return }
+        clickedReference = nil
+        guard let (page, reference) = pageReference(at: location), page === clicked.page,
+              reference.location == clicked.reference.location,
+              currentSelection?.string?.isEmpty ?? true,
+              let target = document?.page(at: reference.target)
+        else { return }
+        go(to: target)
     }
 
     override func scrollWheel(with event: NSEvent) {
