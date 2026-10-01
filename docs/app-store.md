@@ -192,3 +192,10 @@ Die Reihenfolge ist wichtig, weil der erste Verbrauchsartikel nur zusammen mit e
 3. Im Entwurf prüfen, dass Version und alle Käufe enthalten sind, dann „Zur Prüfung übermitteln“.
 
 Version 1.0 (Build 26) mit den drei Trinkgeldern wurde am 25. September 2026 eingereicht.
+
+## Nach der Freigabe einer neuen Version
+
+- [ ] Webseite: In `projects/assets/js/app.js` des Homepage-Repos die Version in `VERSIONS` (Eintrag `leser`) anpassen. Sie erscheint dann in der Projektkarte und auf der Leser-Seite.
+- [ ] Die geänderte `app.js` hochladen.
+
+Der Link zum Store (`https://apps.apple.com/app/id6815862046`) bleibt bei Updates gleich.
