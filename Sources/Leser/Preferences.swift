@@ -43,6 +43,7 @@ enum Preferences {
             reloadOnChangeKey: true,
             searchFromCurrentPageKey: true,
             BookmarkPreferences.showKey: true,
+            PageTone.sepiaKey: false,
         ])
     }
 
@@ -235,6 +236,7 @@ struct SettingsView: View {
     @AppStorage(Preferences.showSingleTabBarKey) private var showSingleTabBar = false
     @AppStorage(Preferences.reloadOnChangeKey) private var reloadOnChange = true
     @AppStorage(Preferences.searchFromCurrentPageKey) private var searchFromCurrentPage = true
+    @AppStorage(PageTone.sepiaKey) private var sepia = false
 
     var body: some View {
         Form {
@@ -266,6 +268,13 @@ struct SettingsView: View {
                 Picker("Neue Dokumente öffnen", selection: $tabbing) {
                     ForEach(TabbingPreference.allCases) { Text($0.title).tag($0.rawValue) }
                 }
+            }
+            Section {
+                Toggle("Seiten in Sepia anzeigen", isOn: $sepia)
+            } footer: {
+                Text("Tönt die Seiten wie warmes Papier, angenehmer für langes Lesen. Drucken und Kopieren bleiben unverändert.")
+                    .font(.callout)
+                    .foregroundStyle(.secondary)
             }
             Section {
                 Toggle("Tableiste auch bei nur einem Dokument anzeigen", isOn: $showSingleTabBar)

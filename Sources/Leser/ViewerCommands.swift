@@ -20,6 +20,7 @@ struct ViewerCommands: Commands {
     @FocusedValue(\.reader) private var reader
     @Environment(\.openWindow) private var openWindow
     @AppStorage(BookmarkPreferences.showKey) private var showsBookmarks = true
+    @AppStorage(PageTone.sepiaKey) private var sepia = false
 
     var body: some Commands {
         CommandGroup(replacing: .appInfo) {
@@ -112,6 +113,8 @@ struct ViewerCommands: Commands {
                 set: { _ in reader?.setAxis(.stacked) }
             ))
             .disabled(reader == nil)
+            Divider()
+            Toggle("Sepia", isOn: $sepia)
             Divider()
             ForEach(Array(PageLayout.allCases.enumerated()), id: \.element) { index, layout in
                 Toggle(layout.title, isOn: Binding(

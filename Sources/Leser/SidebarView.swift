@@ -131,7 +131,23 @@ final class SidebarThumbnailView: PDFThumbnailView {
 
     override func viewDidMoveToWindow() {
         super.viewDidMoveToWindow()
-        if window != nil { revealCurrentPageSoon() }
+        guard window != nil else { return }
+        revealCurrentPageSoon()
+        PageTone.apply(to: self)
+        if toneObserver == nil {
+            toneObserver = NotificationCenter.default.addObserver(
+                forName: UserDefaults.didChangeNotification, object: UserDefaults.standard, queue: .main
+            ) { [weak self] _ in
+                MainActor.assumeIsolated { PageTone.apply(to: self) }
+            }
+        }
+    }
+
+    /// The thumbnails are tinted like the pages.
+    private var toneObserver: NSObjectProtocol?
+
+    deinit {
+        if let toneObserver { NotificationCenter.default.removeObserver(toneObserver) }
     }
 
     /// The list follows page changes by itself, but starts at the top when it appears.

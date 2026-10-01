@@ -270,6 +270,12 @@ final class ViewerModel {
     }
 
 
+    // MARK: - Page tone
+
+    func applyPageTone() {
+        PageTone.apply(to: pdfView.documentView)
+    }
+
     // MARK: - Page layout
 
     func setPageLayout(_ layout: PageLayout) {
@@ -377,6 +383,7 @@ final class ViewerModel {
         pdfView.displaysAsBook = pageLayout == .book
         pdfView.displayMode = pageLayout.displayMode
         pdfView.layoutDocumentView()
+        applyPageTone()
 
         if fitMode == .none {
             applyScale(restoring?.scale ?? 1)
@@ -739,6 +746,9 @@ final class ViewerModel {
             model.onPageChange?()
         }
         observe(.PDFViewScaleChanged) { model, _ in model.scaleDidChange() }
+        observe(UserDefaults.didChangeNotification, of: UserDefaults.standard) { model, _ in
+            model.applyPageTone()
+        }
         observe(.PDFViewDisplayModeChanged) { model, _ in
             // Also changeable from the PDF view's context menu. Changes before the window is
             // shown are ignored; the chosen layout is applied again in the initial layout.

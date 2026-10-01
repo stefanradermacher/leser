@@ -1540,6 +1540,17 @@
         }
       }
     },
+    "Seiten in Sepia anzeigen": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Show Pages in Sepia"
+          }
+        }
+      }
+    },
     "Seitenbreite": {
       "extractionState": "manual",
       "localizations": {
@@ -1624,6 +1635,17 @@
           "stringUnit": {
             "state": "translated",
             "value": "Page scaling:"
+          }
+        }
+      }
+    },
+    "Sepia": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Sepia"
           }
         }
       }
@@ -1756,6 +1778,17 @@
           "stringUnit": {
             "state": "translated",
             "value": "Title"
+          }
+        }
+      }
+    },
+    "Tönt die Seiten wie warmes Papier, angenehmer für langes Lesen. Drucken und Kopieren bleiben unverändert.": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Tints the pages like warm paper, easier on the eyes for long reading. Printing and copying stay as they are."
           }
         }
       }
