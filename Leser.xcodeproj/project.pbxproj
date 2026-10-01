@@ -192,7 +192,6 @@
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 				);
-				MARKETING_VERSION = 1.0;
 				APP_DISPLAY_NAME = "Leser";
 				PRODUCT_BUNDLE_IDENTIFIER = com.stefanradermacher.leser;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -240,7 +239,6 @@
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 				);
-				MARKETING_VERSION = 1.0;
 				APP_DISPLAY_NAME = "Leser Debug";
 				PRODUCT_BUNDLE_IDENTIFIER = com.stefanradermacher.leser.debug;
 				PRODUCT_NAME = "$(TARGET_NAME)";
