@@ -23,7 +23,7 @@ Free, ad-free and collecting no data.
 
 # About This Manual
 
-Leser is a plain PDF viewer for macOS, made for reading. This manual describes in a few short chapters what Leser can do and how it is used.
+Leser is a PDF viewer for macOS, made for reading. This manual describes in a few short chapters what Leser can do and how it is used.
 
 It is also a sample document: several chapters with an outline, so sidebar, search and split view have something to work with. The page references in it work like links, too (see page {Links and References}).
 

@@ -23,15 +23,18 @@ Für Englisch (USA) ist „Leser“ in App Store Connect bereits reserviert. Bei
 
 ## Werbetext (170)
 
-Leser zeigt PDFs, schnell und ohne Ballast: Gliederung, Miniaturen, Suche, geteilte Ansicht. Kostenlos, werbefrei, ohne Datensammlung. Gemacht zum Lesen.
+Leser zeigt PDFs, schnell und ohne Ballast: Gliederung, Lesezeichen, Suche, geteilte Ansicht. Kostenlos, werbefrei, ohne Datensammlung. Gemacht zum Lesen.
 
 ## Beschreibung (4000)
 
-Leser ist ein schlichter PDF-Betrachter für den Mac, gemacht zum Lesen: aufgeräumt, schnell und ohne Ablenkung. Keine Anmeldung, keine Werbung.
+Leser ist ein PDF-Betrachter für den Mac, gemacht zum Lesen: aufgeräumt, schnell und ohne Ablenkung. Keine Anmeldung, keine Werbung.
 
 Lesen und navigieren
 • Gliederung und Seitenminiaturen in der Seitenleiste, beides mit einem Klick umschaltbar
-• Blättern mit den Pfeiltasten, Sprung zu einer Seitenzahl, zurück und vorwärts nach Links im Dokument
+• Lesezeichen für Stellen, zu denen du zurückkehren willst
+• Vorschau beim Zeigen auf einen Link; auch Seitenangaben wie „siehe Seite 12“ werden zu Links
+• Verweise auf andere Dokumente öffnen das Dokument an der genannten Seite
+• Blättern mit den Pfeiltasten, Sprung zu einer Seitenzahl wie im Buch, zurück und vorwärts nach einem Sprung, auch mit den Seitentasten der Maus
 • Fortlaufend, Einzelseite, Doppelseite oder Doppelseite mit einzelner erster Seite
 • Zoomstufen sowie Anpassen an Seitenbreite, Seitenhöhe oder ganze Seite
 
@@ -47,7 +50,10 @@ Zwei Stellen gleichzeitig
 Angenehm im Alltag
 • Merkt sich die zuletzt gelesene Stelle und die Fenstergröße
 • Lädt ein Dokument automatisch neu, wenn ein anderes Programm die Datei ändert, etwa beim Export oder bei LaTeX
-• Text markieren und kopieren, drucken, Dokumentinformationen einsehen
+• Kopierter Text kommt in Absätzen an, mit Fett und Kursiv
+• Drucken in Originalgröße oder an das Papier angepasst
+• Sepia-Ton für langes Lesen
+• Dokumentinformationen einsehen, Handbuch direkt in der App
 • Passwortgeschützte PDFs fragen beim Öffnen nach dem Passwort
 
 Ehrlich und offen
@@ -58,11 +64,34 @@ Ehrlich und offen
 
 ## Schlüsselwörter (100, mit Komma, ohne Leerzeichen)
 
-PDF,Viewer,Betrachter,lesen,Dokument,Gliederung,Miniaturen,Suche,Vorschau,werbefrei,Datenschutz
+PDF,Viewer,Betrachter,lesen,Dokument,Gliederung,Lesezeichen,Suche,Vorschau,werbefrei,Datenschutz
 
 ## Neue Funktionen (4000)
 
-Erste Version.
+Für Version 1.1. Ausführlich steht alles in `CHANGELOG.md` und `CHANGELOG.en.md`.
+
+Neu in Version 1.1
+
+• Lesezeichen: Stellen merken mit ⌘D oder per Rechtsklick, in einem eigenen Bereich über der Gliederung und im Menü „Lesezeichen“
+• Vorschau für Links: Ruht der Mauszeiger auf einem Link, zeigt Leser die Zielseite, ohne dass du die Seite verlässt
+• Seitenangaben wie „siehe Seite 12“ funktionieren wie Links, mit Vorschau und Sprung
+• Verweise auf andere Dokumente, etwa „(Titel, S. 42)“, öffnen das Dokument an der Seite; beim ersten Mal fragt Leser, welche Datei dazugehört
+• Zurück und vor mit den Seitentasten der Maus oder einer Wischbewegung
+• Sepia: Seiten wie warmes Papier
+• Das Handbuch direkt in der App unter „Hilfe“
+
+Verbessert
+
+• Kopierter Text kommt in Absätzen an, Fett und Kursiv bleiben erhalten
+• Drucken in Originalgröße, mit Optionen zum Verkleinern und Anpassen
+• Seitenzahlen wie im Buch, auch bei „Gehe zu Seite“
+• Die Suche beginnt auf der aktuellen Seite
+• Lesestelle und Lesezeichen bleiben, wenn du die Datei umbenennst oder verschiebst
+• Eine geteilte Ansicht öffnet beim Weiterlesen wieder geteilt
+• Einstellungen in Tabs
+• Kleinere Fehler in der Gliederung und beim Platzieren von Fenstern behoben
+
+Version 1.0: Erste Version.
 
 ## Englische Texte
 
@@ -74,15 +103,18 @@ Für die Sprachen „Englisch (USA)“ und „Englisch (UK)“ in App Store Conn
 
 **Werbetext (170):**
 
-Leser shows PDFs, fast and without clutter: outline, thumbnails, search, split view. Free, ad-free, no data collection. Made for reading.
+Leser shows PDFs, fast and without clutter: outline, bookmarks, search, split view. Free, ad-free, no data collection. Made for reading.
 
 **Beschreibung (4000):**
 
-Leser is a plain PDF viewer for the Mac, made for reading: tidy, fast and free of distractions. No sign-in, no ads.
+Leser is a PDF viewer for the Mac, made for reading: tidy, fast and free of distractions. No sign-in, no ads.
 
 Reading and navigating
 • Outline and page thumbnails in the sidebar, switched with a single click
-• Turn pages with the arrow keys, jump to a page number, go back and forward after following links in the document
+• Bookmarks for places you want to come back to
+• Preview when pointing at a link; page references such as “see page 12” become links too
+• References to other documents open the document at the page given
+• Turn pages with the arrow keys, jump to a page number as printed in the book, go back and forward after a jump, also with the side buttons of a mouse
 • Continuous, single page, two pages, or two pages with the first page alone
 • Zoom in steps or fit to page width, page height or the whole page
 
@@ -98,7 +130,10 @@ Two places at once
 Pleasant every day
 • Remembers the place you last read and the window size
 • Reloads a document by itself when another program changes the file, after an export or when a LaTeX document is typeset
-• Select and copy text, print, view document information
+• Copied text arrives in paragraphs, with bold and italic
+• Print at actual size or fitted to the paper
+• Sepia tone for long reading
+• View document information, manual right in the app
 • Password-protected PDFs ask for the password when opened
 
 Honest and open
@@ -109,9 +144,32 @@ Honest and open
 
 **Schlüsselwörter (100):**
 
-PDF,viewer,reader,document,outline,thumbnails,search,split view,preview,ad-free,privacy,simple
+PDF,viewer,reader,document,outline,bookmarks,search,split view,preview,ad-free,privacy,simple
 
-**Neue Funktionen:** First release.
+**Neue Funktionen (4000):**
+
+New in version 1.1
+
+• Bookmarks: keep places with ⌘D or a right-click, in an area of their own above the outline and in the “Bookmarks” menu
+• Link preview: when the pointer rests on a link, Leser shows the page it leads to without leaving yours
+• Page references such as “see page 12” work like links, with preview and jump
+• References to other documents, such as “(Title, p. 42)”, open the document at the page; the first time, Leser asks which file it is
+• Back and forward with the side buttons of a mouse or a swipe
+• Sepia: pages like warm paper
+• The manual right in the app under “Help”
+
+Improved
+
+• Copied text arrives in paragraphs, keeping bold and italic
+• Print at actual size, with options to shrink and fit
+• Page numbers as printed in the book, also in “Go to Page”
+• Search starts on the current page
+• Reading position and bookmarks stay when you rename or move the file
+• A split view opens split again when you continue reading
+• Settings in tabs
+• Small fixes in the outline and in placing windows
+
+Version 1.0: First release.
 
 ## In-App-Käufe
 
@@ -142,6 +200,8 @@ Leser ist ein reiner PDF-Betrachter und verändert Dokumente nie. Es gibt keine 
 Die drei In-App-Käufe sind freiwillige Trinkgelder für die Weiterentwicklung. Sie schalten keine Funktionen frei; alle Funktionen sind ohne Kauf verfügbar. Zu finden sind sie unter „Leser → Über Leser“ und „Hilfe → Leser unterstützen …“.
 
 Leser fragt an seltenen Stellen, ob es die Standard-App für PDFs werden soll. Die Frage erscheint als schmale Leiste im Dokumentfenster, erst nachdem an drei verschiedenen Tagen PDFs geöffnet wurden, höchstens zweimal insgesamt, und die eigentliche Umstellung bestätigt macOS selbst.
+
+Für Verweise auf andere Dokumente merkt sich Leser eine Datei, die der Nutzer dafür selbst ausgewählt hat, mit einem Security-Scoped Bookmark (`com.apple.security.files.bookmarks.app-scope`), nur lesend. Leser öffnet nie eine Datei, die der Nutzer nicht selbst gewählt hat; die Zuordnungen lassen sich in den Einstellungen unter „Verweise“ einsehen und entfernen.
 
 Zum Testen eignet sich jedes beliebige PDF; im Quellcode liegt `docs/Leser-Handbuch.pdf` mit Gliederung und dreizehn Seiten. Es ist zugleich das Dokument, das in den Screenshots zu sehen ist.
 

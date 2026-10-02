@@ -25,7 +25,7 @@ Kostenlos, werbefrei und ohne Datensammlung.
 
 # Über dieses Handbuch
 
-Leser ist ein schlichter PDF-Betrachter für macOS, gemacht zum Lesen. Dieses Handbuch beschreibt in wenigen Kapiteln, was Leser kann und wie es sich bedienen lässt.
+Leser ist ein PDF-Betrachter für macOS, gemacht zum Lesen. Dieses Handbuch beschreibt in wenigen Kapiteln, was Leser kann und wie es sich bedienen lässt.
 
 Es ist zugleich ein Beispieldokument: mehrere Kapitel mit Gliederung, damit sich die Seitenleiste, die Suche und die geteilte Ansicht daran ausprobieren lassen. Auch die Seitenangaben darin funktionieren wie Links (siehe Seite {Links und Verweise}).
 

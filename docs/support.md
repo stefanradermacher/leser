@@ -1,6 +1,6 @@
 # Hilfe zu Leser
 
-Leser ist ein schlichter PDF-Betrachter für macOS, gemacht zum Lesen.
+Leser ist ein PDF-Betrachter für macOS, gemacht zum Lesen.
 
 ## Erste Schritte
 

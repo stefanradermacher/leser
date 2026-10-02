@@ -650,6 +650,17 @@
         }
       }
     },
+    "Ein PDF-Betrachter für macOS, gemacht zum Lesen.\nAufgeräumt, schnell und ohne Ablenkung.": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "A PDF viewer for macOS, made for reading.\nTidy, fast and free of distractions."
+          }
+        }
+      }
+    },
     "Ein Trinkgeld ist in der Version aus dem App Store möglich.": {
       "extractionState": "manual",
       "localizations": {
@@ -668,17 +679,6 @@
           "stringUnit": {
             "state": "translated",
             "value": "Open another PDF in this view"
-          }
-        }
-      }
-    },
-    "Ein schlichter PDF-Betrachter für macOS.\nAufgeräumt, schnell und ohne Ablenkung.": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "A plain PDF viewer for macOS.\nTidy, fast and free of distractions."
           }
         }
       }

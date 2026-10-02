@@ -1,12 +1,12 @@
 # Leser
 
-Schlichter PDF-Betrachter für macOS 15+, gebaut mit SwiftUI und PDFKit. Er kann nur anzeigen, nichts bearbeiten.
+PDF-Betrachter für macOS 15+, gemacht zum Lesen und gebaut mit SwiftUI und PDFKit. Er kann nur anzeigen, nichts bearbeiten.
 
 Leser ist kostenlos, quelloffen (Apache-Lizenz 2.0, siehe `LICENSE`), werbefrei und übermittelt keine Daten: kein Tracking, keine Analyse, keine eigenen Netzwerkverbindungen. Es nutzt ausschließlich Apple-Frameworks. Wer die Entwicklung unterstützen möchte, kann unter **Leser → Über Leser** ein freiwilliges Trinkgeld über den App Store geben; es schaltet nichts frei.
 
 Nicht Teil des lizenzierten Werks sind die Kennzeichen des Projekts: der Name „Leser“, das App- und das Dokumentsymbol, die Monogramme und `scripts/make_icon.swift`, das die Symbole zeichnet. Was damit erlaubt ist, steht in `TRADEMARKS.md` — kurz gesagt: über Leser reden und die unveränderte App weitergeben ja, eine Abspaltung unter diesem Namen nein. `NOTICE` hält den Umfang fest und ist nach Abschnitt 4(d) der Lizenz bei jeder Weitergabe mitzuführen. Der Code selbst bleibt frei verwendbar.
 
-Für die Veröffentlichung im Mac App Store liegen unter `docs/` die vorbereiteten Texte (`app-store.md`), die Datenschutzerklärung (`datenschutz.md`), die Support-Seite (`support.md`) und die Screenshots.
+Für die Veröffentlichung im Mac App Store liegen unter `docs/` die vorbereiteten Texte (`app-store.md`), die Datenschutzerklärung (`datenschutz.md`), die Support-Seite (`support.md`) und die Screenshots. Was sich von Version zu Version geändert hat, steht in `CHANGELOG.md` (englisch: `CHANGELOG.en.md`).
 
 Die Oberfläche gibt es auf Deutsch und Englisch. Die Texte liegen im String-Katalog `Resources/Localizable.xcstrings`; die Schlüssel sind die deutschen Sätze. Neue Texte holt man mit `xcodebuild -exportLocalizations -project Leser.xcodeproj -localizationPath <Ordner> -exportLanguage en` heraus und trägt die Übersetzung im Katalog nach.
 
@@ -69,9 +69,11 @@ PDFs öffnen per Doppelklick („Öffnen mit“), per Drag & Drop aufs Dock-Symb
 | Seitenbreite / Seitenhöhe / Ganze Seite | ⌘1 / ⌘2 / ⌘3 |
 | Fortlaufend / Einzelseite / Doppelseite / Doppelseite (erste Seite einzeln) | ⌥⌘1 / ⌥⌘2 / ⌥⌘3 / ⌥⌘4 |
 | Vorherige / nächste Seite | ← / → oder ⌥⌘↑ / ⌥⌘↓ |
-| Erste / letzte Seite | ⌥⌘Pos1 / ⌥⌘Ende |
-| Zurück / Vorwärts (nach Link- oder Gliederungssprung) | ⌘[ / ⌘] |
+| Erste / letzte Seite | Pos1 / Ende oder ⌥⌘Pos1 / ⌥⌘Ende |
+| Zurück / Vorwärts (nach einem Sprung) | ⌘[ / ⌘], Seitentasten der Maus oder Wischen |
 | Gehe zu Seite … | ⌥⌘G |
+| Lesezeichen hinzufügen | ⌘D |
+| Lesezeichen ein-/ausblenden | ⌃⌘3 |
 | Ansicht teilen / geteilte Ansicht schließen | ⌃⌘T |
 | Dokumentinformationen | ⌘I |
 | Drucken / Papierformat | ⌘P / ⇧⌘P |
@@ -81,11 +83,37 @@ Die Anzeige (Fortlaufend, Einzelseite, Doppelseite) lässt sich über das Menü 
 
 ## Symbolleiste
 
-Wie in Vorschau steht die aktuelle Seite unter dem Dokumentnamen („Seite 3 von 18“). Die Symbolleiste zeigt drei Gruppen: Blättern (˄ ˅), Anzeige (Anzeigemodus, geteilte Ansicht) und Zoom (verkleinern, Zoomstufe mit Anpassen-Optionen, vergrößern), dazu „i“ für die Dokumentinformationen und die Suche. **Gehe zu Seite …** (⌥⌘G) öffnet unter den Blätterknöpfen ein Feld für die Seitenzahl.
+Unter dem Dokumentnamen steht die Position im Dokument („3 von 18“). Die Symbolleiste zeigt drei Gruppen: Blättern (˄, Seitenbezeichnung, ˅), Anzeige (Anzeigemodus, geteilte Ansicht) und Zoom (verkleinern, Zoomstufe mit Anpassen-Optionen, vergrößern), dazu die Suche. Zwischen den Blätterpfeilen steht die Seitenbezeichnung, wie sie das PDF festlegt, etwa „xi“ oder „12“, sonst die Seitenzahl. Ein Klick darauf oder **Gehe zu Seite …** (⌥⌘G) öffnet ein Feld, das Seitenbezeichnungen wie Seitenzahlen versteht.
 
 ## Seitenleiste
 
-Die Seitenleiste zeigt wahlweise die **Gliederung** oder **Miniaturen** aller Seiten; umschalten lässt sich mit dem Umschalter oben in der Seitenleiste oder über das Menü „Darstellung“. In den Miniaturen ist die aktuelle Seite markiert, ein Klick springt zur Seite. In einer geteilten Ansicht gehört die Seitenleiste zur aktiven Ansicht.
+Die Seitenleiste zeigt wahlweise die **Gliederung** oder **Miniaturen** aller Seiten; umschalten lässt sich mit dem Umschalter oben in der Seitenleiste oder über das Menü „Darstellung“. In den Miniaturen ist die aktuelle Seite markiert, ein Klick springt zur Seite. Hat ein Dokument Lesezeichen, stehen sie in einem eigenen Bereich darüber. In einer geteilten Ansicht gehört die Seitenleiste zur aktiven Ansicht.
+
+## Lesezeichen
+
+Lesezeichen merken sich Stellen in einem Dokument. Gespeichert werden sie in Leser, nicht im PDF. **Lesezeichen → Lesezeichen hinzufügen …** (⌘D) nimmt die Stelle oben im Fenster, ein Rechtsklick in die Seite genau diese Stelle; ein kleines Fenster schlägt als Namen die Gliederungsüberschrift der Stelle vor, die anderen Einträge der Seite und die Seitenbezeichnung stehen zur Auswahl. Über das Kontextmenü der Gliederung entsteht ein Lesezeichen direkt mit dem Namen des Eintrags.
+
+Die Lesezeichen stehen in einem Bereich über der Gliederung und im Menü „Lesezeichen“, nach ihrer Stelle im Dokument geordnet. Umbenennen per Doppelklick, ↩ oder Kontextmenü, löschen per ⌫ oder Kontextmenü. Der Bereich passt seine Höhe den Lesezeichen an; zieht man die Trennlinie, merkt sich Leser die Höhe für das Dokument, und ein Doppelklick auf die Linie oder **Darstellung → Lesezeichen-Bereich automatisch anpassen** stellt die Anpassung wieder her. **Darstellung → Lesezeichen** (⌃⌘3) blendet den Bereich aus und ein.
+
+Lesestelle und Lesezeichen hängen an der Kennung, die das erzeugende Programm ins PDF schreibt, nicht am Dateipfad: Umbenennen und Verschieben übersteht beides, und eine Kopie öffnet an derselben Stelle. PDFs ohne Kennung erkennt Leser an einer Prüfsumme ihres Inhalts.
+
+## Links und Verweise
+
+Ruht der Mauszeiger kurz auf einem Link ins selbe Dokument, zeigt ein kleines Fenster die Zielstelle, ohne dass man die Seite verlässt.
+
+**Seitenangaben** im Text wie „siehe Seite 12“, „(Seite 7)“ oder „on page 359“ behandelt Leser wie Links, mit derselben Vorschau und einem Sprung bei Klick. Gezählt wird nach den Seitenbezeichnungen des PDFs; hat es keine, nach der Position, aber nur, wenn die Zielseite die Zahl auch gedruckt trägt. Leser nimmt lieber eine Angabe nicht, als falsch zu springen: Steht ein fremder Titel davor oder danach, ist es kein Verweis ins eigene Dokument.
+
+**Verweise auf andere Dokumente** wie „(Atlas der Sterne, S. 42)“ oder ein kursiver Titel mit Seitenzahl öffnen das genannte Dokument an der Seite, je nach Einstellung in einem neuen Tab oder in der zweiten Ansicht. Beim ersten Klick fragt Leser, welche Datei zu dem Titel gehört, und merkt sie sich mit einem Security-Scoped Bookmark für alle Dokumente; danach zeigt auch hier die Vorschau die Zielseite. Echte PDF-Links in andere Dateien laufen genauso, mit dem Dateinamen als Titel. Ist das Dokument schon offen, springt Leser dort hin.
+
+Nach jedem Sprung führt **Gehe zu → Zurück** (⌘[) zurück, ebenso die Seitentasten einer Maus oder eine Wischbewegung.
+
+## Kopieren und Drucken
+
+Kopierter Text kommt in Absätzen an: Leser fügt die Zeilen wieder zusammen, wo das Layout es nahelegt, und setzt am Zeilenende getrennte Wörter wieder zusammen, auch über Spalten hinweg. Fett und Kursiv bleiben erhalten (als RTF), weiße Schrift wird schwarz.
+
+Der Druckdialog hat einen eigenen Abschnitt „Leser“: Originalgröße (Standard), Große Seiten verkleinern oder Auf Papierformat skalieren, dazu das automatische Drehen quer liegender Seiten. Leser merkt sich die Wahl für den nächsten Druck.
+
+**Darstellung → Sepia** tönt die Seiten wie warmes Papier; Drucken und Kopieren bleiben davon unberührt.
 
 ## Suche
 
@@ -113,7 +141,7 @@ Namen und Emoji stehen in der App und folgen deshalb ihrer Sprache; aus dem App 
 
 Zum Testen ohne echtes Geld liegt `Config/Leser.storekit` bei; das Schema „Leser“ nutzt sie, wenn die App in Xcode mit ⌘R gestartet wird. Builds, die nicht aus dem App Store oder Xcode kommen (z. B. über `build.sh`), zeigen statt der Knöpfe einen Hinweis.
 
-Dieselben Trinkgelder gibt es in einem eigenen kleinen Fenster über **Hilfe → Leser unterstützen …**. Das Hilfe-Menü enthält außerdem Links zur Projektseite auf GitHub und zum Melden von Fehlern und Ideen.
+Dieselben Trinkgelder gibt es in einem eigenen kleinen Fenster über **Hilfe → Leser unterstützen …**. Das Hilfe-Menü enthält außerdem das Handbuch (**Hilfe → Leser-Handbuch**, zur App-Sprache passend und offline) und Links zur Projektseite auf GitHub und zum Melden von Fehlern und Ideen.
 
 ## Dokumentinformationen
 
@@ -121,16 +149,29 @@ Dieselben Trinkgelder gibt es in einem eigenen kleinen Fenster über **Hilfe →
 
 ## Einstellungen
 
-Unter **Leser → Einstellungen …** (⌘,) steht ganz oben, welche App gerade PDFs öffnet, mit einem Knopf, um Leser zur Standard-App zu machen. Das geht nur, wenn Leser im Ordner „Programme“ liegt. Außerdem lässt sich dort festlegen, wie Dokumente geöffnet werden:
+Die Einstellungen (**Leser → Einstellungen …**, ⌘,) sind in drei Tabs geteilt.
+
+**Allgemein**
+
+- **Standard-App für PDF-Dokumente:** welche App gerade PDFs öffnet, mit einem Knopf, um Leser dazu zu machen. Das geht nur, wenn Leser im Ordner „Programme“ liegt.
+- **Neue Dokumente öffnen:** wie in den Systemeinstellungen (Standard), als Tab oder in einem neuen Fenster
+- **Tableiste auch bei nur einem Dokument anzeigen:** Standard: aus. Die Leiste erscheint dann erst ab zwei Tabs.
+- **An der zuletzt gelesenen Stelle weiterlesen:** merkt sich für bis zu 200 Dokumente die letzte Position (Standard: an), auch eine geteilte Ansicht desselben Dokuments mit Anordnung, Position der zweiten Hälfte und aktiver Hälfte. Zeigte die zweite Hälfte ein anderes Dokument, öffnet Leser wieder ungeteilt: Die Sandbox erlaubt nicht, eine andere Datei ohne erneute Auswahl zu öffnen. Beim Ausschalten werden die gespeicherten Stellen gelöscht.
+- **Dokument neu laden, wenn sich die Datei ändert:** Standard: an. Seite, Zoom, Anzeige und eine laufende Suche bleiben erhalten; das gilt auch für ein zweites Dokument in der geteilten Ansicht.
+- **Suche auf der aktuellen Seite beginnen:** Standard: an. Der erste gezeigte Treffer liegt auf der aktuellen Seite oder danach; ausgeschaltet beginnt die Suche am Anfang.
+
+**Darstellung**
 
 - **Anzeige:** zuletzt verwendet (Standard), Fortlaufend, Einzelseite, Doppelseite oder Doppelseite (erste Seite einzeln)
 - **Zoom:** Seitenbreite (Standard), Seitenhöhe, Ganze Seite oder Originalgröße
 - **Seitenleiste anzeigen:** wenn das Dokument eine Gliederung hat (Standard), immer oder nie
 - **Seitenleiste zeigt:** Gliederung, bei Dokumenten ohne Gliederung Miniaturen (Standard), oder immer Miniaturen
-- **Neue Dokumente öffnen:** wie in den Systemeinstellungen (Standard), als Tab oder in einem neuen Fenster
-- **Dokument neu laden, wenn sich die Datei ändert:** Standard: an. Seite, Zoom, Anzeige und eine laufende Suche bleiben erhalten; das gilt auch für ein zweites Dokument in der geteilten Ansicht.
-- **Tableiste auch bei nur einem Dokument anzeigen:** Standard: aus. Die Leiste erscheint dann erst ab zwei Tabs.
-- **An der zuletzt gelesenen Stelle weiterlesen:** merkt sich für bis zu 200 Dokumente die letzte Position (Standard: an), auch eine geteilte Ansicht desselben Dokuments mit Anordnung, Position der zweiten Hälfte und aktiver Hälfte. Zeigte die zweite Hälfte ein anderes Dokument, öffnet Leser wieder ungeteilt: Die Sandbox erlaubt nicht, eine andere Datei ohne erneute Auswahl zu öffnen. Beim Ausschalten werden die gespeicherten Stellen gelöscht.
+- **Seiten in Sepia anzeigen:** Standard: aus
+
+**Verweise**
+
+- **Dokumente öffnen:** in einem neuen Tab (Standard) oder in der zweiten Ansicht, für Verweise und Links in andere Dokumente
+- **Zugeordnete Dokumente:** jeder Titel mit seiner Datei; der volle Pfad erscheint, wenn der Mauszeiger auf dem Dateinamen ruht. Die Lupe zeigt die Datei im Finder, das Menü daneben ordnet eine andere Datei zu oder entfernt die Zuordnung.
 
 ### Nachfrage nach der Standard-App
 
@@ -145,18 +186,28 @@ Die Änderung selbst bestätigt macOS mit einer eigenen Rückfrage.
 ## Quellcode
 
 - `LeserApp.swift`: App, schreibgeschütztes Dokument (`DocumentGroup(viewing:)`)
-- `ViewerModel.swift`: PDFView, Seiten, Zoom, Gliederung, Suche
+- `ViewerModel.swift`: PDFView, Seiten, Zoom, Gliederung, Suche, Lesestelle; `ReaderPDFView` mit Kopieren, Kontextmenü und Klicks auf Verweise
 - `ContentView.swift`: Fenster mit Split-View und Symbolleiste
-- `SidebarView.swift`: Gliederung und Suchtreffer
+- `SidebarView.swift`: Gliederung, Miniaturen, Lesezeichen-Bereich, Suchtreffer
+- `SplitView.swift`: geteilte Ansicht, aktive Ansicht, zweites Dokument; `SplitContainer` für die Teilung mit AppKit
 - `ViewerCommands.swift`: Menübefehle
+- `Bookmarks.swift`: Lesezeichen, ihre Liste in der Seitenleiste und das Fenster zum Anlegen
+- `DocumentKey.swift`: erkennt ein Dokument an seiner Kennung statt am Pfad, für Lesestelle und Lesezeichen
+- `DocumentSearch.swift`: hält die Suchen zweier Ansichten desselben Dokuments auseinander
+- `LinkPreview.swift`: Vorschau beim Zeigen auf Links und Verweise
+- `PageReferences.swift`: findet Seitenangaben und Verweise auf andere Dokumente im Text
+- `OtherDocuments.swift`: Zuordnung von Titeln zu Dateien, Öffnen in Tab oder zweiter Ansicht, Links in andere Dateien, Einstellungen „Verweise“
+- `ParagraphText.swift`: fügt kopierte Zeilen wieder zu Absätzen zusammen
+- `PrintOptions.swift`: Abschnitt „Leser“ im Druckdialog
+- `PageTone.swift`: Sepia-Ton der Seiten
 - `AboutView.swift`: Über-Fenster; Links (Quellcode, weitere Projekte) stehen gesammelt in `AppLinks`
+- `TipJar.swift`: Trinkgelder mit StoreKit 2
 - `DefaultAppOffer.swift`: Nachfrage und Einstellung zur Standard-App für PDFs
 - `DocumentInfoView.swift`: Fenster mit Dokumentinformationen
 - `FileWatcher.swift`: meldet Änderungen an einer Datei, auch wenn Programme sie beim Speichern ersetzen
+- `LockedChangeBanner.swift`: Leiste für eine geänderte Datei, die wieder ihr Passwort braucht
 - `MenuCleaner.swift`: entfernt Menüeinträge, die in einem reinen Betrachter keinen Sinn ergeben (Sichern, Duplizieren, Umbenennen, Bewegen, Zurücksetzen, Neu, Schreibtools, Automatisch ausfüllen, Hilfe); Widerrufen, Wiederholen, Ausschneiden, Einsetzen und Löschen sind ausgeblendet, ihre Tastenkürzel funktionieren in Such- und Seitenfeld aber weiter
 - `Preferences.swift`: Einstellungen und Einstellungsfenster, gespeicherte Lesepositionen
-- `SplitView.swift`: geteilte Ansicht, aktive Ansicht, zweites Dokument
 - `TabBarKeeper.swift`: blendet die Tableiste bei nur einem Dokument ein oder aus
 - `ToolbarSegments.swift`: Knopfgruppen der Symbolleiste (AppKit-Segmente mit Menüs, wie in Vorschau)
-- `TipJar.swift`: Trinkgeldkasse (StoreKit 2)
-- `WindowFrameKeeper.swift`: merkt sich Fenstergröße und -position
+- `WindowFrameKeeper.swift`: merkt sich Größe und Position des Fensters und versetzt neue Fenster
