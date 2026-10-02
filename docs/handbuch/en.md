@@ -10,20 +10,22 @@ Oben stehen die Angaben für Titelseite und Dokumentinformationen, danach der In
   - Punkt               Aufzählungspunkt
   > Hinweis             Text im farbigen Kasten
   | Befehl | Kürzel |   Zeile der Tastaturkürzel-Tabelle
+  {Name}                die Seite des Kapitels oder der Überschrift dieses Namens,
+                        etwa „see page {Searching}“
 -->
 
 Dokumenttitel: Leser – Manual
 Thema: PDF viewer for macOS
 Untertitel: Manual for the macOS PDF viewer
 Leitsatz: Made for reading.
-Einleitung: Tidy, fast and free of distractions: with outline, thumbnails, full-text search and split view.
+Einleitung: Tidy, fast and free of distractions: with outline, bookmarks, full-text search and split view.
 Free, ad-free and collecting no data.
 
 # About This Manual
 
 Leser is a plain PDF viewer for macOS, made for reading. This manual describes in a few short chapters what Leser can do and how it is used.
 
-It is also a sample document: several chapters with an outline, so sidebar, search and split view have something to work with.
+It is also a sample document: several chapters with an outline, so sidebar, search and split view have something to work with. The page references in it work like links, too (see page {Links and References}).
 
 > “Leser” [ˈleːzɐ] is the German word for “reader”.
 
@@ -55,9 +57,43 @@ On the left, Leser shows either the outline of the document or thumbnails of eve
 
 The zoom factor can be changed in steps or fitted to the page width, the page height or the whole page. The chosen fit is kept even when you resize the window.
 
+## Back and forward
+
+After a jump, through a link, the outline or “Go to Page …” for instance, “Go → Back” takes you to where you were before, and “Forward” takes you there again. With a mouse, its side buttons do the same, with a trackpad or a Magic Mouse a swipe.
+
 ## Tabs and windows
 
 Leser opens several documents either as tabs in one window or in windows of their own, whichever the settings say. It remembers the size and position of the last window used, so new documents open to fit right away.
+
+# Bookmarks
+
+Bookmarks keep places you want to come back to. They have an area of their own above the outline and are listed in the “Bookmarks” menu, each with its page number.
+
+## Setting a bookmark
+
+“Bookmarks → Add Bookmark …” keeps the place at the top of the window. A right-click into the page sets it exactly there, a right-click on an outline entry at that chapter. As the name Leser suggests the heading of the place; you can take it, pick from further suggestions or type your own.
+
+## Renaming and removing
+
+A double-click or the return key renames a bookmark, the delete key removes it. Both are in the context menu as well. The divider to the outline can be moved; a double-click on it fits the height to the contents again.
+
+> Bookmarks belong to the document, not to its file name. They stay when you rename or move the file.
+
+# Links and References
+
+When the pointer rests on a link, Leser shows after a moment where it leads, without leaving the page. A click jumps there, “Back” returns to where you were.
+
+![The preview of a page reference, without leaving the page](docs/screenshots/en/3-preview.png)
+
+## Page references in the text
+
+References such as “see page {Bookmarks}” or “(page {Searching})” behave like links as well, even where the document does not contain them as links. Leser finds them in the text and shows the same preview when you point at them.
+
+## References to other documents
+
+When a text names a page in another document, such as “(Atlas of the Stars, p. 42)”, clicking it opens that document at the page given. The first time, Leser asks which file belongs to the title and remembers the answer for all documents. Links to other files work the same way.
+
+Whether the other document opens in a new tab or in the second view is set under “References” in the settings. All assigned documents are listed there as well; you can show them in the Finder, assign another file or remove the assignment.
 
 # Searching
 
@@ -67,7 +103,7 @@ The search looks through the whole document. Every match appears in a sidebar of
 
 ## From match to match
 
-The return key, or “Find Next”, walks you through the matches, and backwards works just as well. Leser ignores both capitalisation and accents, so “Ubergrosse” will find “Übergröße”.
+The return key, or “Find Next”, walks you through the matches, and backwards works just as well. The search starts on the page you are on; the settings can change that. Leser ignores both capitalisation and accents, so “Ubergrosse” will find “Übergröße”.
 
 > If the search finds nothing although the text is plainly visible, the document probably holds nothing but images, as a scan without text recognition does. In that case “Document Information” says No next to “Searchable text”.
 
@@ -79,7 +115,7 @@ Leser searches the text of the document, not the names of its chapters. A docume
 
 With the split view Leser shows the same document twice, side by side or stacked. That way a table and its explanation, a contract and its appendix, or two chapters far apart can be read together.
 
-![Two chapters side by side in split view](docs/screenshots/en/3-split.png)
+![Two chapters side by side in split view](docs/screenshots/en/4-split.png)
 
 ## Two documents
 
@@ -99,11 +135,19 @@ Leser knows four ways to arrange pages: continuous, single page, two pages, or t
 
 ## How documents open
 
-The settings decide what a document opens with: which page layout, which zoom factor and whether the sidebar appears. They also decide whether new documents open as a tab or in a window of their own.
+Under “View” the settings decide what a document opens with: which page layout, which zoom factor and whether the sidebar appears. Under “General” they decide whether new documents open as a tab or in a window of their own.
+
+## Sepia
+
+“View → Sepia” tints the pages like warm paper, easier on the eyes for long reading. Printing and copying are not affected.
 
 ## Reloading automatically
 
 When another program changes the file, after an export or when a LaTeX document is typeset, Leser shows the new version by itself. Page, zoom and page layout are kept.
+
+## Printing
+
+The print dialog has a section of its own for Leser: pages can be printed at actual size, large pages shrunk or all of them scaled to the paper size, and Leser can turn landscape pages to fit if you like.
 
 ## Default app
 
@@ -121,7 +165,7 @@ Because the document doesn't have one. Many PDFs from word processors do not bri
 
 ## Can I copy text?
 
-Yes. Text can be selected and copied with the mouse as usual, as long as the document allows it. Whether it does is listed under “Document Information”.
+Yes. Text can be selected and copied with the mouse as usual, as long as the document allows it. Whether it does is listed under “Document Information”. Leser joins the lines into paragraphs again and keeps bold and italic; white text turns black, so that it stays readable on a white background.
 
 ## What happens to my documents?
 
@@ -138,8 +182,11 @@ The most useful commands are all within reach without the mouse:
 | Zoom in, Zoom out, Actual Size | ⌘+, ⌘-, ⌘0 |
 | Page Width, Page Height, Whole Page | ⌘1, ⌘2, ⌘3 |
 | Previous and next page | ← and → |
-| First and last page | ⌥⌘Home, ⌥⌘End |
+| First and last page | Home, End |
+| Back, Forward | ⌘[, ⌘] |
 | Go to Page | ⌥⌘G |
+| Add Bookmark | ⌘D |
+| Show and hide bookmarks | ⌃⌘3 |
 | Split View | ⌃⌘T |
 | Document Information | ⌘I |
 | Print | ⌘P |
@@ -153,7 +200,9 @@ Leser sends no data anywhere. There is no tracking, no analytics and no advertis
 - Your settings
 - Size and position of the last window used
 - The place you last read, for up to 200 documents
+- Your bookmarks
+- Which file belongs to which title, for references to other documents
 
-None of this leaves your Mac. The stored places can be deleted again with a switch in the settings.
+None of this leaves your Mac. The stored places can be deleted again with a switch in the settings, the assignments one by one under “References”.
 
 > If you like, you can support the continued development with a voluntary tip. It unlocks nothing: Leser stays free in full.

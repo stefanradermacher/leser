@@ -172,11 +172,29 @@ var pageNumber = 0
 var pageOpen = false
 var y: CGFloat = 0
 var runningHead = ""
+/// Pages of chapters and headings by title, for references like "siehe Seite {Suchen}".
+var anchors: [String: Int] = [:]
+/// The pages found in the first round of setting, to fill in the references in the second.
+var knownPages: [String: Int] = [:]
 
 let url = URL(fileURLWithPath: outputPath)
 try? FileManager.default.createDirectory(at: url.deletingLastPathComponent(), withIntermediateDirectories: true)
 var mediaBox = CGRect(origin: .zero, size: pageSize)
-let ctx = CGContext(url as CFURL, mediaBox: &mediaBox, nil)!
+var ctx: CGContext!
+
+/// A text with its references to chapters and headings, "{Suchen}", replaced by their pages.
+/// In the first round the pages are not known yet; a stand-in of the same width keeps the
+/// lines as they will be.
+func resolved(_ string: String) -> String {
+    var result = string
+    while let open = result.range(of: "{"), let close = result.range(of: "}", range: open.upperBound..<result.endIndex) {
+        let name = String(result[open.upperBound..<close.lowerBound])
+        let page = knownPages[name].map(String.init) ?? "00"
+        if !knownPages.isEmpty, knownPages[name] == nil { fatalError("Verweis auf „\(name)“: kein Kapitel und keine Überschrift dieses Namens") }
+        result.replaceSubrange(open.lowerBound..<close.upperBound, with: page)
+    }
+    return result
+}
 
 func beginPage() {
     ctx.beginPDFPage(nil)
@@ -260,7 +278,7 @@ func titlePage() {
                      size: 12, color: quiet, alignment: .center, lineSpacing: 4)
     intro.draw(with: CGRect(x: margin + 40, y: 230, width: contentWidth - 80, height: 70), options: [.usesLineFragmentOrigin, .usesFontLeading])
 
-    let footer = text("Version 1.0 · stefanradermacher.com", size: 9.5, color: quiet, alignment: .center)
+    let footer = text("Version 1.1 · stefanradermacher.com", size: 9.5, color: quiet, alignment: .center)
     footer.draw(with: CGRect(x: margin, y: 120, width: contentWidth, height: 20), options: [.usesLineFragmentOrigin])
     endPage()
 }
@@ -353,62 +371,82 @@ func isBullet(_ block: Block) -> Bool {
     return false
 }
 
-titlePage()
+/// Sets the whole manual into `target`. Run twice: first to learn the pages of chapters
+/// and headings, then with the references to them filled in.
+func render(into target: CFURL) {
+    outline = []
+    anchors = [:]
+    pageNumber = 0
+    pageOpen = false
+    runningHead = ""
+    ctx = CGContext(target, mediaBox: &mediaBox, nil)!
+    titlePage()
 
-for (index, block) in blocks.enumerated() {
-    // A list is not torn apart: if its points do not all fit, it starts on the next page.
-    if case .bullet = block, index == 0 || !isBullet(blocks[index - 1]) {
-        let run = blocks[index...].prefix(while: isBullet)
-        let needed = run.reduce(CGFloat(0)) { total, next in
-            guard case .bullet(let string) = next else { return total }
-            return total + height(text(string, size: 11.5, lineSpacing: 3.5), width: contentWidth - 18) + 7
+    for (index, block) in blocks.enumerated() {
+        // A list is not torn apart: if its points do not all fit, it starts on the next page.
+        if case .bullet = block, index == 0 || !isBullet(blocks[index - 1]) {
+            let run = blocks[index...].prefix(while: isBullet)
+            let needed = run.reduce(CGFloat(0)) { total, next in
+                guard case .bullet(let string) = next else { return total }
+                return total + height(text(resolved(string), size: 11.5, lineSpacing: 3.5), width: contentWidth - 18) + 7
+            }
+            if y - needed < bottomMargin && needed < pageSize.height - margin - bottomMargin {
+                endPage()
+                beginPage()
+            }
         }
-        if y - needed < bottomMargin && needed < pageSize.height - margin - bottomMargin {
+        switch block {
+        case .chapter(let title):
             endPage()
+            runningHead = title
             beginPage()
+            outline.append((title, pageNumber))
+            anchors[title] = pageNumber
+            place(text(title, size: 27, weight: .bold, color: accent), gap: 6)
+            accent.withAlphaComponent(0.3).setFill()
+            CGRect(x: margin, y: y + 2, width: 70, height: 2.5).fill()
+            y -= 18
+        case .heading(let title):
+            y -= 6
+            // A heading never stays alone at the foot of a page: it needs room for a few lines below.
+            if y - 90 < bottomMargin {
+                endPage()
+                beginPage()
+            }
+            place(text(title, size: 14, weight: .semibold), gap: 6)
+            anchors[title] = pageNumber
+        case .body(let string):
+            place(text(resolved(string), size: 11.5, alignment: .justified, lineSpacing: 3.5), gap: 12)
+        case .bullet(let raw):
+            let string = resolved(raw)
+            let dot = text("•", size: 11.5, color: accent)
+            let line = text(string, size: 11.5, lineSpacing: 3.5)
+            let needed = height(line, width: contentWidth - 18)
+            if y - needed < bottomMargin {
+                endPage()
+                beginPage()
+            }
+            dot.draw(at: NSPoint(x: margin, y: y - needed + (needed - 14)))
+            draw(line, x: margin + 18, top: y, width: contentWidth - 18)
+            y -= needed + 7
+        case .note(let string):
+            y -= 4
+            noteBox(resolved(string))
+        case .picture(let path, let caption):
+            picture(path, caption: caption)
+        case .shortcuts(let rows):
+            shortcutTable(rows)
         }
     }
-    switch block {
-    case .chapter(let title):
-        endPage()
-        runningHead = title
-        beginPage()
-        outline.append((title, pageNumber))
-        place(text(title, size: 27, weight: .bold, color: accent), gap: 6)
-        accent.withAlphaComponent(0.3).setFill()
-        CGRect(x: margin, y: y + 2, width: 70, height: 2.5).fill()
-        y -= 18
-    case .heading(let title):
-        y -= 6
-        // A heading never stays alone at the foot of a page: it needs room for a few lines below.
-        if y - 90 < bottomMargin {
-            endPage()
-            beginPage()
-        }
-        place(text(title, size: 14, weight: .semibold), gap: 6)
-    case .body(let string):
-        place(text(string, size: 11.5, alignment: .justified, lineSpacing: 3.5), gap: 12)
-    case .bullet(let string):
-        let dot = text("•", size: 11.5, color: accent)
-        let line = text(string, size: 11.5, lineSpacing: 3.5)
-        let needed = height(line, width: contentWidth - 18)
-        if y - needed < bottomMargin {
-            endPage()
-            beginPage()
-        }
-        dot.draw(at: NSPoint(x: margin, y: y - needed + (needed - 14)))
-        draw(line, x: margin + 18, top: y, width: contentWidth - 18)
-        y -= needed + 7
-    case .note(let string):
-        y -= 4
-        noteBox(string)
-    case .picture(let path, let caption):
-        picture(path, caption: caption)
-    case .shortcuts(let rows):
-        shortcutTable(rows)
-    }
+    endPage()
 }
-endPage()
+
+let firstRound = url.deletingLastPathComponent().appendingPathComponent("tmp-erster-satz.pdf")
+render(into: firstRound as CFURL)
+ctx.closePDF()
+try? FileManager.default.removeItem(at: firstRound)
+knownPages = anchors
+render(into: url as CFURL)
 
 // Outline, so the sidebar has something to show
 let children = outline.map { entry -> [String: Any] in

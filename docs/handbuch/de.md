@@ -12,20 +12,22 @@ Oben stehen die Angaben für Titelseite und Dokumentinformationen, danach der In
   ![Text](Pfad)         Bildschirmfoto über die ganze Breite, darunter der Text;
                         fehlt die Datei, wird es ausgelassen
   | Befehl | Kürzel |   Zeile der Tastaturkürzel-Tabelle
+  {Name}                die Seite des Kapitels oder der Überschrift dieses Namens,
+                        etwa „siehe Seite {Suchen}“
 -->
 
 Dokumenttitel: Leser – Handbuch
 Thema: PDF-Betrachter für macOS
 Untertitel: Handbuch zum PDF-Betrachter für macOS
 Leitsatz: Gemacht zum Lesen.
-Einleitung: Aufgeräumt, schnell und ohne Ablenkung: mit Gliederung, Miniaturen, Volltextsuche und geteilter Ansicht.
+Einleitung: Aufgeräumt, schnell und ohne Ablenkung: mit Gliederung, Lesezeichen, Volltextsuche und geteilter Ansicht.
 Kostenlos, werbefrei und ohne Datensammlung.
 
 # Über dieses Handbuch
 
 Leser ist ein schlichter PDF-Betrachter für macOS, gemacht zum Lesen. Dieses Handbuch beschreibt in wenigen Kapiteln, was Leser kann und wie es sich bedienen lässt.
 
-Es ist zugleich ein Beispieldokument: mehrere Kapitel mit Gliederung, damit sich die Seitenleiste, die Suche und die geteilte Ansicht daran ausprobieren lassen.
+Es ist zugleich ein Beispieldokument: mehrere Kapitel mit Gliederung, damit sich die Seitenleiste, die Suche und die geteilte Ansicht daran ausprobieren lassen. Auch die Seitenangaben darin funktionieren wie Links (siehe Seite {Links und Verweise}).
 
 ## Was Leser ausmacht
 
@@ -55,9 +57,43 @@ Links zeigt Leser wahlweise die Gliederung des Dokuments oder Miniaturen aller S
 
 Der Zoom lässt sich in Stufen ändern oder an die Seitenbreite, die Seitenhöhe oder die ganze Seite anpassen. Die gewählte Anpassung bleibt erhalten, auch wenn du das Fenster größer oder kleiner ziehst.
 
+## Zurück und vor
+
+Nach einem Sprung, etwa über einen Link, die Gliederung oder „Gehe zu Seite …“, bringt dich „Gehe zu → Zurück“ wieder an die Stelle davor, „Vorwärts“ wieder hin. Mit einer Maus geht das auch über die Seitentasten, mit einem Trackpad oder einer Magic Mouse über eine Wischbewegung.
+
 ## Tabs und Fenster
 
 Mehrere Dokumente öffnet Leser wahlweise als Tabs in einem Fenster oder in eigenen Fenstern, je nachdem, was in den Einstellungen steht. Größe und Position des zuletzt benutzten Fensters merkt sich Leser, sodass neue Dokumente gleich passend aufgehen.
+
+# Lesezeichen
+
+Lesezeichen merken sich Stellen, zu denen du zurückkehren willst. Sie stehen in einem eigenen Bereich über der Gliederung und im Menü „Lesezeichen“, jeweils mit ihrer Seitenzahl.
+
+## Ein Lesezeichen setzen
+
+„Lesezeichen → Lesezeichen hinzufügen …“ merkt sich die Stelle, die gerade oben im Fenster steht. Mit einem Rechtsklick in die Seite setzt du es genau an diese Stelle, mit einem Rechtsklick auf einen Eintrag der Gliederung an dessen Kapitel. Als Name schlägt Leser die Überschrift der Stelle vor; du kannst ihn übernehmen, aus weiteren Vorschlägen wählen oder selbst einen eingeben.
+
+## Ordnen und umbenennen
+
+Ein Doppelklick oder die Eingabetaste benennt ein Lesezeichen um, die Rückschritttaste löscht es. Beides geht auch über das Kontextmenü. Die Trennlinie zur Gliederung lässt sich verschieben; ein Doppelklick darauf passt die Höhe wieder dem Inhalt an.
+
+> Lesezeichen hängen am Dokument, nicht am Dateinamen. Sie bleiben erhalten, wenn du die Datei umbenennst oder verschiebst.
+
+# Links und Verweise
+
+Ruht der Mauszeiger auf einem Link, zeigt Leser nach einem kurzen Moment, wohin er führt, ohne dass du die Seite verlässt. Ein Klick springt hin, „Zurück“ wieder zur Stelle davor.
+
+![Die Vorschau einer Seitenangabe, ohne die Seite zu verlassen](docs/screenshots/3-vorschau.png)
+
+## Seitenangaben im Text
+
+Auch Angaben wie „siehe Seite {Lesezeichen}“ oder „(Seite {Suchen})“ verhalten sich wie Links, selbst wenn das Dokument sie nicht als Link enthält. Leser erkennt sie im Text und zeigt beim Darauf-Zeigen dieselbe Vorschau.
+
+## Verweise auf andere Dokumente
+
+Nennt ein Text eine Seite in einem anderen Dokument, etwa „(Atlas der Sterne, S. 42)“, öffnet ein Klick darauf dieses Dokument an der genannten Seite. Beim ersten Mal fragt Leser, welche Datei zu dem Titel gehört, und merkt sich die Antwort für alle Dokumente. Links in andere Dateien funktionieren genauso.
+
+Ob das andere Dokument in einem neuen Tab oder in der zweiten Ansicht aufgeht, legst du in den Einstellungen unter „Verweise“ fest. Dort stehen auch alle zugeordneten Dokumente; du kannst sie im Finder zeigen, einer anderen Datei zuordnen oder die Zuordnung entfernen.
 
 # Suchen
 
@@ -67,7 +103,7 @@ Die Suche findet Wörter im gesamten Dokument. Die Fundstellen erscheinen in ein
 
 ## Von Treffer zu Treffer
 
-Mit der Eingabetaste oder mit „Weitersuchen“ wanderst du durch die Fundstellen, rückwärts geht es ebenso. Leser achtet dabei weder auf Groß- und Kleinschreibung noch auf Akzente, sodass auch „Ubergrosse“ die Stelle „Übergröße“ findet.
+Mit der Eingabetaste oder mit „Weitersuchen“ wanderst du durch die Fundstellen, rückwärts geht es ebenso. Die Suche beginnt auf der Seite, auf der du gerade bist; das lässt sich in den Einstellungen ändern. Leser achtet dabei weder auf Groß- und Kleinschreibung noch auf Akzente, sodass auch „Ubergrosse“ die Stelle „Übergröße“ findet.
 
 > Findet die Suche nichts, obwohl der Text sichtbar ist, enthält das Dokument vermutlich nur Bilder, etwa bei einem Scan ohne Texterkennung. Unter „Dokumentinformationen“ steht dann bei „Durchsuchbarer Text“ ein Nein.
 
@@ -79,7 +115,7 @@ Gesucht wird im Text des Dokuments, nicht in den Namen der Kapitel. Ein Dokument
 
 Mit der geteilten Ansicht zeigt Leser dasselbe Dokument zweimal, nebeneinander oder untereinander. So lassen sich eine Tabelle und ihre Erläuterung, ein Vertragstext und seine Anlage oder zwei weit auseinanderliegende Kapitel zusammen lesen.
 
-![Zwei Kapitel nebeneinander in der geteilten Ansicht](docs/screenshots/3-geteilt.png)
+![Zwei Kapitel nebeneinander in der geteilten Ansicht](docs/screenshots/4-geteilt.png)
 
 ## Zwei Dokumente
 
@@ -99,11 +135,19 @@ Leser kennt vier Arten, Seiten anzuordnen: fortlaufend, einzeln, als Doppelseite
 
 ## Was beim Öffnen gilt
 
-In den Einstellungen legst du fest, womit ein Dokument aufgeht: mit welcher Anzeige, welchem Zoom und ob die Seitenleiste erscheint. Ebenso, ob neue Dokumente als Tab oder in einem eigenen Fenster öffnen.
+In den Einstellungen legst du unter „Darstellung“ fest, womit ein Dokument aufgeht: mit welcher Anzeige, welchem Zoom und ob die Seitenleiste erscheint. Unter „Allgemein“ steht, ob neue Dokumente als Tab oder in einem eigenen Fenster öffnen.
+
+## Sepia
+
+„Darstellung → Sepia“ tönt die Seiten wie warmes Papier, angenehmer für langes Lesen. Drucken und Kopieren bleiben davon unberührt.
 
 ## Automatisch neu laden
 
 Ändert ein anderes Programm die Datei, etwa beim Export aus einem Satzprogramm oder beim Übersetzen eines LaTeX-Dokuments, zeigt Leser die neue Fassung von selbst an. Seite, Zoom und Anzeige bleiben dabei erhalten.
+
+## Drucken
+
+Im Druckdialog hat Leser einen eigenen Bereich: Seiten lassen sich in Originalgröße drucken, große Seiten verkleinern oder alle auf das Papierformat skalieren, und auf Wunsch dreht Leser quer liegende Seiten passend.
 
 ## Standard-App
 
@@ -121,7 +165,7 @@ Weil das Dokument keine enthält. Viele PDFs aus Textverarbeitungen bringen kein
 
 ## Kann ich Text kopieren?
 
-Ja. Text lässt sich wie gewohnt mit der Maus markieren und kopieren, sofern das Dokument es erlaubt. Ob das so ist, steht unter „Dokumentinformationen“.
+Ja. Text lässt sich wie gewohnt mit der Maus markieren und kopieren, sofern das Dokument es erlaubt. Ob das so ist, steht unter „Dokumentinformationen“. Leser fügt die Zeilen dabei wieder zu Absätzen zusammen und behält Fett und Kursiv; weiße Schrift wird schwarz, damit sie auf weißem Grund lesbar bleibt.
 
 ## Was passiert mit meinen Dokumenten?
 
@@ -138,8 +182,11 @@ Die wichtigsten Befehle lassen sich ohne Maus erreichen:
 | Vergrößern, Verkleinern, Originalgröße | ⌘+, ⌘-, ⌘0 |
 | Seitenbreite, Seitenhöhe, Ganze Seite | ⌘1, ⌘2, ⌘3 |
 | Vorherige und nächste Seite | ← und → |
-| Erste und letzte Seite | ⌥⌘Pos1, ⌥⌘Ende |
+| Erste und letzte Seite | Pos1, Ende |
+| Zurück, Vorwärts | ⌘Ö, ⌘Ä |
 | Gehe zu Seite | ⌥⌘G |
+| Lesezeichen hinzufügen | ⌘D |
+| Lesezeichen ein- und ausblenden | ⌃⌘3 |
 | Ansicht teilen | ⌃⌘T |
 | Dokumentinformationen | ⌘I |
 | Drucken | ⌘P |
@@ -153,7 +200,9 @@ Leser übermittelt keine Daten. Es gibt kein Tracking, keine Analyse und keine W
 - Deine Einstellungen
 - Größe und Position des zuletzt benutzten Fensters
 - Die zuletzt gelesene Stelle für bis zu 200 Dokumente
+- Deine Lesezeichen
+- Welche Datei zu welchem Titel gehört, für Verweise auf andere Dokumente
 
-Diese Angaben verlassen deinen Mac nicht. Die gespeicherten Stellen lassen sich in den Einstellungen mit einem Schalter wieder löschen.
+Diese Angaben verlassen deinen Mac nicht. Die gespeicherten Stellen lassen sich in den Einstellungen mit einem Schalter wieder löschen, die Zuordnungen unter „Verweise“ einzeln.
 
 > Wer möchte, kann die Weiterentwicklung mit einem freiwilligen Trinkgeld unterstützen. Es schaltet nichts frei: Leser bleibt vollständig kostenlos.

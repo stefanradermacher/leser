@@ -143,7 +143,7 @@ Die drei In-App-Käufe sind freiwillige Trinkgelder für die Weiterentwicklung. 
 
 Leser fragt an seltenen Stellen, ob es die Standard-App für PDFs werden soll. Die Frage erscheint als schmale Leiste im Dokumentfenster, erst nachdem an drei verschiedenen Tagen PDFs geöffnet wurden, höchstens zweimal insgesamt, und die eigentliche Umstellung bestätigt macOS selbst.
 
-Zum Testen eignet sich jedes beliebige PDF; im Quellcode liegt `docs/Leser-Handbuch.pdf` mit Gliederung und zehn Seiten. Es ist zugleich das Dokument, das in den Screenshots zu sehen ist.
+Zum Testen eignet sich jedes beliebige PDF; im Quellcode liegt `docs/Leser-Handbuch.pdf` mit Gliederung und dreizehn Seiten. Es ist zugleich das Dokument, das in den Screenshots zu sehen ist.
 
 ## Screenshots
 
@@ -151,10 +151,11 @@ In `docs/screenshots/`, 2880 × 1800 Pixel:
 
 | Datei | Inhalt |
 |---|---|
-| 1-dokument.png | Ganze Seite mit Gliederung in der Seitenleiste |
+| 1-dokument.png | Ganze Seite mit Gliederung in der Seitenleiste, darüber drei Lesezeichen |
 | 2-suche.png | Suche nach „Leser“, Trefferliste rechts, Fundstellen hervorgehoben |
-| 3-geteilt.png | Geteilte Ansicht mit zwei Kapiteln nebeneinander |
-| 4-miniaturen.png | Miniaturen in der Seitenleiste, aktuelle Seite hervorgehoben |
+| 3-vorschau.png | Vorschau einer Seitenangabe („siehe Seite 5“), der Mauszeiger darauf |
+| 4-geteilt.png | Geteilte Ansicht mit zwei Kapiteln nebeneinander |
+| 5-miniaturen.png | Miniaturen in der Seitenleiste, aktuelle Seite hervorgehoben |
 | trinkgeld.png | Fenster „Leser unterstützen“ als Prüfbild für die In-App-Käufe |
 
 Gezeigt wird darin `docs/Leser-Handbuch.pdf`, das Handbuch zu Leser, das `scripts/make_manual.swift` erzeugt.
@@ -163,10 +164,11 @@ Für den englischen Eintrag liegt derselbe Satz mit englischer Oberfläche in `d
 
 | Datei | Inhalt |
 |---|---|
-| en/1-document.png | Ganze Seite mit Gliederung in der Seitenleiste |
+| en/1-document.png | Ganze Seite mit Gliederung in der Seitenleiste, darüber drei Lesezeichen |
 | en/2-search.png | Suche nach „Leser“, Trefferliste rechts, Fundstellen hervorgehoben |
-| en/3-split.png | Geteilte Ansicht mit zwei Kapiteln nebeneinander |
-| en/4-thumbnails.png | Miniaturen in der Seitenleiste, aktuelle Seite hervorgehoben |
+| en/3-preview.png | Vorschau einer Seitenangabe („see page 5“), der Mauszeiger darauf |
+| en/4-split.png | Geteilte Ansicht mit zwei Kapiteln nebeneinander |
+| en/5-thumbnails.png | Miniaturen in der Seitenleiste, aktuelle Seite hervorgehoben |
 
 Gezeigt wird darin `docs/Leser-Manual.pdf`, die englische Fassung des Handbuchs (`swift scripts/make_manual.swift en`).
 
