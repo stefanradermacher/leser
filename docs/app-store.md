@@ -205,6 +205,18 @@ Für Verweise auf andere Dokumente merkt sich Leser eine Datei, die der Nutzer d
 
 Zum Testen eignet sich jedes beliebige PDF; im Quellcode liegt `docs/Leser-Handbuch.pdf` mit Gliederung und dreizehn Seiten. Es ist zugleich das Dokument, das in den Screenshots zu sehen ist.
 
+**English** (für das Feld „Notizen“ unter „Informationen zur App-Prüfung“; die Prüfer arbeiten meist mit englischer Oberfläche):
+
+Leser is a pure PDF viewer and never modifies documents. There is no sign-in, no account and no demo credentials.
+
+The three in-app purchases are voluntary tips for further development. They do not unlock any features; everything is available without a purchase. They can be found under “Leser → About Leser” and “Help → Support Leser…”.
+
+On rare occasions, Leser asks whether it should become the default app for PDFs. The question appears as a slim bar in the document window, only after PDFs have been opened on three different days, at most twice in total, and macOS itself confirms the actual change.
+
+For references to other documents, Leser remembers a file that the user has chosen for this purpose, using a read-only security-scoped bookmark (`com.apple.security.files.bookmarks.app-scope`). Leser never opens a file the user has not chosen; the assignments can be viewed and removed in the settings under “References”.
+
+Any PDF is suitable for testing; the source code contains `docs/Leser-Manual.pdf`, which has an outline and twelve pages. It is also the document shown in the English screenshots.
+
 ## Screenshots
 
 In `docs/screenshots/`, 2880 × 1800 Pixel:
