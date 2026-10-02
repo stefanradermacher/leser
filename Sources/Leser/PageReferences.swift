@@ -99,6 +99,8 @@ final class PageReferences {
     private static let leadIns: Set<String> = [
         "see", "also", "on", "at", "in", "to", "from", "cf.",
         "siehe", "vgl.", "auf", "ab", "von", "s.a.",
+        // "auf den Seiten 3–4", "auf der Seite 12"
+        "den", "dem", "der", "die",
     ]
 
     private func find(on page: PDFPage, index: Int) -> [Reference] {
@@ -219,7 +221,7 @@ final class PageReferences {
         guard let match = Self.titleAfter.firstMatch(in: context, range: NSRange(location: 0, length: (context as NSString).length))
         else { return nil }
         let rest = (context as NSString).substring(from: match.range(at: 1).location)
-        guard let title = Self.leadingTitle(of: rest) else { return nil }
+        guard let title = Self.leadingTitle(of: rest), Self.isDistinctTitle(title) else { return nil }
         // Where the title ends in the page's text: after the words before it and the title.
         let lead = (context as NSString).substring(to: match.range(at: 1).location)
         let count = Self.alphanumericCount(lead) + Self.alphanumericCount(title)
@@ -239,6 +241,11 @@ final class PageReferences {
         while let word = words.last {
             let bare = String(word.unicodeScalars.drop { openings.contains($0) })
             let opens = bare != word
+            // A word in capitals ends the title unless a colon comes before it, as in
+            // "Handbuch: FAQ"; otherwise it is a heading, as in "WICHTIGER HINWEIS".
+            let letters = bare.filter(\.isLetter)
+            if letters.count > 1, letters.allSatisfy(\.isUppercase),
+               words.dropLast().last?.hasSuffix(":") != true { break }
             if isTitleWord(bare) || (titleJoiners.contains(bare) && !title.isEmpty) {
                 title.insert(bare, at: 0)
                 words.removeLast()
@@ -256,17 +263,28 @@ final class PageReferences {
     private static func leadingTitle(of text: String) -> String? {
         var title: [String] = []
         for word in text.split(separator: " ").map(String.init) {
-            let bare = word.trimmingCharacters(in: CharacterSet(charactersIn: ".,;)"))
-            if isTitleWord(bare) || titleJoiners.contains(bare) || (Int(bare) != nil && !title.isEmpty) {
-                title.append(bare)
-                if bare != word { break }
-            } else {
-                break
-            }
+            // Punctuation after a word ends the title, except the colon before a subtitle, as
+            // in "Kernregeln: Spielleitung"; "NSC):" is the last word of one.
+            let core = word.trimmingCharacters(in: CharacterSet(charactersIn: ".,;:)"))
+            let subtitleFollows = word == core + ":"
+            // Short words in capitals count here too, as in "GM Core".
+            let short = core.count == 2 && core.allSatisfy(\.isUppercase)
+            guard isTitleWord(core) || short || titleJoiners.contains(core) || (Int(core) != nil && !title.isEmpty)
+            else { break }
+            title.append(subtitleFollows ? word : core)
+            if !subtitleFollows, core != word { break }
         }
         while let last = title.last, titleJoiners.contains(last) { title.removeLast() }
+        // Capitals throughout are fine here: after "of" or "in" they rather belong to a title
+        // ("GM Core", "Handbuch: FAQ") than to a heading.
+        guard let first = title.first, first.first?.isUppercase == true,
+              title.last?.hasSuffix(":") == false,
+              // A number inside, as in "Chapter 4: Skills", makes it a part of a book; a book
+              // has its volume number at the end, as in "Handbuch 2".
+              !title.dropLast().contains(where: { Int($0.trimmingCharacters(in: CharacterSet(charactersIn: ":"))) != nil })
+        else { return nil }
         let result = title.joined(separator: " ")
-        return isTitle(result) ? result : nil
+        return OtherDocuments.key(for: result).isEmpty ? nil : result
     }
 
     /// A capitalized word of at least three letters, like "Handbuch:" or "FAQ": short ones
@@ -388,10 +406,20 @@ final class PageReferences {
     private func namesAnotherDocument(after text: String) -> Bool {
         let context = Self.joined(String(text.prefix(80)))
         guard let match = Self.titleAfter.firstMatch(
-            in: context, range: NSRange(location: 0, length: (context as NSString).length))
+            in: context, range: NSRange(location: 0, length: (context as NSString).length)),
+            let title = Self.leadingTitle(of: (context as NSString).substring(from: match.range(at: 1).location)),
+            Self.isDistinctTitle(title)
         else { return false }
-        let title = OtherDocuments.key(for: (context as NSString).substring(from: match.range(at: 1).location))
-        return !ownTitles.contains { title.hasPrefix($0) }
+        return !isOwnTitle(title)
+    }
+
+    /// Whether a title after a page reference is clearly one: with a subtitle after a colon,
+    /// of several words or with a volume number, or assigned to a file already. A single
+    /// capitalised word, as in "Seite 5 im Anhang", is in German rather a part of this document.
+    private static func isDistinctTitle(_ title: String) -> Bool {
+        let words = title.split(separator: " ").map(String.init)
+        return title.contains(":") || words.filter { $0.first?.isUppercase == true }.count >= 2
+            || words.last.map { Int($0) != nil } == true || OtherDocuments.isKnown(title)
     }
 
     private static let titleAfter = try! NSRegularExpression(
