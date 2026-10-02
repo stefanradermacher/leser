@@ -114,13 +114,19 @@ final class LinkPreview {
         if let documentView = view?.documentView { remove(in: documentView) }
     }
 
-    /// A link or page reference at a point of the view that leads somewhere in this document.
+    /// A link or page reference at a point of the view that leads somewhere in this document,
+    /// or into another one.
     private func target(at location: NSPoint) -> Target? {
         if let link = internalLink(at: location), let page = link.page,
            let destination = Self.destination(of: link) {
             removeLinkToolTips()
             return Target(id: ObjectIdentifier(link), page: page, bounds: link.bounds,
                           content: .destination(destination))
+        }
+        if let remote = view?.remoteLink(at: location), let page = remote.link.page {
+            removeLinkToolTips()
+            return Target(id: ObjectIdentifier(remote.link), page: page, bounds: remote.link.bounds,
+                          content: Self.content(of: .index(remote.page), in: remote.file))
         }
         guard let view, let (page, reference) = view.pageReference(at: location) else { return nil }
         let content: Content
@@ -129,7 +135,7 @@ final class LinkPreview {
             guard let targetPage = view.document?.page(at: index) else { return nil }
             content = .destination(Self.top(of: targetPage))
         case .book(let title, let number):
-            content = Self.content(ofPage: number, in: title)
+            content = Self.content(of: .number(number), in: title)
         }
         let bounds = reference.bounds.dropFirst().reduce(reference.bounds[0]) { $0.union($1) }
         return Target(id: [ObjectIdentifier(page), reference.location] as [AnyHashable],
@@ -137,15 +143,20 @@ final class LinkPreview {
     }
 
     /// The page of another book, or what keeps it from being shown.
-    private static func content(ofPage number: Int, in title: String) -> Content {
+    private static func content(of pointer: OtherBooks.Page, in title: String) -> Content {
         guard OtherBooks.isKnown(title) else {
             return .message(String(localized: "„\(title)“ ist noch keiner Datei zugeordnet. Klicke, um die Datei zu wählen."))
         }
-        guard let book = OtherBooks.shared.page(number, of: title) else {
+        guard let book = OtherBooks.shared.page(pointer, of: title) else {
             return .message(String(localized: "Die Datei für „\(title)“ fehlt oder kann nicht gelesen werden."))
         }
         guard let index = book.index, let page = book.document.page(at: index) else {
-            return .message(String(localized: "„\(title)“ hat keine Seite \(number)."))
+            switch pointer {
+            case .number(let number):
+                return .message(String(localized: "„\(title)“ hat keine Seite \(number)."))
+            case .index(let index):
+                return .message(String(localized: "„\(title)“ hat keine Seite \(index + 1)."))
+            }
         }
         return .destination(top(of: page))
     }
@@ -167,11 +178,17 @@ final class LinkPreview {
 
     /// A link at a point of the view that leads somewhere in this document.
     private func internalLink(at location: NSPoint) -> PDFAnnotation? {
-        guard let view, let page = view.page(for: location, nearest: false) else { return nil }
-        let point = view.convert(location, to: page)
-        guard let annotation = page.annotation(at: point), annotation.type == "Link",
+        guard let annotation = link(at: location), let page = annotation.page,
               let destination = Self.destination(of: annotation),
               let target = destination.page, target.document === page.document
+        else { return nil }
+        return annotation
+    }
+
+    private func link(at location: NSPoint) -> PDFAnnotation? {
+        guard let view, let page = view.page(for: location, nearest: false),
+              let annotation = page.annotation(at: view.convert(location, to: page)),
+              annotation.type == "Link"
         else { return nil }
         return annotation
     }

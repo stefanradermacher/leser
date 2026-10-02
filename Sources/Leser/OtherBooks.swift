@@ -18,7 +18,8 @@ import PDFKit
 import SwiftUI
 
 /// Books that references in the text point to, like "Kernregeln: Monster, S. 284", each
-/// assigned to a file by the user the first time one of its references is followed. The
+/// assigned to a file by the user the first time one of its references is followed. Links
+/// into other files count too, their file name taking the place of the title. The
 /// assignments hold for all documents.
 ///
 /// In the sandbox Leser may only open files the user chose; a security-scoped bookmark keeps
@@ -58,14 +59,11 @@ final class OtherBooks {
 
     // MARK: Titles
 
-    /// A title compared without case, punctuation and line breaks, and without a leading
-    /// "Pathfinder": "Pathfinder Kernregeln: Monster" is "Kernregeln: Monster".
+    /// A title compared without case, punctuation and line breaks.
     nonisolated static func key(for title: String) -> String {
-        var key = PageReferences.joined(title).lowercased()
+        PageReferences.joined(title).lowercased()
             .replacingOccurrences(of: #"[^\p{L}\d]+"#, with: " ", options: .regularExpression)
             .trimmingCharacters(in: .whitespaces)
-        if key.hasPrefix("pathfinder ") { key.removeFirst("pathfinder ".count) }
-        return key == "pathfinder" ? "" : key
     }
 
     static var revision: Int { shared.revision }
@@ -118,8 +116,16 @@ final class OtherBooks {
 
     // MARK: Pages
 
-    /// The document assigned to a title and the index of the page with a number in it.
-    func page(_ number: Int, of title: String) -> (url: URL, document: PDFDocument, index: Int?)? {
+    /// A page as a reference gives it.
+    enum Page {
+        /// The number of the page, as printed on it or as its page label.
+        case number(Int)
+        /// The position of the page in the file, as a link into the file gives it.
+        case index(Int)
+    }
+
+    /// The document assigned to a title and the index of a page in it.
+    func page(_ page: Page, of title: String) -> (url: URL, document: PDFDocument, index: Int?)? {
         guard let url = file(for: title) else { return nil }
         let entry: (document: PDFDocument, references: PageReferences)
         if let cached = documents[url] {
@@ -129,20 +135,26 @@ final class OtherBooks {
             entry = (document, PageReferences(document: document, name: url.lastPathComponent))
             documents[url] = entry
         }
-        return (url, entry.document, entry.references.pageIndex(forNumber: number))
+        switch page {
+        case .number(let number):
+            return (url, entry.document, entry.references.pageIndex(forNumber: number))
+        case .index(let index):
+            return (url, entry.document, index < entry.document.pageCount ? index : nil)
+        }
     }
 
     // MARK: Following a reference
 
     /// Opens the page a reference into another book gives. An unknown title is assigned to a
-    /// file first, chosen by the user.
-    func follow(title: String, number: Int, from state: ReaderState) {
+    /// file first, chosen by the user, starting in `folder`, where a linked file is likely.
+    func follow(title: String, page: Page, folder: URL? = nil, from state: ReaderState) {
         if file(for: title) != nil {
-            open(title: title, number: number, from: state)
+            open(title: title, page: page, from: state)
             return
         }
         let panel = NSOpenPanel()
         panel.allowedContentTypes = [.pdf]
+        panel.directoryURL = folder
         panel.message = String(localized: "Welche Datei ist „\(title)“?")
         panel.prompt = String(localized: "Zuordnen")
         let handle: (NSApplication.ModalResponse) -> Void = { [weak self, weak state] response in
@@ -150,7 +162,7 @@ final class OtherBooks {
             MainActor.assumeIsolated {
                 guard let self, let state else { return }
                 self.assign(url, to: title)
-                self.open(title: title, number: number, from: state)
+                self.open(title: title, page: page, from: state)
             }
         }
         if let window = state.primary.pdfView.window {
@@ -160,8 +172,8 @@ final class OtherBooks {
         }
     }
 
-    private func open(title: String, number: Int, from state: ReaderState) {
-        guard let page = page(number, of: title) else {
+    private func open(title: String, page pointer: Page, from state: ReaderState) {
+        guard let page = page(pointer, of: title) else {
             let alert = NSAlert()
             alert.messageText = String(localized: "„\(title)“ konnte nicht geöffnet werden.")
             alert.informativeText = String(localized: "Die zugeordnete Datei fehlt oder ist kein lesbares PDF-Dokument. In den Einstellungen unter „Andere Bücher“ kannst du ihr eine andere Datei zuordnen.")
@@ -265,7 +277,7 @@ struct OtherBooksSettings: View {
         } header: {
             Text("Andere Bücher")
         } footer: {
-            Text("Verweise wie „Kernregeln: Monster, S. 284“ öffnen das genannte Buch an dieser Seite. Beim ersten Mal fragt Leser, welche Datei zu dem Buch gehört.")
+            Text("Nennt ein Dokument eine Seite in einem anderen Buch, etwa „Titel, S. 12“, öffnet ein Klick darauf dieses Buch an der Seite. Welche Datei zu einem Titel gehört, fragt Leser beim ersten Mal. Links in andere Dateien funktionieren genauso.")
                 .font(.callout)
                 .foregroundStyle(.secondary)
         }
@@ -336,4 +348,75 @@ private struct OtherBooksList: View {
             books.assign(url, to: book.title)
         }
     }
+}
+
+// MARK: - Links into other files
+
+/// Reads where links into other files lead ("GoToR" actions) from the PDF itself.
+enum RemoteLinks {
+    /// The name of the file a link leads to and the index of the page in it.
+    static func target(of link: PDFAnnotation, on page: PDFPage) -> (file: String, page: Int)? {
+        guard let dictionary = page.pageRef?.dictionary else { return nil }
+        var annotations: CGPDFArrayRef?
+        guard CGPDFDictionaryGetArray(dictionary, "Annots", &annotations), let annotations else { return nil }
+        for index in 0..<CGPDFArrayGetCount(annotations) {
+            var annotation: CGPDFDictionaryRef?
+            guard CGPDFArrayGetDictionary(annotations, index, &annotation), let annotation,
+                  let rect = rect(in: annotation), rect.insetBy(dx: -1, dy: -1).contains(link.bounds.center),
+                  let target = goToR(in: annotation)
+            else { continue }
+            return target
+        }
+        return nil
+    }
+
+    private static func goToR(in annotation: CGPDFDictionaryRef) -> (file: String, page: Int)? {
+        var action: CGPDFDictionaryRef?
+        var kind: UnsafePointer<CChar>?
+        guard CGPDFDictionaryGetDictionary(annotation, "A", &action), let action,
+              CGPDFDictionaryGetName(action, "S", &kind), let kind, String(cString: kind) == "GoToR",
+              let file = fileName(in: action)
+        else { return nil }
+        // The page as an index, first in the destination array; a named destination counts as
+        // the first page.
+        var destination: CGPDFArrayRef?
+        var page: CGPDFInteger = 0
+        if CGPDFDictionaryGetArray(action, "D", &destination), let destination {
+            _ = CGPDFArrayGetInteger(destination, 0, &page)
+        }
+        return (file, max(0, Int(page)))
+    }
+
+    /// The file of an action: a string, or a file specification with one.
+    private static func fileName(in action: CGPDFDictionaryRef) -> String? {
+        var string: CGPDFStringRef?
+        if CGPDFDictionaryGetString(action, "F", &string), let string,
+           let text = CGPDFStringCopyTextString(string) as String? {
+            return (text as NSString).lastPathComponent
+        }
+        var specification: CGPDFDictionaryRef?
+        guard CGPDFDictionaryGetDictionary(action, "F", &specification), let specification else { return nil }
+        for key in ["UF", "F"] {
+            if CGPDFDictionaryGetString(specification, key, &string), let string,
+               let text = CGPDFStringCopyTextString(string) as String? {
+                return (text as NSString).lastPathComponent
+            }
+        }
+        return nil
+    }
+
+    private static func rect(in annotation: CGPDFDictionaryRef) -> CGRect? {
+        var array: CGPDFArrayRef?
+        guard CGPDFDictionaryGetArray(annotation, "Rect", &array), let array,
+              CGPDFArrayGetCount(array) == 4
+        else { return nil }
+        var values = [CGPDFReal](repeating: 0, count: 4)
+        for index in 0..<4 { guard CGPDFArrayGetNumber(array, index, &values[index]) else { return nil } }
+        return CGRect(x: min(values[0], values[2]), y: min(values[1], values[3]),
+                      width: abs(values[2] - values[0]), height: abs(values[3] - values[1]))
+    }
+}
+
+private extension CGRect {
+    var center: CGPoint { CGPoint(x: midX, y: midY) }
 }

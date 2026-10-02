@@ -404,9 +404,10 @@ final class ReaderState {
     }
 
     private func watchFocus(of model: ViewerModel) {
-        model.pdfView.onOpenBook = { [weak self] title, number in
+        model.pdfView.onOpenBook = { [weak self, weak model] title, page in
             guard let self else { return }
-            OtherBooks.shared.follow(title: title, number: number, from: self)
+            OtherBooks.shared.follow(title: title, page: page,
+                                     folder: model?.location?.deletingLastPathComponent(), from: self)
         }
         model.pdfView.onAddBookmark = { [weak self, weak model] page, point in
             self?.bookmarkDraft = model?.bookmarkDraft(page: page, point: point)

@@ -126,7 +126,7 @@ final class PageReferences {
                 // "(Kernregeln: Monster, S. 284)": the title together with the page. Spelled
                 // out, as in "(Die Belohnungen der Stadt, Seite 64)", it is rather a section of
                 // this document, unless the title is assigned to another book.
-                let own = ownTitles.contains(OtherBooks.key(for: book.title))
+                let own = isOwnTitle(book.title)
                 if !own, !abbreviated, !OtherBooks.isKnown(book.title) {
                     if let target = pageIndex(forNumber: first), target != index {
                         add(NSRange(location: match.range.location,
@@ -141,7 +141,7 @@ final class PageReferences {
                 }
             } else if let book = bookAfter(NSMaxRange(match.range), in: string) {
                 // "S. 8 in Kernregeln: NSC": the page together with the title.
-                if !ownTitles.contains(OtherBooks.key(for: book.title)) {
+                if !isOwnTitle(book.title) {
                     add(NSRange(location: match.range.location, length: book.end - match.range.location),
                         .book(title: book.title, number: first))
                     continue
@@ -171,7 +171,7 @@ final class PageReferences {
                   OtherBooks.isKnown(title) || Self.isItalic(titleRange, on: page)
             else { continue }
             let range = NSRange(location: titleRange.location, length: NSMaxRange(match.range(at: 2)) - titleRange.location)
-            if ownTitles.contains(OtherBooks.key(for: title)) {
+            if isOwnTitle(title) {
                 if let target = pageIndex(forNumber: number), target != index { add(range, .page(target)) }
             } else {
                 add(range, .book(title: title, number: number))
@@ -392,6 +392,13 @@ final class PageReferences {
 
     private static let titleAfter = try! NSRegularExpression(
         pattern: #"^\s*,?\s*(?:of|from|in|im|aus|der|des)\s+(\p{Lu})"#)
+
+    /// Whether a title is this document's, also with more words before it, like a series
+    /// name: "Pathfinder Monster Core" inside "Monster Core".
+    private func isOwnTitle(_ title: String) -> Bool {
+        let key = OtherBooks.key(for: title)
+        return ownTitles.contains { key == $0 || key.hasSuffix(" " + $0) }
+    }
 
     private func endsWithOwnTitle(_ text: String) -> Bool {
         let normalized = OtherBooks.key(for: text)
