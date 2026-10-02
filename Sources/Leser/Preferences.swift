@@ -44,6 +44,7 @@ enum Preferences {
             searchFromCurrentPageKey: true,
             BookmarkPreferences.showKey: true,
             PageTone.sepiaKey: false,
+            OtherBooks.openingKey: OtherBookOpening.tab.rawValue,
         ])
     }
 
@@ -294,6 +295,7 @@ struct SettingsView: View {
                     .font(.callout)
                     .foregroundStyle(.secondary)
             }
+            OtherBooksSettings()
             Section {
                 Toggle("An der zuletzt gelesenen Stelle weiterlesen", isOn: $rememberPosition)
                     .onChange(of: rememberPosition) { _, remember in

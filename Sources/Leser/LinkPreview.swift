@@ -17,7 +17,8 @@ import PDFKit
 
 /// Shows where a link inside the document leads while the pointer rests on it, without going
 /// there: the target page from the place the link points to, in a small popover. Page
-/// references in the text, like "(page 359)", count as links too.
+/// references in the text, like "(page 359)", count as links too, and so do references into
+/// other books, like "(Kernregeln: Monster, S. 284)", once their book is assigned to a file.
 @MainActor
 final class LinkPreview {
     /// Something the pointer can rest on that leads elsewhere in the document.
@@ -27,7 +28,14 @@ final class LinkPreview {
         let page: PDFPage
         /// The area on the page the popover points at, in page coordinates.
         let bounds: CGRect
-        let destination: PDFDestination
+        let content: Content
+    }
+
+    private enum Content {
+        /// The place the target leads to, shown as a picture of its page.
+        case destination(PDFDestination)
+        /// A note instead, for a book not assigned to a file yet, for instance.
+        case message(String)
     }
 
     private weak var view: ReaderPDFView?
@@ -67,19 +75,25 @@ final class LinkPreview {
     }
 
     private func show() {
-        guard let view, let target = current, let image = Self.image(of: target.destination)
-        else { return }
-
-        let imageView = NSImageView(image: image)
-        imageView.imageScaling = .scaleNone
-        imageView.frame = NSRect(origin: .zero, size: image.size)
-        PageTone.apply(to: imageView)
+        guard let view, let target = current else { return }
+        let content: NSView
+        switch target.content {
+        case .destination(let destination):
+            guard let image = Self.image(of: destination) else { return }
+            let imageView = NSImageView(image: image)
+            imageView.imageScaling = .scaleNone
+            imageView.frame = NSRect(origin: .zero, size: image.size)
+            PageTone.apply(to: imageView)
+            content = imageView
+        case .message(let text):
+            content = Self.messageView(text)
+        }
         let controller = NSViewController()
-        controller.view = imageView
+        controller.view = content
 
         let popover = NSPopover()
         popover.contentViewController = controller
-        popover.contentSize = image.size
+        popover.contentSize = content.frame.size
         popover.behavior = .applicationDefined
         popover.animates = true
         let anchor = view.convert(target.bounds, from: target.page)
@@ -106,16 +120,49 @@ final class LinkPreview {
            let destination = Self.destination(of: link) {
             removeLinkToolTips()
             return Target(id: ObjectIdentifier(link), page: page, bounds: link.bounds,
-                          destination: destination)
+                          content: .destination(destination))
         }
-        guard let view, let (page, reference) = view.pageReference(at: location),
-              let targetPage = view.document?.page(at: reference.target)
-        else { return nil }
-        let unspecified = CGFloat(kPDFDestinationUnspecifiedValue)
+        guard let view, let (page, reference) = view.pageReference(at: location) else { return nil }
+        let content: Content
+        switch reference.target {
+        case .page(let index):
+            guard let targetPage = view.document?.page(at: index) else { return nil }
+            content = .destination(Self.top(of: targetPage))
+        case .book(let title, let number):
+            content = Self.content(ofPage: number, in: title)
+        }
         let bounds = reference.bounds.dropFirst().reduce(reference.bounds[0]) { $0.union($1) }
         return Target(id: [ObjectIdentifier(page), reference.location] as [AnyHashable],
-                      page: page, bounds: bounds,
-                      destination: PDFDestination(page: targetPage, at: CGPoint(x: unspecified, y: unspecified)))
+                      page: page, bounds: bounds, content: content)
+    }
+
+    /// The page of another book, or what keeps it from being shown.
+    private static func content(ofPage number: Int, in title: String) -> Content {
+        guard OtherBooks.isKnown(title) else {
+            return .message(String(localized: "„\(title)“ ist noch keiner Datei zugeordnet. Klicke, um die Datei zu wählen."))
+        }
+        guard let book = OtherBooks.shared.page(number, of: title) else {
+            return .message(String(localized: "Die Datei für „\(title)“ fehlt oder kann nicht gelesen werden."))
+        }
+        guard let index = book.index, let page = book.document.page(at: index) else {
+            return .message(String(localized: "„\(title)“ hat keine Seite \(number)."))
+        }
+        return .destination(top(of: page))
+    }
+
+    private static func top(of page: PDFPage) -> PDFDestination {
+        let unspecified = CGFloat(kPDFDestinationUnspecifiedValue)
+        return PDFDestination(page: page, at: CGPoint(x: unspecified, y: unspecified))
+    }
+
+    private static func messageView(_ text: String) -> NSView {
+        let label = NSTextField(wrappingLabelWithString: text)
+        label.preferredMaxLayoutWidth = 260
+        let size = label.fittingSize
+        label.frame = NSRect(x: 12, y: 10, width: size.width, height: size.height)
+        let container = NSView(frame: NSRect(x: 0, y: 0, width: size.width + 24, height: size.height + 20))
+        container.addSubview(label)
+        return container
     }
 
     /// A link at a point of the view that leads somewhere in this document.

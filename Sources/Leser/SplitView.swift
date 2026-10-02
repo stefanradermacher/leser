@@ -89,6 +89,15 @@ final class ReaderState {
     @ObservationIgnored private var secondaryURL: URL?
     @ObservationIgnored private var secondaryWatcher: FileWatcher?
 
+    /// The windows' states, to find the window showing a file.
+    private static let all = NSHashTable<ReaderState>.weakObjects()
+
+    /// The state of the window whose main view shows a file.
+    static func open(for url: URL) -> ReaderState? {
+        let path = url.standardizedFileURL.path
+        return all.allObjects.first { $0.primaryURL?.standardizedFileURL.path == path }
+    }
+
     init(primary: ViewerModel, fileURL: URL?) {
         self.primary = primary
         primaryURL = fileURL
@@ -99,6 +108,7 @@ final class ReaderState {
         }
         primary.splitPosition = { [weak self] in self?.splitPosition() }
         restoreSplit()
+        Self.all.add(self)
     }
 
     // MARK: Remembering the split
@@ -220,7 +230,18 @@ final class ReaderState {
         }
     }
 
-    private func openOtherDocument(at url: URL) {
+    /// Shows a file in the second view at a page, or goes to the page if it is shown there.
+    func showInSecondView(_ url: URL, at page: Int?) {
+        if let secondary, secondaryURL?.standardizedFileURL == url.standardizedFileURL {
+            if let page { secondary.goToPage(page) }
+            activate(secondary)
+            secondary.focusDocument()
+            return
+        }
+        openOtherDocument(at: url, startPage: page ?? 0)
+    }
+
+    private func openOtherDocument(at url: URL, startPage: Int = 0) {
         guard let document = PDFDocument(url: url) else {
             let alert = NSAlert()
             alert.messageText = String(localized: "Das Dokument „\(url.lastPathComponent)“ konnte nicht geöffnet werden.")
@@ -239,7 +260,7 @@ final class ReaderState {
             lockedSecondary = (document, url)
             isSecondaryActive = false
         } else {
-            showOtherDocument(document, url: url)
+            showOtherDocument(document, url: url, startPage: startPage)
         }
     }
 
@@ -249,9 +270,10 @@ final class ReaderState {
         showOtherDocument(locked.document, url: locked.url)
     }
 
-    private func showOtherDocument(_ document: PDFDocument, url: URL) {
+    private func showOtherDocument(_ document: PDFDocument, url: URL, startPage: Int = 0) {
         // A guest in this window: its reading position is not remembered.
-        showSecondary(ViewerModel(document: document, fileURL: nil, displayName: url.lastPathComponent))
+        showSecondary(ViewerModel(document: document, fileURL: nil, displayName: url.lastPathComponent,
+                                  startPage: startPage))
         secondaryURL = url
         secondaryWatcher = FileWatcher(url: url) { [weak self] in self?.reloadSecondary() }
     }
@@ -382,6 +404,10 @@ final class ReaderState {
     }
 
     private func watchFocus(of model: ViewerModel) {
+        model.pdfView.onOpenBook = { [weak self] title, number in
+            guard let self else { return }
+            OtherBooks.shared.follow(title: title, number: number, from: self)
+        }
         model.pdfView.onAddBookmark = { [weak self, weak model] page, point in
             self?.bookmarkDraft = model?.bookmarkDraft(page: page, point: point)
         }

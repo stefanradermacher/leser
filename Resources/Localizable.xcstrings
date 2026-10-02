@@ -188,6 +188,28 @@
         }
       }
     },
+    "Andere Bücher": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Other Books"
+          }
+        }
+      }
+    },
+    "Andere Datei zuordnen …": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Assign Another File…"
+          }
+        }
+      }
+    },
     "Anderes Dokument in zweiter Ansicht öffnen …": {
       "extractionState": "manual",
       "localizations": {
@@ -276,6 +298,17 @@
         }
       }
     },
+    "Bearbeiten …": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Edit…"
+          }
+        }
+      }
+    },
     "Beim Öffnen eines Dokuments": {
       "extractionState": "manual",
       "localizations": {
@@ -283,6 +316,28 @@
           "stringUnit": {
             "state": "translated",
             "value": "When opening a document"
+          }
+        }
+      }
+    },
+    "Buch": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Book"
+          }
+        }
+      }
+    },
+    "Bücher öffnen": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Open Books"
           }
         }
       }
@@ -397,6 +452,17 @@
         }
       }
     },
+    "Die Datei für „%@“ fehlt oder kann nicht gelesen werden.": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The file for “%@” is missing or cannot be read."
+          }
+        }
+      }
+    },
     "Die Datei ist beschädigt oder kein PDF-Dokument.": {
       "extractionState": "manual",
       "localizations": {
@@ -404,6 +470,17 @@
           "stringUnit": {
             "state": "translated",
             "value": "The file is damaged or not a PDF document."
+          }
+        }
+      }
+    },
+    "Die zugeordnete Datei fehlt oder ist kein lesbares PDF-Dokument. In den Einstellungen unter „Andere Bücher“ kannst du ihr eine andere Datei zuordnen.": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The assigned file is missing or not a readable PDF document. You can assign another file in Settings under “Other Books”."
           }
         }
       }
@@ -613,6 +690,17 @@
           "stringUnit": {
             "state": "translated",
             "value": "Single Page"
+          }
+        }
+      }
+    },
+    "Entfernen": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Remove"
           }
         }
       }
@@ -892,6 +980,17 @@
         }
       }
     },
+    "In der zweiten Ansicht": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "In the Second View"
+          }
+        }
+      }
+    },
     "In einem neuen Fenster": {
       "extractionState": "manual",
       "localizations": {
@@ -899,6 +998,17 @@
           "stringUnit": {
             "state": "translated",
             "value": "In a new window"
+          }
+        }
+      }
+    },
+    "In einem neuen Tab": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "In a New Tab"
           }
         }
       }
@@ -1272,6 +1382,17 @@
           "stringUnit": {
             "state": "translated",
             "value": "Never"
+          }
+        }
+      }
+    },
+    "Noch keine Bücher zugeordnet": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "No Books Assigned Yet"
           }
         }
       }
@@ -1859,6 +1980,17 @@
         }
       }
     },
+    "Verweise wie „Kernregeln: Monster, S. 284“ öffnen das genannte Buch an dieser Seite. Beim ersten Mal fragt Leser, welche Datei zu dem Buch gehört.": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "References like “Player Core 392” open the book they name at that page. The first time, Leser asks which file belongs to the book."
+          }
+        }
+      }
+    },
     "Vielen Dank für deine Unterstützung!": {
       "extractionState": "manual",
       "localizations": {
@@ -1910,6 +2042,17 @@
           "stringUnit": {
             "state": "translated",
             "value": "Find Next"
+          }
+        }
+      }
+    },
+    "Welche Datei ist „%@“?": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Which file is “%@”?"
           }
         }
       }
@@ -1969,6 +2112,17 @@
         }
       }
     },
+    "Zugeordnete Bücher": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Assigned Books"
+          }
+        }
+      }
+    },
     "Zuletzt verwendet": {
       "extractionState": "manual",
       "localizations": {
@@ -1976,6 +2130,28 @@
           "stringUnit": {
             "state": "translated",
             "value": "Last used"
+          }
+        }
+      }
+    },
+    "Zuordnen": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Assign"
+          }
+        }
+      }
+    },
+    "Zuordnung entfernen": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Remove Assignment"
           }
         }
       }
@@ -2031,6 +2207,39 @@
           "stringUnit": {
             "state": "translated",
             "value": "About Leser"
+          }
+        }
+      }
+    },
+    "„%@“ hat keine Seite %lld.": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "“%@” has no page %lld."
+          }
+        }
+      }
+    },
+    "„%@“ ist noch keiner Datei zugeordnet. Klicke, um die Datei zu wählen.": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "“%@” is not assigned to a file yet. Click to choose the file."
+          }
+        }
+      }
+    },
+    "„%@“ konnte nicht geöffnet werden.": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "“%@” could not be opened."
           }
         }
       }

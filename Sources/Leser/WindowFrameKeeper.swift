@@ -52,6 +52,8 @@ struct WindowFrameKeeper: NSViewRepresentable {
                 guard let self, let window else { return }
                 self.restoreFrame(of: window)
                 self.observe(window)
+                // A book opened from a reference joins the window it was opened from.
+                DocumentTabs.adopt(window)
                 TabBarKeeper.track(window)
             }
         }

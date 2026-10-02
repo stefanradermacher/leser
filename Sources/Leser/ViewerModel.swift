@@ -151,6 +151,9 @@ final class ViewerModel {
     @ObservationIgnored nonisolated(unsafe) private var observers: [NSObjectProtocol] = []
     /// Page shown first when no reading position is remembered.
     @ObservationIgnored private let startPage: Int
+    /// Page shown first instead of the remembered reading position, for a document opened
+    /// from a reference into it.
+    @ObservationIgnored private var openingPage: Int?
     /// State to restore after reloading the document.
     @ObservationIgnored private let restoring: ViewSnapshot?
     /// The second view of a split window, stored with the reading position of the main view.
@@ -180,6 +183,7 @@ final class ViewerModel {
         self.location = location ?? fileURL ?? document.documentURL
         self.startPage = startPage
         self.restoring = restoring
+        openingPage = DocumentTabs.takePendingPage(for: fileURL)
         if let restoring {
             pageLayout = restoring.layout
             fitMode = restoring.fitMode
@@ -187,6 +191,7 @@ final class ViewerModel {
         }
 
         pdfView.document = document
+        pdfView.documentName = self.displayName
         pdfView.displayMode = pageLayout.displayMode
         pdfView.displaysAsBook = pageLayout == .book
         pdfView.displayDirection = .vertical
@@ -397,6 +402,8 @@ final class ViewerModel {
             if let page = document.page(at: index) {
                 pdfView.go(to: PDFDestination(page: page, at: restoring.point))
             }
+        } else if let openingPage, let page = document.page(at: openingPage) {
+            pdfView.go(to: page)
         } else if let saved = savedReadingPosition(),
            let page = document.page(at: saved.page) {
             pdfView.go(to: PDFDestination(page: page, at: CGPoint(x: saved.x, y: saved.y)))
@@ -814,6 +821,11 @@ final class ReaderPDFView: PDFView {
     var onAttach: (() -> Void)?
     /// Called to add a bookmark at a point on a page (page index, point in page coordinates).
     var onAddBookmark: ((Int, CGPoint) -> Void)?
+    /// Called to follow a reference into another book (its title, the page number given).
+    var onOpenBook: ((String, Int) -> Void)?
+    /// The name of the document, taken as its title when telling its own page references
+    /// from those into other books.
+    var documentName: String?
 
     /// Shows where a link in the document leads while the pointer rests on it.
     private lazy var linkPreview = LinkPreview(view: self)
@@ -826,7 +838,9 @@ final class ReaderPDFView: PDFView {
     /// The page reference in the text at a point of the view.
     func pageReference(at location: NSPoint) -> (page: PDFPage, reference: PageReferences.Reference)? {
         guard let document, let page = page(for: location, nearest: false) else { return nil }
-        if pageReferences?.document !== document { pageReferences = PageReferences(document: document) }
+        if pageReferences?.document !== document || pageReferences?.booksRevision != OtherBooks.revision {
+            pageReferences = PageReferences(document: document, name: documentName)
+        }
         guard let reference = pageReferences?.reference(at: convert(location, to: page), on: page)
         else { return nil }
         return (page, reference)
@@ -868,10 +882,14 @@ final class ReaderPDFView: PDFView {
         clickedReference = nil
         guard let (page, reference) = pageReference(at: location), page === clicked.page,
               reference.location == clicked.reference.location,
-              currentSelection?.string?.isEmpty ?? true,
-              let target = document?.page(at: reference.target)
+              currentSelection?.string?.isEmpty ?? true
         else { return }
-        go(to: target)
+        switch reference.target {
+        case .page(let index):
+            if let target = document?.page(at: index) { go(to: target) }
+        case .book(let title, let number):
+            onOpenBook?(title, number)
+        }
     }
 
     override func scrollWheel(with event: NSEvent) {
