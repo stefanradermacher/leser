@@ -1003,7 +1003,7 @@ final class ReaderPDFView: PDFView {
 
     /// Text that is white or nearly so, as on the coloured bands of headings, turns black:
     /// pasted into a document it would otherwise be invisible on the white page.
-    private static func readableOnWhite(_ text: NSAttributedString) -> NSAttributedString {
+    static func readableOnWhite(_ text: NSAttributedString) -> NSAttributedString {
         let result = NSMutableAttributedString(attributedString: text)
         text.enumerateAttribute(.foregroundColor, in: NSRange(location: 0, length: text.length)) { value, range, _ in
             guard let color = (value as? NSColor)?.usingColorSpace(.sRGB) else { return }

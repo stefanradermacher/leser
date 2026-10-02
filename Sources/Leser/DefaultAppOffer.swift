@@ -96,14 +96,23 @@ enum DefaultAppOffer {
         }
         guard isInstalled, !defaults.bool(forKey: Key.wasDefault) else { return false }
 
-        let usageDays = defaults.integer(forKey: Key.usageDays)
-        switch defaults.integer(forKey: Key.offerCount) {
+        return isDue(usageDays: defaults.integer(forKey: Key.usageDays),
+                     offers: defaults.integer(forKey: Key.offerCount),
+                     lastOffer: defaults.object(forKey: Key.lastOfferDate) as? Date,
+                     usageDaysAtLastOffer: defaults.integer(forKey: Key.usageDaysAtLastOffer))
+    }
+
+    /// Whether the use of Leser so far calls for an offer: the first after enough days of use,
+    /// the second a while later and after enough further days.
+    static func isDue(usageDays: Int, offers: Int, lastOffer: Date?, usageDaysAtLastOffer: Int,
+                      now: Date = .now) -> Bool {
+        switch offers {
         case 0:
             return usageDays >= requiredUsageDays
         case ..<maxOffers:
-            guard let last = defaults.object(forKey: Key.lastOfferDate) as? Date else { return false }
-            let newUsageDays = usageDays - defaults.integer(forKey: Key.usageDaysAtLastOffer)
-            return Date.now.timeIntervalSince(last) >= repeatAfter && newUsageDays >= requiredUsageDays
+            guard let lastOffer else { return false }
+            return now.timeIntervalSince(lastOffer) >= repeatAfter
+                && usageDays - usageDaysAtLastOffer >= requiredUsageDays
         default:
             return false
         }

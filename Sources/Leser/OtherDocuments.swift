@@ -50,7 +50,8 @@ final class OtherDocuments {
     @ObservationIgnored private var files: [String: URL] = [:]
     @ObservationIgnored private var loaded: [URL: (document: PDFDocument, references: PageReferences)] = [:]
 
-    private init() {
+    /// Reads the assignments stored before; `shared` is the one to use, the tests make their own.
+    init() {
         if let data = UserDefaults.standard.data(forKey: Self.defaultsKey),
            let stored = try? JSONDecoder().decode([String: Assignment].self, from: data) {
             // By the key of their title as it is formed now, which may have changed since.

@@ -32,14 +32,26 @@ Nachträglich lässt sich die Nummer nicht setzen: `CFBundleVersion` wird beim V
 
 Das App-Icon und das Dokumentsymbol werden von `scripts/make_icon.swift` gezeichnet: das App-Icon in den Asset-Katalog, das Dokumentsymbol nach `Resources/PDFDocument.icns`. Nach Änderungen an der Zeichnung im Projektordner `swift scripts/make_icon.swift` ausführen. Das Dokumentsymbol zeigt macOS nur, wenn Leser die Standard-App für PDFs ist, und auch dann meist nur dort, wo es keine Seitenvorschau gibt.
 
-`scripts/make_manual.swift` zeichnet `docs/Leser-Handbuch.pdf`, ein zehnseitiges Handbuch mit Gliederung und drei Bildschirmfotos aus `docs/screenshots/`. Es erklärt die Bedienung, dient zugleich als Beispieldokument und ist in den Screenshots für den App Store zu sehen – die Bildschirmfotos im Handbuch zeigen also das Handbuch selbst. Die Texte stehen in `docs/handbuch/de.md` und `docs/handbuch/en.md`, das Format ist oben in den Dateien beschrieben. Nach Änderungen im Projektordner `swift scripts/make_manual.swift` ausführen; `swift scripts/make_manual.swift en` schreibt die englische Fassung nach `docs/Leser-Manual.pdf`. Beide Fassungen kopiert das Skript außerdem nach `Resources/`: Sie liegen im App-Bundle, und „Hilfe → Leser-Handbuch“ öffnet die zur App-Sprache passende direkt in Leser, offline und immer zur installierten Version passend.
+`scripts/make_manual.swift` zeichnet `docs/Leser-Handbuch.pdf`, ein dreizehnseitiges Handbuch mit Gliederung und vier Bildschirmfotos aus `docs/screenshots/`. Es erklärt die Bedienung, dient zugleich als Beispieldokument und ist in den Screenshots für den App Store zu sehen – die Bildschirmfotos im Handbuch zeigen also das Handbuch selbst. Die Texte stehen in `docs/handbuch/de.md` und `docs/handbuch/en.md`, das Format ist oben in den Dateien beschrieben. Nach Änderungen im Projektordner `swift scripts/make_manual.swift` ausführen; `swift scripts/make_manual.swift en` schreibt die englische Fassung nach `docs/Leser-Manual.pdf`. Beide Fassungen kopiert das Skript außerdem nach `Resources/`: Sie liegen im App-Bundle, und „Hilfe → Leser-Handbuch“ öffnet die zur App-Sprache passende direkt in Leser, offline und immer zur installierten Version passend.
 
 ### Projektstruktur
 
 - `Sources/Leser/`: Quellcode; neue Dateien gehören automatisch zum Projekt
 - `Resources/`: Asset-Katalog mit App-Icon, Monogramme, Lokalisierung, `PrivacyInfo.xcprivacy`
-- `Config/Info.plist`, `Config/Leser.entitlements`: App-Einstellungen und Sandbox-Berechtigungen (nur Lesezugriff auf selbst gewählte Dateien und Drucken)
+- `Config/Info.plist`, `Config/Leser.entitlements`: App-Einstellungen und Sandbox-Berechtigungen (nur Lesezugriff auf selbst gewählte Dateien, das Merken solcher Dateien für Verweise auf andere Dokumente, und Drucken)
 - `Config/Leser.xcconfig`: Build-Einstellungen; bindet optional `Config/Local.xcconfig` ein
+- `Tests/LeserTests/`: Unit-Tests; neue Dateien gehören automatisch zum Test-Target
+- `testdata/`: Dokumente zum Ausprobieren von Hand, darunter zwei mit Links zwischen den Dateien (`swift scripts/make_link_tests.swift`)
+
+### Tests
+
+```
+./test.sh
+```
+
+Das führt die Unit-Tests aus (Swift Testing). Sie laufen im Debug-Build von Leser, der eigene Einstellungen hat, und lassen die der installierten App unberührt. Die PDFs, die sie brauchen, erzeugen sie selbst, mit genau dem Text, den Seitenbeschriftungen, Links und Kennungen, um die es im Test geht. Einzelne Gruppen oder Tests: `./test.sh PageReferenceTests` oder `./test.sh PageReferenceTests/pageLabelsDecide()`. Das vollständige Protokoll steht in `.build/test.log`.
+
+Geprüft werden vor allem die Teile mit eigener Logik: Seitenangaben und Verweise auf andere Dokumente, Kopieren mit Absätzen, Dokumentkennung, Lesestellen, Lesezeichen, Zuordnungen und Links in andere Dateien, Navigation, Suche, Drucken, die Teilung der Seitenleiste, die Dateiüberwachung beim Neuladen und die Nachfrage nach der Standard-App.
 
 Zum Signieren mit eigenem Entwicklerkonto `Config/Local.xcconfig.example` nach `Config/Local.xcconfig` kopieren und die eigene Team-ID eintragen. Die Datei bleibt lokal. Ohne sie baut Xcode ohne Team, und `./build.sh` signiert ad hoc.
 

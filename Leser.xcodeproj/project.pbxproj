@@ -6,8 +6,19 @@
 	objectVersion = 77;
 	objects = {
 
+/* Begin PBXContainerItemProxy section */
+		5E57A0000000000000000007 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 46F86FAA6BBF9AC94A7E4595 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 42AEFBAE01D2DFD981F7DA7D;
+			remoteInfo = Leser;
+		};
+/* End PBXContainerItemProxy section */
+
 /* Begin PBXFileReference section */
 		3398A89E5193BB4A7403F00C /* Leser.storekit */ = {isa = PBXFileReference; lastKnownFileType = text.json.xcstorekit; path = Leser.storekit; sourceTree = "<group>"; };
+		5E57A0000000000000000002 /* LeserTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = LeserTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		717037E812ACD37C551EE87B /* Leser.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Leser.xcconfig; sourceTree = "<group>"; };
 		86B3BC083DF59791BE56CFAE /* Leser.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Leser.entitlements; sourceTree = "<group>"; };
 		BB5944C6515D6D2B678426AB /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -20,6 +31,12 @@
 			path = Resources;
 			sourceTree = "<group>";
 		};
+		5E57A0000000000000000003 /* LeserTests */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			name = LeserTests;
+			path = Tests/LeserTests;
+			sourceTree = "<group>";
+		};
 		F2AB5FB218DA8B84623F4557 /* Sources */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
 			name = Sources;
@@ -29,6 +46,13 @@
 /* End PBXFileSystemSynchronizedRootGroup section */
 
 /* Begin PBXFrameworksBuildPhase section */
+		5E57A0000000000000000005 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		DAF6AA633395B1B76148E35B /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -54,6 +78,7 @@
 			isa = PBXGroup;
 			children = (
 				D2A57DC1D883FD21FB995169 /* Leser.app */,
+				5E57A0000000000000000002 /* LeserTests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -63,6 +88,7 @@
 			children = (
 				F2AB5FB218DA8B84623F4557 /* Sources */,
 				55B558C7EF820E6E00E5993B /* Resources */,
+				5E57A0000000000000000003 /* LeserTests */,
 				2245023265AE4CF87D02C8B6 /* Config */,
 				86024CAD1E83101D97359D73 /* Products */,
 			);
@@ -94,6 +120,29 @@
 			productReference = D2A57DC1D883FD21FB995169 /* Leser.app */;
 			productType = "com.apple.product-type.application";
 		};
+		5E57A0000000000000000001 /* LeserTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 5E57A0000000000000000009 /* Build configuration list for PBXNativeTarget "LeserTests" */;
+			buildPhases = (
+				5E57A0000000000000000004 /* Sources */,
+				5E57A0000000000000000005 /* Frameworks */,
+				5E57A0000000000000000006 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				5E57A0000000000000000008 /* PBXTargetDependency */,
+			);
+			fileSystemSynchronizedGroups = (
+				5E57A0000000000000000003 /* LeserTests */,
+			);
+			name = LeserTests;
+			packageProductDependencies = (
+			);
+			productName = LeserTests;
+			productReference = 5E57A0000000000000000002 /* LeserTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -106,6 +155,10 @@
 				TargetAttributes = {
 					42AEFBAE01D2DFD981F7DA7D = {
 						CreatedOnToolsVersion = 27.0;
+					};
+					5E57A0000000000000000001 = {
+						CreatedOnToolsVersion = 27.0;
+						TestTargetID = 42AEFBAE01D2DFD981F7DA7D;
 					};
 				};
 			};
@@ -125,11 +178,19 @@
 			projectRoot = "";
 			targets = (
 				42AEFBAE01D2DFD981F7DA7D /* Leser */,
+				5E57A0000000000000000001 /* LeserTests */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
+		5E57A0000000000000000006 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		943E4BBD9B51C81965501BA3 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -147,7 +208,22 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		5E57A0000000000000000004 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		5E57A0000000000000000008 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 42AEFBAE01D2DFD981F7DA7D /* Leser */;
+			targetProxy = 5E57A0000000000000000007 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
 
 /* Begin XCBuildConfiguration section */
 		23D4A73D9ACEE251428615F5 /* Debug */ = {
@@ -173,6 +249,34 @@
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 			};
 			name = Debug;
+		};
+		5E57A000000000000000000A /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 717037E812ACD37C551EE87B /* Leser.xcconfig */;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				GENERATE_INFOPLIST_FILE = YES;
+				PRODUCT_BUNDLE_IDENTIFIER = com.stefanradermacher.leser.tests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 5.0;
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Leser.app/Contents/MacOS/Leser";
+			};
+			name = Debug;
+		};
+		5E57A000000000000000000B /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 717037E812ACD37C551EE87B /* Leser.xcconfig */;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				GENERATE_INFOPLIST_FILE = YES;
+				PRODUCT_BUNDLE_IDENTIFIER = com.stefanradermacher.leser.tests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 5.0;
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Leser.app/Contents/MacOS/Leser";
+			};
+			name = Release;
 		};
 		8951287761002419191396D2 /* Release */ = {
 			isa = XCBuildConfiguration;
@@ -255,6 +359,15 @@
 			buildConfigurations = (
 				23D4A73D9ACEE251428615F5 /* Debug */,
 				9839C9EE1C2813DFF11007DA /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		5E57A0000000000000000009 /* Build configuration list for PBXNativeTarget "LeserTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				5E57A000000000000000000A /* Debug */,
+				5E57A000000000000000000B /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
