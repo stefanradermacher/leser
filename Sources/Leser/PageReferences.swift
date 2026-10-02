@@ -18,7 +18,7 @@ import PDFKit
 /// "see page 12" or "siehe Seite 42", so that they can be previewed and followed like links.
 ///
 /// Only references to the document itself count, and better one missed than one leading to a
-/// wrong page: a reference preceded by another book's title, as in "(Kernregeln: Monster,
+/// wrong page: a reference preceded by another document's title, as in "(Handbuch: Technik,
 /// S. 284)", is left alone, and so is a number no page of the document carries. Page numbers
 /// are the page labels the PDF sets; a PDF without them counts the pages by position, and a
 /// reference is only taken if the page at that position shows the number, since a cover
@@ -29,8 +29,8 @@ final class PageReferences {
         enum Target: Equatable {
             /// A page of this document, by index.
             case page(Int)
-            /// A page of another book, by its title and the page number given.
-            case book(title: String, number: Int)
+            /// A page of another document, by its title and the page number given.
+            case document(title: String, number: Int)
         }
 
         /// Where the reference is on its page, one rectangle per line, in page coordinates.
@@ -48,9 +48,9 @@ final class PageReferences {
     private var printed: [Int: Set<Int>] = [:]
     private let ownTitles: [String]
     private var cache: [Int: [Reference]] = [:]
-    /// The books assigned to files when the references were found: a newly assigned title is
+    /// The documents assigned to files when the references were found: a newly assigned title is
     /// recognized in more forms.
-    let booksRevision = OtherBooks.revision
+    let assignmentsRevision = OtherDocuments.revision
 
     /// `name` is the document's file name, taken as its title along with the one the PDF sets.
     init(document: PDFDocument, name: String? = nil) {
@@ -63,7 +63,7 @@ final class PageReferences {
         }
         if let name { titles.append((name as NSString).deletingPathExtension) }
         if let url = document.documentURL { titles.append(url.deletingPathExtension().lastPathComponent) }
-        ownTitles = titles.map(OtherBooks.key(for:)).filter { $0.count >= 3 }
+        ownTitles = titles.map(OtherDocuments.key(for:)).filter { $0.count >= 3 }
     }
 
     /// The index of the page with a number, as a reference gives it: by the page labels of
@@ -122,12 +122,12 @@ final class PageReferences {
             let abbreviated = string.substring(with: match.range(at: 1)).hasSuffix(".")
             let first = Int(string.substring(with: match.range(at: 2))) ?? 0
 
-            if let book = bookBefore(match.range.location, in: string, abbreviated: abbreviated) {
-                // "(Kernregeln: Monster, S. 284)": the title together with the page. Spelled
-                // out, as in "(Die Belohnungen der Stadt, Seite 64)", it is rather a section of
-                // this document, unless the title is assigned to another book.
-                let own = isOwnTitle(book.title)
-                if !own, !abbreviated, !OtherBooks.isKnown(book.title) {
+            if let named = titledBefore(match.range.location, in: string, abbreviated: abbreviated) {
+                // "(Handbuch: Technik, S. 284)": the title together with the page. Spelled out,
+                // as in "(Die Reise nach Norden, Seite 64)", it is rather a section of this
+                // document, unless the title is assigned to another document.
+                let own = isOwnTitle(named.title)
+                if !own, !abbreviated, !OtherDocuments.isKnown(named.title) {
                     if let target = pageIndex(forNumber: first), target != index {
                         add(NSRange(location: match.range.location,
                                     length: NSMaxRange(match.range(at: 2)) - match.range.location), .page(target))
@@ -135,20 +135,20 @@ final class PageReferences {
                     continue
                 }
                 if !own {
-                    add(NSRange(location: book.start, length: NSMaxRange(match.range(at: 2)) - book.start),
-                        .book(title: book.title, number: first))
+                    add(NSRange(location: named.start, length: NSMaxRange(match.range(at: 2)) - named.start),
+                        .document(title: named.title, number: first))
                     continue
                 }
-            } else if let book = bookAfter(NSMaxRange(match.range), in: string) {
-                // "S. 8 in Kernregeln: NSC": the page together with the title.
-                if !isOwnTitle(book.title) {
-                    add(NSRange(location: match.range.location, length: book.end - match.range.location),
-                        .book(title: book.title, number: first))
+            } else if let named = titledAfter(NSMaxRange(match.range), in: string) {
+                // "S. 8 in Handbuch: FAQ": the page together with the title.
+                if !isOwnTitle(named.title) {
+                    add(NSRange(location: match.range.location, length: named.end - match.range.location),
+                        .document(title: named.title, number: first))
                     continue
                 }
             }
             guard pointsIntoDocument(after: before, abbreviated: abbreviated),
-                  !namesAnotherBook(after: after)
+                  !namesAnotherDocument(after: after)
             else { continue }
             // The first number together with the word before it, a second one on its own.
             var parts = [NSRange(location: match.range.location,
@@ -162,36 +162,36 @@ final class PageReferences {
             }
         }
 
-        // "(Player Core 392)": a title in italics, or one assigned to a file, and a number.
+        // "(Field Guide 392)": a title in italics, or one assigned to a file, and a number.
         for match in Self.titleAndNumber.matches(in: text, range: NSRange(location: 0, length: string.length)) {
             let titleRange = match.range(at: 1)
             let title = Self.joined(string.substring(with: titleRange)).trimmingCharacters(in: .whitespaces)
             guard let number = Int(string.substring(with: match.range(at: 2))),
                   Self.isTitle(title),
-                  OtherBooks.isKnown(title) || Self.isItalic(titleRange, on: page)
+                  OtherDocuments.isKnown(title) || Self.isItalic(titleRange, on: page)
             else { continue }
             let range = NSRange(location: titleRange.location, length: NSMaxRange(match.range(at: 2)) - titleRange.location)
             if isOwnTitle(title) {
                 if let target = pageIndex(forNumber: number), target != index { add(range, .page(target)) }
             } else {
-                add(range, .book(title: title, number: number))
+                add(range, .document(title: title, number: number))
             }
         }
         return references.sorted { $0.location < $1.location }
     }
 
-    // MARK: - References to other books
+    // MARK: - References to other documents
 
     private static let titleAndNumber = try! NSRegularExpression(
         pattern: #"(?<=[(;,][ \t\n]{0,2})(\p{Lu}[\p{L}\d’'\-–: \n]{1,60}?)\s+(\d{1,4})(?=\s*[);,])"#)
 
-    /// Small words that can stand inside a title, as in "Zorn der Elemente".
+    /// Small words that can stand inside a title, as in "Atlas der Sterne".
     private static let titleJoiners: Set<String> = ["der", "des", "die", "das", "von", "und", "of", "the", "and"]
 
-    /// A book title right before a page reference: "Kernregeln: Monster, S. 284", or with an
-    /// abbreviation in brackets "Krieg der Unsterblichen (S. 147)". Gives the title and where
+    /// A title right before a page reference: "Handbuch: Technik, S. 284", or with an
+    /// abbreviation in brackets "Atlas der Sterne (S. 147)". Gives the title and where
     /// it starts in the page's text.
-    private func bookBefore(_ location: Int, in string: NSString, abbreviated: Bool) -> (title: String, start: Int)? {
+    private func titledBefore(_ location: Int, in string: NSString, abbreviated: Bool) -> (title: String, start: Int)? {
         // Back over spaces to the separator, a comma, or a bracket before an abbreviation.
         var end = location
         while end > 0, Self.isSpace(string.character(at: end - 1)) { end -= 1 }
@@ -207,9 +207,9 @@ final class PageReferences {
         return (title, Self.locationBefore(end, in: string, alphanumerics: Self.alphanumericCount(title)))
     }
 
-    /// A book title right after a page reference: "S. 8 in Kernregeln: NSC". Gives the title
+    /// A title right after a page reference: "S. 8 in Handbuch: FAQ". Gives the title
     /// and where it ends in the page's text.
-    private func bookAfter(_ location: Int, in string: NSString) -> (title: String, end: Int)? {
+    private func titledAfter(_ location: Int, in string: NSString) -> (title: String, end: Int)? {
         let length = min(100, string.length - location)
         let raw = string.substring(with: NSRange(location: location, length: length))
         let context = Self.joined(raw)
@@ -224,7 +224,7 @@ final class PageReferences {
     }
 
     /// The title at the end of a text: capitalized words, with small words like "der" inside
-    /// and a volume number at the end, as in "Kernregeln: Monster 2". It starts after an
+    /// and a volume number at the end, as in "Handbuch: Technik 2". It starts after an
     /// opening bracket or quote, if there is one.
     private static func trailingTitle(of text: String) -> String? {
         var words = text.split(separator: " ").map(String.init)
@@ -266,8 +266,8 @@ final class PageReferences {
         return isTitle(result) ? result : nil
     }
 
-    /// A capitalized word of at least three letters, like "Kernregeln:" or "NSC": short ones
-    /// like "SG" or "A" are rather values or areas than titles.
+    /// A capitalized word of at least three letters, like "Handbuch:" or "FAQ": short ones
+    /// like "Nr" or "A" are rather values or areas than titles.
     private static func isTitleWord(_ word: String) -> Bool {
         let bare = word.hasSuffix(":") ? String(word.dropLast()) : word
         guard let first = bare.first, first.isUppercase else { return false }
@@ -276,11 +276,11 @@ final class PageReferences {
 
     /// Whether a text can be a title: title words and small words, at most a volume number at
     /// the end, starting with a title word. A word in capitals only counts after a colon, as in
-    /// "Kernregeln: NSC"; elsewhere it is rather a heading, like "RIESIG TIER" in a stat block.
+    /// "Handbuch: FAQ"; elsewhere it is rather a heading, like "WICHTIGER HINWEIS" in a box.
     private static func isTitle(_ text: String) -> Bool {
         let words = text.split(separator: " ").map(String.init)
         guard let first = words.first, isTitleWord(first), words.count <= 8,
-              !OtherBooks.key(for: text).isEmpty,
+              !OtherDocuments.key(for: text).isEmpty,
               let last = words.last, !last.hasSuffix(":")
         else { return false }
         for (offset, word) in words.enumerated() {
@@ -297,7 +297,7 @@ final class PageReferences {
         return true
     }
 
-    /// Whether all letters of a range are set in italics, as book titles are in Paizo's books.
+    /// Whether all letters of a range are set in italics, as titles often are in printed works.
     private static func isItalic(_ range: NSRange, on page: PDFPage) -> Bool {
         guard let text = page.selection(for: range)?.attributedString, text.length > 0 else { return false }
         var italic = true
@@ -350,7 +350,7 @@ final class PageReferences {
 
     /// Whether the text before a page reference makes it one into this document. A bracket
     /// alone is enough for "(page 12)" or "(Seite 12)", not for an abbreviation: "(S. 147)"
-    /// usually follows the title of another book, as in "Krieg der Unsterblichen (S. 147)".
+    /// usually follows the title of another document, as in "Atlas der Sterne (S. 147)".
     private func pointsIntoDocument(after text: String, abbreviated: Bool) -> Bool {
         let tail = String(text.suffix(120))
         let context = Self.joined(tail)
@@ -360,8 +360,8 @@ final class PageReferences {
         if "([".contains(last) { return !abbreviated }
         if endsWithOwnTitle(trimmed) { return true }
         if ",:;".contains(last) {
-            // "(siehe Bereich J5, Seite 61)" or "(Monster Core, page 12)", but not
-            // "(Kernregeln: Monster, S. 284)".
+            // "(siehe Abschnitt B2, Seite 61)" or "(Field Guide, page 12)" inside Field Guide,
+            // but not "(Handbuch: Technik, S. 284)".
             let segment = Self.segment(before: String(trimmed.dropLast()))
             if let first = segment.split(separator: " ").first,
                Self.leadIns.contains(first.lowercased()) { return true }
@@ -377,16 +377,16 @@ final class PageReferences {
         return false
     }
 
-    /// Whether a title follows the reference, as in "page 8 of Player Core" or "S. 8 in
-    /// Kernregeln: NSC" – a capitalized word after "of", "in" and the like, unless it is the
-    /// document's own title. With an article between, as in "page 358 in the Ability
-    /// Glossary", it is rather a section of this document.
-    private func namesAnotherBook(after text: String) -> Bool {
+    /// Whether a title follows the reference, as in "page 8 of Field Guide" or "S. 8 in
+    /// Handbuch: FAQ" – a capitalized word after "of", "in" and the like, unless it is the
+    /// document's own title. With an article between, as in "page 358 in the Glossary", it is
+    /// rather a section of this document.
+    private func namesAnotherDocument(after text: String) -> Bool {
         let context = Self.joined(String(text.prefix(80)))
         guard let match = Self.titleAfter.firstMatch(
             in: context, range: NSRange(location: 0, length: (context as NSString).length))
         else { return false }
-        let title = OtherBooks.key(for: (context as NSString).substring(from: match.range(at: 1).location))
+        let title = OtherDocuments.key(for: (context as NSString).substring(from: match.range(at: 1).location))
         return !ownTitles.contains { title.hasPrefix($0) }
     }
 
@@ -394,14 +394,14 @@ final class PageReferences {
         pattern: #"^\s*,?\s*(?:of|from|in|im|aus|der|des)\s+(\p{Lu})"#)
 
     /// Whether a title is this document's, also with more words before it, like a series
-    /// name: "Pathfinder Monster Core" inside "Monster Core".
+    /// name: "Explorer Series Field Guide" inside "Field Guide".
     private func isOwnTitle(_ title: String) -> Bool {
-        let key = OtherBooks.key(for: title)
+        let key = OtherDocuments.key(for: title)
         return ownTitles.contains { key == $0 || key.hasSuffix(" " + $0) }
     }
 
     private func endsWithOwnTitle(_ text: String) -> Bool {
-        let normalized = OtherBooks.key(for: text)
+        let normalized = OtherDocuments.key(for: text)
         return ownTitles.contains { normalized.hasSuffix($0) }
     }
 

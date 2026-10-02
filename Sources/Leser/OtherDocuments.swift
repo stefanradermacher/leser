@@ -17,8 +17,8 @@ import Observation
 import PDFKit
 import SwiftUI
 
-/// Books that references in the text point to, like "Kernregeln: Monster, S. 284", each
-/// assigned to a file by the user the first time one of its references is followed. Links
+/// Other documents that references in the text point to, like "Handbuch: Technik, S. 284",
+/// each assigned to a file by the user the first time one of its references is followed. Links
 /// into other files count too, their file name taking the place of the title. The
 /// assignments hold for all documents.
 ///
@@ -26,34 +26,35 @@ import SwiftUI
 /// that permission for a chosen file across launches.
 @MainActor
 @Observable
-final class OtherBooks {
-    static let shared = OtherBooks()
+final class OtherDocuments {
+    static let shared = OtherDocuments()
 
-    struct Book: Codable, Identifiable {
+    struct Assignment: Codable, Identifiable {
         /// The title as it appeared in the reference it was assigned for.
         var title: String
         /// File name, to show without resolving the bookmark.
         var fileName: String
         var bookmark: Data
 
-        var id: String { OtherBooks.key(for: title) }
+        var id: String { OtherDocuments.key(for: title) }
     }
 
-    nonisolated private static let defaultsKey = "otherBooks"
-    nonisolated static let openingKey = "otherBookOpening"
+    nonisolated private static let defaultsKey = "otherDocuments"
+    nonisolated static let openingKey = "otherDocumentOpening"
 
-    /// Assigned books by the key of their title.
-    private(set) var books: [String: Book] = [:]
+    /// Assignments of files to titles, by the key of the title.
+    private(set) var assignments: [String: Assignment] = [:]
     /// Counts the changes, so that references found before can be found again.
     private(set) var revision = 0
 
     @ObservationIgnored private var files: [String: URL] = [:]
-    @ObservationIgnored private var documents: [URL: (document: PDFDocument, references: PageReferences)] = [:]
+    @ObservationIgnored private var loaded: [URL: (document: PDFDocument, references: PageReferences)] = [:]
 
     private init() {
         if let data = UserDefaults.standard.data(forKey: Self.defaultsKey),
-           let stored = try? JSONDecoder().decode([String: Book].self, from: data) {
-            books = stored
+           let stored = try? JSONDecoder().decode([String: Assignment].self, from: data) {
+            // By the key of their title as it is formed now, which may have changed since.
+            assignments = Dictionary(stored.values.map { ($0.id, $0) }, uniquingKeysWith: { first, _ in first })
         }
     }
 
@@ -69,7 +70,7 @@ final class OtherBooks {
     static var revision: Int { shared.revision }
 
     static func isKnown(_ title: String) -> Bool {
-        shared.books[key(for: title)] != nil
+        shared.assignments[key(for: title)] != nil
     }
 
     // MARK: Assigning files
@@ -80,20 +81,20 @@ final class OtherBooks {
             includingResourceValuesForKeys: nil, relativeTo: nil)
         else { return }
         let key = Self.key(for: title)
-        books[key] = Book(title: title, fileName: url.lastPathComponent, bookmark: bookmark)
+        assignments[key] = Assignment(title: title, fileName: url.lastPathComponent, bookmark: bookmark)
         files[key] = nil
         store()
     }
 
-    func remove(_ book: Book) {
-        books[book.id] = nil
-        files[book.id] = nil
+    func remove(_ assignment: Assignment) {
+        assignments[assignment.id] = nil
+        files[assignment.id] = nil
         store()
     }
 
     private func store() {
         revision += 1
-        if let data = try? JSONEncoder().encode(books) {
+        if let data = try? JSONEncoder().encode(assignments) {
             UserDefaults.standard.set(data, forKey: Self.defaultsKey)
         }
     }
@@ -102,14 +103,14 @@ final class OtherBooks {
     func file(for title: String) -> URL? {
         let key = Self.key(for: title)
         if let url = files[key] { return url }
-        guard let book = books[key] else { return nil }
+        guard let assignment = assignments[key] else { return nil }
         var stale = false
-        guard let url = try? URL(resolvingBookmarkData: book.bookmark, options: .withSecurityScope,
+        guard let url = try? URL(resolvingBookmarkData: assignment.bookmark, options: .withSecurityScope,
                                  relativeTo: nil, bookmarkDataIsStale: &stale),
               url.startAccessingSecurityScopedResource()
         else { return nil }
         // Moved or renamed: keep the bookmark up to date.
-        if stale { assign(url, to: book.title) }
+        if stale { assign(url, to: assignment.title) }
         files[key] = url
         return url
     }
@@ -128,12 +129,12 @@ final class OtherBooks {
     func page(_ page: Page, of title: String) -> (url: URL, document: PDFDocument, index: Int?)? {
         guard let url = file(for: title) else { return nil }
         let entry: (document: PDFDocument, references: PageReferences)
-        if let cached = documents[url] {
+        if let cached = loaded[url] {
             entry = cached
         } else {
             guard let document = PDFDocument(url: url), !document.isLocked else { return nil }
             entry = (document, PageReferences(document: document, name: url.lastPathComponent))
-            documents[url] = entry
+            loaded[url] = entry
         }
         switch page {
         case .number(let number):
@@ -145,7 +146,7 @@ final class OtherBooks {
 
     // MARK: Following a reference
 
-    /// Opens the page a reference into another book gives. An unknown title is assigned to a
+    /// Opens the page a reference into another document gives. An unknown title is assigned to a
     /// file first, chosen by the user, starting in `folder`, where a linked file is likely.
     func follow(title: String, page: Page, folder: URL? = nil, from state: ReaderState) {
         if file(for: title) != nil {
@@ -176,7 +177,7 @@ final class OtherBooks {
         guard let page = page(pointer, of: title) else {
             let alert = NSAlert()
             alert.messageText = String(localized: "„\(title)“ konnte nicht geöffnet werden.")
-            alert.informativeText = String(localized: "Die zugeordnete Datei fehlt oder ist kein lesbares PDF-Dokument. In den Einstellungen unter „Andere Bücher“ kannst du ihr eine andere Datei zuordnen.")
+            alert.informativeText = String(localized: "Die zugeordnete Datei fehlt oder ist kein lesbares PDF-Dokument. In den Einstellungen unter „Verweise“ kannst du ihr eine andere Datei zuordnen.")
             if let window = state.primary.pdfView.window {
                 alert.beginSheetModal(for: window)
             } else {
@@ -184,7 +185,7 @@ final class OtherBooks {
             }
             return
         }
-        switch OtherBookOpening.current {
+        switch OtherDocumentOpening.current {
         case .tab:
             DocumentTabs.open(page.url, at: page.index, nextTo: state.primary.pdfView.window)
         case .split:
@@ -193,8 +194,8 @@ final class OtherBooks {
     }
 }
 
-/// Where a book opens when a reference into it is followed.
-enum OtherBookOpening: String, CaseIterable, Identifiable {
+/// Where another document opens when a reference into it is followed.
+enum OtherDocumentOpening: String, CaseIterable, Identifiable {
     case tab, split
 
     var id: String { rawValue }
@@ -206,8 +207,8 @@ enum OtherBookOpening: String, CaseIterable, Identifiable {
         }
     }
 
-    static var current: OtherBookOpening {
-        OtherBookOpening(rawValue: UserDefaults.standard.string(forKey: OtherBooks.openingKey) ?? "") ?? .tab
+    static var current: OtherDocumentOpening {
+        OtherDocumentOpening(rawValue: UserDefaults.standard.string(forKey: OtherDocuments.openingKey) ?? "") ?? .tab
     }
 }
 
@@ -256,96 +257,101 @@ enum DocumentTabs {
 
 // MARK: - Settings
 
-/// The settings for references into other books: where they open, and the assigned files.
-struct OtherBooksSettings: View {
-    @AppStorage(OtherBooks.openingKey) private var opening = OtherBookOpening.tab.rawValue
-    @State private var showsBooks = false
-    private let books = OtherBooks.shared
+/// The settings for references into other documents: where they open, and the assigned files.
+struct ReferenceSettings: View {
+    @AppStorage(OtherDocuments.openingKey) private var opening = OtherDocumentOpening.tab.rawValue
+    private let store = OtherDocuments.shared
+
+    private var sorted: [OtherDocuments.Assignment] {
+        store.assignments.values.sorted { $0.title.localizedStandardCompare($1.title) == .orderedAscending }
+    }
 
     var body: some View {
-        Section {
-            Picker("Bücher öffnen", selection: $opening) {
-                ForEach(OtherBookOpening.allCases) { Text($0.title).tag($0.rawValue) }
+        Form {
+            Section {
+                Picker("Dokumente öffnen", selection: $opening) {
+                    ForEach(OtherDocumentOpening.allCases) { Text($0.title).tag($0.rawValue) }
+                }
+            } footer: {
+                SettingsFooter("Nennt ein Dokument eine Seite in einem anderen Dokument, etwa „Titel, S. 12“, öffnet ein Klick darauf das andere Dokument an dieser Seite. Welche Datei zu einem Titel gehört, fragt Leser beim ersten Mal. Links in andere Dateien funktionieren genauso.")
             }
-            LabeledContent("Zugeordnete Bücher") {
-                HStack {
-                    Text(verbatim: "\(books.books.count)")
+            Section("Zugeordnete Dokumente") {
+                if sorted.isEmpty {
+                    Text("Noch keine Dokumente zugeordnet")
                         .foregroundStyle(.secondary)
-                    Button("Bearbeiten …") { showsBooks = true }
+                } else {
+                    ForEach(sorted) { assignment in
+                        AssignmentRow(assignment: assignment)
+                    }
                 }
             }
-        } header: {
-            Text("Andere Bücher")
-        } footer: {
-            Text("Nennt ein Dokument eine Seite in einem anderen Buch, etwa „Titel, S. 12“, öffnet ein Klick darauf dieses Buch an der Seite. Welche Datei zu einem Titel gehört, fragt Leser beim ersten Mal. Links in andere Dateien funktionieren genauso.")
-                .font(.callout)
-                .foregroundStyle(.secondary)
         }
-        .sheet(isPresented: $showsBooks) {
-            OtherBooksList()
-        }
+        .formStyle(.grouped)
+        .frame(width: 520)
+        // Short lists keep the window small, long ones scroll.
+        .frame(height: min(200 + CGFloat(max(sorted.count, 1)) * 44, 560))
     }
 }
 
-private struct OtherBooksList: View {
-    @Environment(\.dismiss) private var dismiss
-    @State private var selection: String?
-    private let books = OtherBooks.shared
-
-    private var sorted: [OtherBooks.Book] {
-        books.books.values.sorted { $0.title.localizedStandardCompare($1.title) == .orderedAscending }
-    }
+/// An assigned title: the title and its file, the full path when the pointer rests on the file,
+/// and a button to show the file in the Finder.
+private struct AssignmentRow: View {
+    let assignment: OtherDocuments.Assignment
+    private let store = OtherDocuments.shared
 
     var body: some View {
-        VStack(alignment: .leading, spacing: 12) {
-            Text("Zugeordnete Bücher")
-                .font(.headline)
-            Table(sorted, selection: $selection) {
-                TableColumn("Buch", value: \.title)
-                TableColumn("Datei", value: \.fileName)
-            }
-            .contextMenu(forSelectionType: String.self) { ids in
-                if let book = ids.first.flatMap({ books.books[$0] }) {
-                    Button("Andere Datei zuordnen …") { reassign(book) }
-                    Button("Zuordnung entfernen") { books.remove(book) }
+        let url = store.file(for: assignment.title)
+        LabeledContent {
+            HStack(spacing: 6) {
+                Text(assignment.fileName)
+                    .foregroundStyle(url == nil ? .red : .secondary)
+                    .lineLimit(1)
+                    .truncationMode(.middle)
+                    .help(url?.path ?? String(localized: "Die Datei wurde nicht gefunden."))
+                Button {
+                    if let url { NSWorkspace.shared.activateFileViewerSelecting([url]) }
+                } label: {
+                    Image(systemName: "magnifyingglass.circle.fill")
                 }
-            }
-            .onDeleteCommand { removeSelection() }
-            .overlay {
-                if books.books.isEmpty {
-                    Text("Noch keine Bücher zugeordnet")
-                        .foregroundStyle(.secondary)
+                .buttonStyle(.borderless)
+                .foregroundStyle(.secondary)
+                .disabled(url == nil)
+                .help("Im Finder zeigen")
+                .accessibilityLabel("Im Finder zeigen")
+                Menu {
+                    Button("Andere Datei zuordnen …") { reassign() }
+                    Button("Zuordnung entfernen", role: .destructive) { store.remove(assignment) }
+                } label: {
+                    Image(systemName: "ellipsis.circle")
                 }
+                .menuStyle(.borderlessButton)
+                .menuIndicator(.hidden)
+                .fixedSize()
+                .accessibilityLabel("Weitere Aktionen")
             }
-            HStack {
-                Button("Entfernen") { removeSelection() }
-                    .disabled(selection == nil)
-                Button("Andere Datei zuordnen …") {
-                    if let book = selection.flatMap({ books.books[$0] }) { reassign(book) }
-                }
-                .disabled(selection == nil)
-                Spacer()
-                Button("Fertig") { dismiss() }
-                    .keyboardShortcut(.defaultAction)
-            }
+        } label: {
+            Text(assignment.title)
+                .lineLimit(1)
         }
-        .padding(20)
-        .frame(width: 520, height: 340)
+        .contextMenu {
+            Button("Im Finder zeigen") {
+                if let url { NSWorkspace.shared.activateFileViewerSelecting([url]) }
+            }
+            .disabled(url == nil)
+            Button("Andere Datei zuordnen …") { reassign() }
+            Divider()
+            Button("Zuordnung entfernen") { store.remove(assignment) }
+        }
     }
 
-    private func removeSelection() {
-        guard let book = selection.flatMap({ books.books[$0] }) else { return }
-        books.remove(book)
-        selection = nil
-    }
-
-    private func reassign(_ book: OtherBooks.Book) {
+    private func reassign() {
         let panel = NSOpenPanel()
         panel.allowedContentTypes = [.pdf]
-        panel.message = String(localized: "Welche Datei ist „\(book.title)“?")
+        panel.message = String(localized: "Welche Datei ist „\(assignment.title)“?")
         panel.prompt = String(localized: "Zuordnen")
+        panel.directoryURL = store.file(for: assignment.title)?.deletingLastPathComponent()
         if panel.runModal() == .OK, let url = panel.url {
-            books.assign(url, to: book.title)
+            store.assign(url, to: assignment.title)
         }
     }
 }

@@ -44,7 +44,7 @@ enum Preferences {
             searchFromCurrentPageKey: true,
             BookmarkPreferences.showKey: true,
             PageTone.sepiaKey: false,
-            OtherBooks.openingKey: OtherBookOpening.tab.rawValue,
+            OtherDocuments.openingKey: OtherDocumentOpening.tab.rawValue,
         ])
     }
 
@@ -227,29 +227,103 @@ enum TabbingPreference: String, CaseIterable, Identifiable {
     }
 }
 
+/// The settings window: tabs in its toolbar, as in other Mac apps, each as tall as its content.
 struct SettingsView: View {
-    @AppStorage(Preferences.layoutKey) private var layout = Preferences.lastUsedLayout
-    @AppStorage(Preferences.zoomKey) private var zoom = ZoomPreference.width.rawValue
-    @AppStorage(Preferences.sidebarKey) private var sidebar = SidebarPreference.automatic.rawValue
-    @AppStorage(Preferences.sidebarContentKey) private var sidebarContent = SidebarContentPreference.outline.rawValue
+    var body: some View {
+        TabView {
+            GeneralSettings()
+                .tabItem { Label("Allgemein", systemImage: "gearshape") }
+            AppearanceSettings()
+                .tabItem { Label("Darstellung", systemImage: "doc.richtext") }
+            ReferenceSettings()
+                .tabItem { Label("Verweise", systemImage: "link") }
+        }
+    }
+}
+
+/// A tab of the settings, as wide as all of them and as tall as its content, so that
+/// nothing scrolls and no scroller appears.
+private struct SettingsTab<Content: View>: View {
+    @ViewBuilder let content: Content
+
+    var body: some View {
+        Form { content }
+            .formStyle(.grouped)
+            .scrollDisabled(true)
+            .frame(width: 520)
+            .fixedSize(horizontal: false, vertical: true)
+    }
+}
+
+/// A short explanation below a setting.
+struct SettingsFooter: View {
+    let text: LocalizedStringKey
+
+    init(_ text: LocalizedStringKey) {
+        self.text = text
+    }
+
+    var body: some View {
+        Text(text)
+            .font(.callout)
+            .foregroundStyle(.secondary)
+    }
+}
+
+private struct GeneralSettings: View {
     @AppStorage(Preferences.tabbingKey) private var tabbing = TabbingPreference.system.rawValue
     @AppStorage(Preferences.rememberPositionKey) private var rememberPosition = true
     @AppStorage(Preferences.showSingleTabBarKey) private var showSingleTabBar = false
     @AppStorage(Preferences.reloadOnChangeKey) private var reloadOnChange = true
     @AppStorage(Preferences.searchFromCurrentPageKey) private var searchFromCurrentPage = true
-    @AppStorage(PageTone.sepiaKey) private var sepia = false
 
     var body: some View {
-        Form {
+        SettingsTab {
             Section {
                 DefaultAppSettingsRow()
             } footer: {
                 if !DefaultAppOffer.isInstalled {
-                    Text("Um Leser als Standard festzulegen, muss die App im Ordner „Programme“ liegen.")
-                        .font(.callout)
-                        .foregroundStyle(.secondary)
+                    SettingsFooter("Um Leser als Standard festzulegen, muss die App im Ordner „Programme“ liegen.")
                 }
             }
+            Section {
+                Picker("Neue Dokumente öffnen", selection: $tabbing) {
+                    ForEach(TabbingPreference.allCases) { Text($0.title).tag($0.rawValue) }
+                }
+                Toggle("Tableiste auch bei nur einem Dokument anzeigen", isOn: $showSingleTabBar)
+                    .onChange(of: showSingleTabBar) { TabBarKeeper.updateAll() }
+            }
+            Section {
+                Toggle("An der zuletzt gelesenen Stelle weiterlesen", isOn: $rememberPosition)
+                    .onChange(of: rememberPosition) { _, remember in
+                        if !remember { Preferences.forgetReadingPositions() }
+                    }
+            } footer: {
+                SettingsFooter("Leser merkt sich für jedes Dokument die Seite, auf der du zuletzt warst. Beim Ausschalten werden alle gespeicherten Stellen gelöscht.")
+            }
+            Section {
+                Toggle("Dokument neu laden, wenn sich die Datei ändert", isOn: $reloadOnChange)
+            } footer: {
+                SettingsFooter("Praktisch für PDFs, die ein anderes Programm erzeugt, etwa beim Export oder mit LaTeX. Seite, Zoom und Anzeige bleiben dabei erhalten.")
+            }
+            Section {
+                Toggle("Suche auf der aktuellen Seite beginnen", isOn: $searchFromCurrentPage)
+            } footer: {
+                SettingsFooter("Leser zeigt den ersten Treffer auf der aktuellen Seite oder danach und erst dann die davor. Ausgeschaltet beginnt die Suche immer am Anfang des Dokuments.")
+            }
+        }
+    }
+}
+
+private struct AppearanceSettings: View {
+    @AppStorage(Preferences.layoutKey) private var layout = Preferences.lastUsedLayout
+    @AppStorage(Preferences.zoomKey) private var zoom = ZoomPreference.width.rawValue
+    @AppStorage(Preferences.sidebarKey) private var sidebar = SidebarPreference.automatic.rawValue
+    @AppStorage(Preferences.sidebarContentKey) private var sidebarContent = SidebarContentPreference.outline.rawValue
+    @AppStorage(PageTone.sepiaKey) private var sepia = false
+
+    var body: some View {
+        SettingsTab {
             Section("Beim Öffnen eines Dokuments") {
                 Picker("Anzeige", selection: $layout) {
                     Text("Zuletzt verwendet").tag(Preferences.lastUsedLayout)
@@ -266,51 +340,12 @@ struct SettingsView: View {
                     ForEach(SidebarContentPreference.allCases) { Text($0.title).tag($0.rawValue) }
                 }
                 .disabled(sidebar == SidebarPreference.never.rawValue)
-                Picker("Neue Dokumente öffnen", selection: $tabbing) {
-                    ForEach(TabbingPreference.allCases) { Text($0.title).tag($0.rawValue) }
-                }
             }
             Section {
                 Toggle("Seiten in Sepia anzeigen", isOn: $sepia)
             } footer: {
-                Text("Tönt die Seiten wie warmes Papier, angenehmer für langes Lesen. Drucken und Kopieren bleiben unverändert.")
-                    .font(.callout)
-                    .foregroundStyle(.secondary)
-            }
-            Section {
-                Toggle("Tableiste auch bei nur einem Dokument anzeigen", isOn: $showSingleTabBar)
-                    .onChange(of: showSingleTabBar) { TabBarKeeper.updateAll() }
-            }
-            Section {
-                Toggle("Dokument neu laden, wenn sich die Datei ändert", isOn: $reloadOnChange)
-            } footer: {
-                Text("Praktisch für PDFs, die ein anderes Programm erzeugt, etwa beim Export oder mit LaTeX. Seite, Zoom und Anzeige bleiben dabei erhalten.")
-                    .font(.callout)
-                    .foregroundStyle(.secondary)
-            }
-            Section {
-                Toggle("Suche auf der aktuellen Seite beginnen", isOn: $searchFromCurrentPage)
-            } footer: {
-                Text("Leser zeigt den ersten Treffer auf der aktuellen Seite oder danach und erst dann die davor. Ausgeschaltet beginnt die Suche immer am Anfang des Dokuments.")
-                    .font(.callout)
-                    .foregroundStyle(.secondary)
-            }
-            OtherBooksSettings()
-            Section {
-                Toggle("An der zuletzt gelesenen Stelle weiterlesen", isOn: $rememberPosition)
-                    .onChange(of: rememberPosition) { _, remember in
-                        if !remember { Preferences.forgetReadingPositions() }
-                    }
-            } footer: {
-                Text("Leser merkt sich für jedes Dokument die Seite, auf der du zuletzt warst. Beim Ausschalten werden alle gespeicherten Stellen gelöscht.")
-                    .font(.callout)
-                    .foregroundStyle(.secondary)
+                SettingsFooter("Tönt die Seiten wie warmes Papier, angenehmer für langes Lesen. Drucken und Kopieren bleiben unverändert.")
             }
         }
-        .formStyle(.grouped)
-        // The window is as tall as its content, so nothing scrolls and no scroller appears.
-        .scrollDisabled(true)
-        .frame(width: 520)
-        .fixedSize(horizontal: false, vertical: true)
     }
 }

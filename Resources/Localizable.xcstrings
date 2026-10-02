@@ -133,6 +133,17 @@
         }
       }
     },
+    "Allgemein": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "General"
+          }
+        }
+      }
+    },
     "Als Lesezeichen hinzufügen": {
       "extractionState": "manual",
       "localizations": {
@@ -184,17 +195,6 @@
           "stringUnit": {
             "state": "translated",
             "value": "Continue where you left off"
-          }
-        }
-      }
-    },
-    "Andere Bücher": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Other Books"
           }
         }
       }
@@ -298,17 +298,6 @@
         }
       }
     },
-    "Bearbeiten …": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Edit…"
-          }
-        }
-      }
-    },
     "Beim Öffnen eines Dokuments": {
       "extractionState": "manual",
       "localizations": {
@@ -316,28 +305,6 @@
           "stringUnit": {
             "state": "translated",
             "value": "When opening a document"
-          }
-        }
-      }
-    },
-    "Buch": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Book"
-          }
-        }
-      }
-    },
-    "Bücher öffnen": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Open Books"
           }
         }
       }
@@ -371,6 +338,17 @@
           "stringUnit": {
             "state": "translated",
             "value": "Thanks for the coffee!"
+          }
+        }
+      }
+    },
+    "Darstellung": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "View"
           }
         }
       }
@@ -474,13 +452,24 @@
         }
       }
     },
-    "Die zugeordnete Datei fehlt oder ist kein lesbares PDF-Dokument. In den Einstellungen unter „Andere Bücher“ kannst du ihr eine andere Datei zuordnen.": {
+    "Die Datei wurde nicht gefunden.": {
       "extractionState": "manual",
       "localizations": {
         "en": {
           "stringUnit": {
             "state": "translated",
-            "value": "The assigned file is missing or not a readable PDF document. You can assign another file in Settings under “Other Books”."
+            "value": "The file could not be found."
+          }
+        }
+      }
+    },
+    "Die zugeordnete Datei fehlt oder ist kein lesbares PDF-Dokument. In den Einstellungen unter „Verweise“ kannst du ihr eine andere Datei zuordnen.": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The assigned file is missing or not a readable PDF document. You can assign another file in Settings under “References”."
           }
         }
       }
@@ -536,6 +525,17 @@
           "stringUnit": {
             "state": "translated",
             "value": "Reload the document when the file changes"
+          }
+        }
+      }
+    },
+    "Dokumente öffnen": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Open Documents"
           }
         }
       }
@@ -690,17 +690,6 @@
           "stringUnit": {
             "state": "translated",
             "value": "Single Page"
-          }
-        }
-      }
-    },
-    "Entfernen": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Remove"
           }
         }
       }
@@ -1342,13 +1331,13 @@
         }
       }
     },
-    "Nennt ein Dokument eine Seite in einem anderen Buch, etwa „Titel, S. 12“, öffnet ein Klick darauf dieses Buch an der Seite. Welche Datei zu einem Titel gehört, fragt Leser beim ersten Mal. Links in andere Dateien funktionieren genauso.": {
+    "Nennt ein Dokument eine Seite in einem anderen Dokument, etwa „Titel, S. 12“, öffnet ein Klick darauf das andere Dokument an dieser Seite. Welche Datei zu einem Titel gehört, fragt Leser beim ersten Mal. Links in andere Dateien funktionieren genauso.": {
       "extractionState": "manual",
       "localizations": {
         "en": {
           "stringUnit": {
             "state": "translated",
-            "value": "When a document refers to a page in another book, such as “Title, p. 12”, clicking it opens that book at the page. Leser asks once which file belongs to each title. Links to other files work the same way."
+            "value": "When a document refers to a page in another document, such as “Title, p. 12”, clicking it opens the other document at that page. Leser asks once which file belongs to each title. Links to other files work the same way."
           }
         }
       }
@@ -1397,13 +1386,13 @@
         }
       }
     },
-    "Noch keine Bücher zugeordnet": {
+    "Noch keine Dokumente zugeordnet": {
       "extractionState": "manual",
       "localizations": {
         "en": {
           "stringUnit": {
             "state": "translated",
-            "value": "No Books Assigned Yet"
+            "value": "No Documents Assigned Yet"
           }
         }
       }
@@ -1991,6 +1980,17 @@
         }
       }
     },
+    "Verweise": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "References"
+          }
+        }
+      }
+    },
     "Vielen Dank für deine Unterstützung!": {
       "extractionState": "manual",
       "localizations": {
@@ -2020,6 +2020,17 @@
           "stringUnit": {
             "state": "translated",
             "value": "Forward"
+          }
+        }
+      }
+    },
+    "Weitere Aktionen": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "More Actions"
           }
         }
       }
@@ -2112,13 +2123,13 @@
         }
       }
     },
-    "Zugeordnete Bücher": {
+    "Zugeordnete Dokumente": {
       "extractionState": "manual",
       "localizations": {
         "en": {
           "stringUnit": {
             "state": "translated",
-            "value": "Assigned Books"
+            "value": "Assigned Documents"
           }
         }
       }

@@ -18,7 +18,7 @@ import PDFKit
 /// Shows where a link inside the document leads while the pointer rests on it, without going
 /// there: the target page from the place the link points to, in a small popover. Page
 /// references in the text, like "(page 359)", count as links too, and so do references into
-/// other books, like "(Kernregeln: Monster, S. 284)", once their book is assigned to a file.
+/// other documents, like "(Handbuch: Technik, S. 284)", once a file is assigned to their title.
 @MainActor
 final class LinkPreview {
     /// Something the pointer can rest on that leads elsewhere in the document.
@@ -34,7 +34,7 @@ final class LinkPreview {
     private enum Content {
         /// The place the target leads to, shown as a picture of its page.
         case destination(PDFDestination)
-        /// A note instead, for a book not assigned to a file yet, for instance.
+        /// A note instead, for a title not assigned to a file yet, for instance.
         case message(String)
     }
 
@@ -134,7 +134,7 @@ final class LinkPreview {
         case .page(let index):
             guard let targetPage = view.document?.page(at: index) else { return nil }
             content = .destination(Self.top(of: targetPage))
-        case .book(let title, let number):
+        case .document(let title, let number):
             content = Self.content(of: .number(number), in: title)
         }
         let bounds = reference.bounds.dropFirst().reduce(reference.bounds[0]) { $0.union($1) }
@@ -142,15 +142,15 @@ final class LinkPreview {
                       page: page, bounds: bounds, content: content)
     }
 
-    /// The page of another book, or what keeps it from being shown.
-    private static func content(of pointer: OtherBooks.Page, in title: String) -> Content {
-        guard OtherBooks.isKnown(title) else {
+    /// The page of another document, or what keeps it from being shown.
+    private static func content(of pointer: OtherDocuments.Page, in title: String) -> Content {
+        guard OtherDocuments.isKnown(title) else {
             return .message(String(localized: "„\(title)“ ist noch keiner Datei zugeordnet. Klicke, um die Datei zu wählen."))
         }
-        guard let book = OtherBooks.shared.page(pointer, of: title) else {
+        guard let other = OtherDocuments.shared.page(pointer, of: title) else {
             return .message(String(localized: "Die Datei für „\(title)“ fehlt oder kann nicht gelesen werden."))
         }
-        guard let index = book.index, let page = book.document.page(at: index) else {
+        guard let index = other.index, let page = other.document.page(at: index) else {
             switch pointer {
             case .number(let number):
                 return .message(String(localized: "„\(title)“ hat keine Seite \(number)."))

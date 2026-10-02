@@ -821,9 +821,9 @@ final class ReaderPDFView: PDFView {
     var onAttach: (() -> Void)?
     /// Called to add a bookmark at a point on a page (page index, point in page coordinates).
     var onAddBookmark: ((Int, CGPoint) -> Void)?
-    /// Called to follow a reference into another book (its title, or the name of the file a
+    /// Called to follow a reference into another document (its title, or the name of the file a
     /// link leads to, and the page).
-    var onOpenBook: ((String, OtherBooks.Page) -> Void)?
+    var onOpenDocument: ((String, OtherDocuments.Page) -> Void)?
 
     /// A link into another file at a point of the view: the annotation, the name of the file
     /// and the index of the page. Read from the PDF itself: PDFKit resolves the file against
@@ -838,7 +838,7 @@ final class ReaderPDFView: PDFView {
         return (link, target.file, target.page)
     }
     /// The name of the document, taken as its title when telling its own page references
-    /// from those into other books.
+    /// from those into other documents.
     var documentName: String?
 
     /// Shows where a link in the document leads while the pointer rests on it.
@@ -852,7 +852,7 @@ final class ReaderPDFView: PDFView {
     /// The page reference in the text at a point of the view.
     func pageReference(at location: NSPoint) -> (page: PDFPage, reference: PageReferences.Reference)? {
         guard let document, let page = page(for: location, nearest: false) else { return nil }
-        if pageReferences?.document !== document || pageReferences?.booksRevision != OtherBooks.revision {
+        if pageReferences?.document !== document || pageReferences?.assignmentsRevision != OtherDocuments.revision {
             pageReferences = PageReferences(document: document, name: documentName)
         }
         guard let reference = pageReferences?.reference(at: convert(location, to: page), on: page)
@@ -875,9 +875,9 @@ final class ReaderPDFView: PDFView {
     override func mouseDown(with event: NSEvent) {
         linkPreview.close()
         let location = convert(event.locationInWindow, from: nil)
-        // A link into another file opens that file like a book a reference names.
+        // A link into another file opens that file like a document a reference names.
         if let remote = remoteLink(at: location) {
-            onOpenBook?(remote.file, .index(remote.page))
+            onOpenDocument?(remote.file, .index(remote.page))
             return
         }
         let plainClick = event.clickCount == 1
@@ -906,8 +906,8 @@ final class ReaderPDFView: PDFView {
         switch reference.target {
         case .page(let index):
             if let target = document?.page(at: index) { go(to: target) }
-        case .book(let title, let number):
-            onOpenBook?(title, .number(number))
+        case .document(let title, let number):
+            onOpenDocument?(title, .number(number))
         }
     }
 
