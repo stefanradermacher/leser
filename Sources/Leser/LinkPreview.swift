@@ -97,7 +97,10 @@ final class LinkPreview {
         popover.behavior = .applicationDefined
         popover.animates = true
         let anchor = view.convert(target.bounds, from: target.page)
-        popover.show(relativeTo: anchor, of: view, preferredEdge: .maxY)
+        // Above a reference in the lower half of the view, below one in the upper half, so
+        // that the preview stays over the document rather than the toolbar.
+        let upper = view.isFlipped ? anchor.midY < view.bounds.midY : anchor.midY > view.bounds.midY
+        popover.show(relativeTo: anchor, of: view, preferredEdge: upper != view.isFlipped ? .minY : .maxY)
         self.popover = popover
     }
 

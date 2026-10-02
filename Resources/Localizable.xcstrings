@@ -535,7 +535,7 @@
         "en": {
           "stringUnit": {
             "state": "translated",
-            "value": "Open Documents"
+            "value": "Open documents"
           }
         }
       }
@@ -975,7 +975,7 @@
         "en": {
           "stringUnit": {
             "state": "translated",
-            "value": "In the Second View"
+            "value": "In the second view"
           }
         }
       }
@@ -997,7 +997,7 @@
         "en": {
           "stringUnit": {
             "state": "translated",
-            "value": "In a New Tab"
+            "value": "In a new tab"
           }
         }
       }
@@ -1392,7 +1392,7 @@
         "en": {
           "stringUnit": {
             "state": "translated",
-            "value": "No Documents Assigned Yet"
+            "value": "No documents assigned yet"
           }
         }
       }
@@ -2129,7 +2129,7 @@
         "en": {
           "stringUnit": {
             "state": "translated",
-            "value": "Assigned Documents"
+            "value": "Assigned documents"
           }
         }
       }

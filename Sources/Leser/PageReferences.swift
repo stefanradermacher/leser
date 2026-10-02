@@ -92,6 +92,9 @@ final class PageReferences {
     private static let pattern = try! NSRegularExpression(
         pattern: #"(?<![\p{L}\d])(pages?|pp?\.|Seiten?|S\.)\s*(\d{1,4})(?:\s*(?:[–-]|and|und|bis|to)\s*(\d{1,4}))?(?![\p{L}\d])"#)
 
+    /// Brackets and quotes that can open a reference, as in "(siehe Seite 12)".
+    private static let openings = CharacterSet(charactersIn: "([„“\"'‚‘»«")
+
     /// Words after which a page reference points into the document itself.
     private static let leadIns: Set<String> = [
         "see", "also", "on", "at", "in", "to", "from", "cf.",
@@ -234,7 +237,7 @@ final class PageReferences {
             words.removeLast()
         }
         while let word = words.last {
-            let bare = String(word.drop { "([„\"'‚»«".contains($0) })
+            let bare = String(word.unicodeScalars.drop { openings.contains($0) })
             let opens = bare != word
             if isTitleWord(bare) || (titleJoiners.contains(bare) && !title.isEmpty) {
                 title.insert(bare, at: 0)
@@ -367,8 +370,9 @@ final class PageReferences {
                Self.leadIns.contains(first.lowercased()) { return true }
             return endsWithOwnTitle(segment)
         }
+        // "siehe Seite 12", also right after a bracket or quote: "(siehe Seite 12)".
         if let word = trimmed.split(separator: " ").last,
-           Self.leadIns.contains(word.lowercased()) { return true }
+           Self.leadIns.contains(word.trimmingCharacters(in: Self.openings).lowercased()) { return true }
         // At the start of a line after a number or the end of a sentence, as in a heading.
         let line = tail.replacingOccurrences(of: "\r", with: "\n")
         if let lastBreak = line.lastIndex(of: "\n"),

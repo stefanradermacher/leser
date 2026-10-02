@@ -546,18 +546,26 @@ struct SplitContainer<First: View, Second: View>: NSViewRepresentable {
         }
 
         /// Lays the views out again once the content has been updated, for a fitted size.
+        /// Through the split view's own way of moving its divider: halves resized from outside
+        /// it keep showing parts of their old layout, such as the line at the foot of a list.
         func relayoutSoon(_ splitView: NSSplitView) {
             DispatchQueue.main.async { [weak splitView] in
-                guard let splitView else { return }
+                guard let splitView, splitView.subviews.count == 2 else { return }
                 self.sizeAtDragStart = nil
-                self.splitView(splitView, resizeSubviewsWithOldSize: splitView.bounds.size)
+                let position = self.firstLength(in: splitView, oldSize: splitView.bounds.size)
+                self.isRelayouting = true
+                splitView.setPosition(position, ofDividerAt: 0)
+                self.isRelayouting = false
             }
         }
+
+        /// Set while the divider is moved for a fitted size, which is not the reader's doing.
+        private var isRelayouting = false
 
         /// Called only while the divider is dragged.
         func splitView(_ splitView: NSSplitView, constrainSplitPosition proposedPosition: CGFloat,
                        ofSubviewAt dividerIndex: Int) -> CGFloat {
-            if sizeAtDragStart == nil, let first = splitView.subviews.first {
+            if !isRelayouting, sizeAtDragStart == nil, let first = splitView.subviews.first {
                 sizeAtDragStart = splitView.isVertical ? first.frame.width : first.frame.height
             }
             return proposedPosition
@@ -598,6 +606,25 @@ struct SplitContainer<First: View, Second: View>: NSViewRepresentable {
             let vertical = splitView.isVertical
             let divider = splitView.dividerThickness
             let available = max(length(of: splitView) - divider, 0)
+            let first = firstLength(in: splitView, oldSize: oldSize)
+            let bounds = splitView.bounds
+            if vertical {
+                views[0].frame = NSRect(x: 0, y: 0, width: first, height: bounds.height)
+                views[1].frame = NSRect(x: first + divider, y: 0, width: available - first, height: bounds.height)
+            } else {
+                views[0].frame = NSRect(x: 0, y: 0, width: bounds.width, height: first)
+                views[1].frame = NSRect(x: 0, y: first + divider, width: bounds.width, height: available - first)
+            }
+
+        }
+
+        /// The length the first view should have: fitted to its content, or keeping its share
+        /// of the old size, and never less than the minimum for either view.
+        private func firstLength(in splitView: NSSplitView, oldSize: NSSize) -> CGFloat {
+            let views = splitView.subviews
+            let vertical = splitView.isVertical
+            let divider = splitView.dividerThickness
+            let available = max(length(of: splitView) - divider, 0)
             let oldAvailable = (vertical ? oldSize.width : oldSize.height) - divider
             let oldFirst = vertical ? views[0].frame.width : views[0].frame.height
             var wanted: CGFloat
@@ -609,15 +636,7 @@ struct SplitContainer<First: View, Second: View>: NSViewRepresentable {
                 wanted = (available * share).rounded()
             }
             if available > 0 { startShare = nil }
-            let first = min(max(wanted, minimum), max(available - minimum, 0))
-            let bounds = splitView.bounds
-            if vertical {
-                views[0].frame = NSRect(x: 0, y: 0, width: first, height: bounds.height)
-                views[1].frame = NSRect(x: first + divider, y: 0, width: available - first, height: bounds.height)
-            } else {
-                views[0].frame = NSRect(x: 0, y: 0, width: bounds.width, height: first)
-                views[1].frame = NSRect(x: 0, y: first + divider, width: bounds.width, height: available - first)
-            }
+            return min(max(wanted, minimum), max(available - minimum, 0))
         }
 
         /// Height of the rows of the list in a view, with the room the list keeps above and
