@@ -2,7 +2,7 @@
 
 Was sich in Leser von Version zu Version geändert hat. English version: [CHANGELOG.en.md](CHANGELOG.en.md).
 
-## 1.1 – noch nicht veröffentlicht
+## 1.1 – 3. Oktober 2026
 
 ### Neu
 

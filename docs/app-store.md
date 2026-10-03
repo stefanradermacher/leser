@@ -270,6 +270,9 @@ Version 1.0 (Build 26) mit den drei Trinkgeldern wurde am 25. September 2026 ein
 ## Nach der Freigabe einer neuen Version
 
 - [ ] Webseite: In `projects/assets/js/app.js` des Homepage-Repos die Version in `VERSIONS` (Eintrag `leser`) anpassen. Sie erscheint dann in der Projektkarte und auf der Leser-Seite.
-- [ ] Die geänderte `app.js` hochladen.
+- [ ] In `CHANGELOG.md` und `CHANGELOG.en.md` „noch nicht veröffentlicht“ durch das Datum der Freigabe ersetzen.
+- [ ] Webseite: Den neuen Abschnitt aus beiden Changelogs in `projects/leser/neuigkeiten/index.html` übernehmen, oben in den Block der jeweiligen Sprache, ohne „Hinter den Kulissen“.
+- [ ] Webseite: Haben sich Funktionen, Tastaturkürzel oder gespeicherte Daten geändert, auch Produktseite, Hilfe und Datenschutz (mit neuem Stand) anpassen; neue Screenshots auf 1440 Pixel Breite verkleinert nach `projects/leser/img/`.
+- [ ] Die geänderten Dateien hochladen.
 
 Der Link zum Store (`https://apps.apple.com/app/id6815862046`) bleibt bei Updates gleich.
