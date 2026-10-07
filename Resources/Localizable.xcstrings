@@ -463,6 +463,16 @@
         }
       }
     },
+    "Die Preise konnten gerade nicht vom App Store geladen werden.": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The prices could not be loaded from the App Store right now."
+          }
+        }
+      }
+    },
     "Die zugeordnete Datei fehlt oder ist kein lesbares PDF-Dokument. In den Einstellungen unter „Verweise“ kannst du ihr eine andere Datei zuordnen.": {
       "extractionState": "manual",
       "localizations": {
@@ -712,6 +722,16 @@
           "stringUnit": {
             "state": "translated",
             "value": "Allowed"
+          }
+        }
+      }
+    },
+    "Erneut versuchen": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Try Again"
           }
         }
       }
