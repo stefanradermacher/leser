@@ -6,7 +6,7 @@ Vorbereitete Texte und Angaben für den Eintrag in App Store Connect. Zeichenzah
 
 | Feld | Wert |
 |---|---|
-| Name (30) | Leser (Deutsch), Leser – PDF Reader (Englisch) |
+| Name (30) | Leser – PDF-Betrachter (Deutsch), Leser – PDF Reader (Englisch) |
 | Untertitel (30) | PDFs lesen, sonst nichts |
 | Bundle-ID | com.stefanradermacher.leser |
 | SKU | leser-macos |
@@ -19,7 +19,7 @@ Vorbereitete Texte und Angaben für den Eintrag in App Store Connect. Zeichenzah
 | Marketing-URL | https://stefanradermacher.com/projects/leser |
 | Datenschutz-URL | https://stefanradermacher.com/projects/leser/datenschutz |
 
-Für Englisch (USA) ist „Leser“ in App Store Connect bereits reserviert. Beide englischen Fassungen, USA und UK, heißen deshalb einheitlich „Leser – PDF Reader“, passend zu „Motiv – Image Viewer“; auf dem Mac und im deutschen Eintrag bleibt es „Leser“.
+Für Englisch (USA) ist „Leser“ in App Store Connect bereits reserviert. Beide englischen Fassungen, USA und UK, heißen deshalb einheitlich „Leser – PDF Reader“, passend zu „Motiv – Image Viewer“. Seit 1.1.1 heißt auch der deutsche Eintrag „Leser – PDF-Betrachter“ statt nur „Leser“, passend zu „Motiv – Bildbetrachter“ und besser für die Suche. Auf dem Mac selbst heißt die App weiterhin „Leser“.
 
 ## Werbetext (170)
 
@@ -66,7 +66,9 @@ Ehrlich und offen
 
 ## Schlüsselwörter (100, mit Komma, ohne Leerzeichen)
 
-PDF,Viewer,Betrachter,lesen,Dokument,Gliederung,Lesezeichen,Suche,Vorschau,werbefrei,Datenschutz
+Wörter aus dem Namen („PDF“, „Betrachter“) zählen bei der Suche schon mit und stehen deshalb nicht noch einmal hier.
+
+Reader,Viewer,lesen,Dokument,Gliederung,Lesezeichen,Suche,Vorschau,werbefrei,Datenschutz
 
 ## Neue Funktionen (4000)
 
