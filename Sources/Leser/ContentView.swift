@@ -140,6 +140,7 @@ struct ReaderView: View {
             separateItem { navigationGroup }
             separateItem { displayGroup }
             separateItem { zoomGroup }
+            separateItem { toolGroup }
         }
         .focusedSceneValue(\.viewer, model)
         .focusedSceneValue(\.reader, state)
@@ -243,6 +244,17 @@ struct ReaderView: View {
             }),
             ToolbarSegment(symbol: "plus.magnifyingglass", label: String(localized: "Vergrößern"), action: { model.zoomIn() }),
         ])
+    }
+}
+
+extension ReaderView {
+    /// Text selection | rectangular selection | hand, as Preview offers them in its Tools menu.
+    var toolGroup: some View {
+        let state = state
+        return ToolbarSegments(segments: ReaderTool.allCases.map { tool in
+            ToolbarSegment(symbol: tool.systemImage, label: tool.title, isSelected: state.tool == tool,
+                           action: { state.tool = tool })
+        })
     }
 }
 

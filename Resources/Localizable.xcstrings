@@ -56,6 +56,17 @@
         }
       }
     },
+    "%@, Seite %@": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%@, Page %@"
+          }
+        }
+      }
+    },
     "%lld Treffer": {
       "extractionState": "manual",
       "localizations": {
@@ -305,6 +316,39 @@
           "stringUnit": {
             "state": "translated",
             "value": "When opening a document"
+          }
+        }
+      }
+    },
+    "Bild": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Image"
+          }
+        }
+      }
+    },
+    "Bild kopieren": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Copy Image"
+          }
+        }
+      }
+    },
+    "Bild sichern unter …": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Save Image As…"
           }
         }
       }
@@ -1582,6 +1626,17 @@
         }
       }
     },
+    "Rechteckige Auswahl": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Rectangular Selection"
+          }
+        }
+      }
+    },
     "Rückwärts suchen": {
       "extractionState": "manual",
       "localizations": {
@@ -1901,6 +1956,17 @@
         }
       }
     },
+    "Textauswahl": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Text Selection"
+          }
+        }
+      }
+    },
     "Thema": {
       "extractionState": "manual",
       "localizations": {
@@ -1985,6 +2051,17 @@
           "stringUnit": {
             "state": "translated",
             "value": "Zoom Out"
+          }
+        }
+      }
+    },
+    "Verschieben": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Scroll"
           }
         }
       }
@@ -2106,6 +2183,17 @@
           "stringUnit": {
             "state": "translated",
             "value": "No ads"
+          }
+        }
+      }
+    },
+    "Werkzeuge": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Tools"
           }
         }
       }

@@ -2,6 +2,23 @@
 
 What changed in Leser from version to version. Deutsche Fassung: [CHANGELOG.md](CHANGELOG.md).
 
+## 1.1.1 – not released yet
+
+### New
+
+**Tools.** On the right of the toolbar and in the new “Tools” menu you choose what dragging with the mouse does: Text Selection, Rectangular Selection or Scroll. With the rectangular selection you copy an area of the page as a picture. Scroll moves a page that is larger than the window by hand; this also works at any time with the space bar held down or with the middle mouse button. Leser remembers the tool for new windows.
+
+**Saving pictures.** A right-click on a picture offers “Copy Image” and “Save Image As…”. Leser takes the picture as the document holds it: in full resolution and with its transparent background.
+
+### Improved
+
+**Text below pictures.** Text can now be selected where a picture lies over it, at its transparent edge for instance. A selection no longer takes pictures with it, and a double or triple click there selects a word or a line.
+
+### Behind the scenes
+
+- Leser may now also write files you choose in the save dialog; this is needed for “Save Image As…”. Leser still never modifies documents.
+- Tests for the tools and for reading pictures.
+
 ## 1.1 – 3 October 2026
 
 ### New

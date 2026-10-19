@@ -21,6 +21,8 @@ struct ToolbarSegment {
     var title: String?
     var label: String
     var isEnabled = true
+    /// For a group of choices of which one is selected, like tools; nil for buttons.
+    var isSelected: Bool?
     /// A fixed width, for a text that changes and should not make the group jump; nil fits the content.
     var width: CGFloat?
     var action: (() -> Void)?
@@ -48,6 +50,8 @@ struct ToolbarSegments: NSViewRepresentable {
     func updateNSView(_ control: NSSegmentedControl, context: Context) {
         context.coordinator.segments = segments
         control.segmentCount = segments.count
+        let isChoice = segments.contains { $0.isSelected != nil }
+        control.trackingMode = isChoice ? .selectOne : .momentary
         for (index, segment) in segments.enumerated() {
             if let symbol = segment.symbol {
                 let image = NSImage(systemSymbolName: symbol, accessibilityDescription: segment.label)
@@ -63,6 +67,7 @@ struct ToolbarSegments: NSViewRepresentable {
             let menu = segment.menu?()
             control.setMenu(menu, forSegment: index)
             control.setShowsMenuIndicator(menu != nil, forSegment: index)
+            if isChoice { control.setSelected(segment.isSelected == true, forSegment: index) }
         }
         control.setAccessibilityLabel(segments.map(\.label).joined(separator: ", "))
     }
@@ -91,11 +96,14 @@ struct ToolbarSegments: NSViewRepresentable {
 }
 
 /// Menu item that runs a closure.
-final class ActionMenuItem: NSMenuItem {
+final class ActionMenuItem: NSMenuItem, NSMenuItemValidation {
     private let handler: () -> Void
+    private let allowed: Bool
 
-    init(_ title: String, symbol: String? = nil, checked: Bool = false, handler: @escaping () -> Void) {
+    init(_ title: String, symbol: String? = nil, checked: Bool = false, enabled: Bool = true,
+         handler: @escaping () -> Void) {
         self.handler = handler
+        allowed = enabled
         super.init(title: title, action: #selector(run), keyEquivalent: "")
         target = self
         state = checked ? .on : .off
@@ -107,4 +115,6 @@ final class ActionMenuItem: NSMenuItem {
     }
 
     @objc private func run() { handler() }
+
+    func validateMenuItem(_ menuItem: NSMenuItem) -> Bool { allowed }
 }

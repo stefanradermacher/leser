@@ -56,6 +56,15 @@ final class ReaderState {
     var sidebarMode: SidebarMode
     /// Whether the search results are shown in the sidebar on the right.
     var showsSearchResults = false
+    /// What dragging over a page does, in both views of the window. New windows start with
+    /// the tool chosen last.
+    var tool = ReaderTool.preferred {
+        didSet {
+            ReaderTool.preferred = tool
+            primary.pdfView.tool = tool
+            secondary?.pdfView.tool = tool
+        }
+    }
     /// Information about the active document while its window is open.
     var documentInfo: DocumentInfo?
 
@@ -404,6 +413,7 @@ final class ReaderState {
     }
 
     private func watchFocus(of model: ViewerModel) {
+        model.pdfView.tool = tool
         model.pdfView.onOpenDocument = { [weak self, weak model] title, page in
             guard let self else { return }
             OtherDocuments.shared.follow(title: title, page: page,

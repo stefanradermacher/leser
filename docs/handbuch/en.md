@@ -57,6 +57,16 @@ On the left, Leser shows either the outline of the document or thumbnails of eve
 
 The zoom factor can be changed in steps or fitted to the page width, the page height or the whole page. The chosen fit is kept even when you resize the window.
 
+## Tools
+
+What dragging with the mouse does depends on the tool. The three tools are on the right of the toolbar and in the “Tools” menu; Leser remembers the choice for new windows.
+
+- Text Selection: selects text, even where a picture lies over the text. A double click selects a word, a triple click a line.
+- Rectangular Selection: draws a frame on a page. “Edit → Copy” puts the area on the clipboard as a picture, Esc removes the frame.
+- Scroll: moves a page that is larger than the window, like pushing paper by hand. Links can still be clicked.
+
+Moving the page works without switching tools as well: hold down the space bar and drag, or drag with the middle mouse button held down. Pressed briefly, the space bar scrolls on as usual.
+
 ## Back and forward
 
 After a jump, through a link, the outline or “Go to Page …” for instance, “Go → Back” takes you to where you were before, and “Forward” takes you there again. With a mouse, its side buttons do the same, with a trackpad or a Magic Mouse a swipe.
@@ -165,11 +175,15 @@ Because the document doesn't have one. Many PDFs from word processors do not bri
 
 ## Can I copy text?
 
-Yes. Text can be selected and copied with the mouse as usual, as long as the document allows it. Whether it does is listed under “Document Information”. Leser joins the lines into paragraphs again and keeps bold and italic; white text turns black, so that it stays readable on a white background.
+Yes. Text can be selected and copied with the mouse as usual, as long as the document allows it. Whether it does is listed under “Document Information”. Leser joins the lines into paragraphs again and keeps bold and italic; white text turns black, so that it stays readable on a white background. To copy an area of the page, a map or a table for instance, as a picture, use the rectangular selection.
+
+## Can I save pictures from a document?
+
+Yes, with a right-click on the picture: “Copy Image” puts it on the clipboard, “Save Image As…” saves it as a file. Leser takes the picture as the document holds it, in full resolution and with its transparent background. A click on a clear part hits the picture below. If a document does not allow copying, its pictures cannot be saved either.
 
 ## What happens to my documents?
 
-Nothing, other than being shown. Leser never modifies documents and never uploads anything.
+Nothing, other than being shown. Leser never modifies documents and never uploads anything. A new file is only written when you save a picture, and only where you choose in the save dialog.
 
 # Keyboard Shortcuts
 
@@ -187,6 +201,7 @@ The most useful commands are all within reach without the mouse:
 | Go to Page | ⌥⌘G |
 | Add Bookmark | ⌘D |
 | Show and hide bookmarks | ⌃⌘3 |
+| Move the page | Hold space and drag |
 | Split View | ⌃⌘T |
 | Document Information | ⌘I |
 | Print | ⌘P |

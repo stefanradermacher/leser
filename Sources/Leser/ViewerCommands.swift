@@ -153,6 +153,16 @@ struct ViewerCommands: Commands {
                 .disabled(viewer == nil)
         }
 
+        CommandMenu("Werkzeuge") {
+            ForEach(ReaderTool.allCases) { tool in
+                Toggle(tool.title, isOn: Binding(
+                    get: { reader?.tool == tool },
+                    set: { _ in reader?.tool = tool }
+                ))
+                .disabled(reader == nil)
+            }
+        }
+
         CommandMenu("Lesezeichen") {
             Button("Lesezeichen hinzufügen …") { reader?.requestBookmark() }
                 .keyboardShortcut("d")

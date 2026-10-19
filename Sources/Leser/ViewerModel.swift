@@ -860,11 +860,53 @@ final class ReaderPDFView: PDFView {
         return (page, reference)
     }
 
+    /// What dragging over a page does; set for the whole window by `ReaderState`.
+    var tool = ReaderTool.text {
+        didSet {
+            guard tool != oldValue else { return }
+            areaSelection = nil
+            updateCursor()
+        }
+    }
+
+    /// The rectangle chosen with the rectangular selection, copied as an image.
+    var areaSelection: AreaSelection? {
+        didSet { updateAreaOverlay() }
+    }
+    private lazy var areaOverlay = AreaSelectionOverlay()
+    private var observesLayout = false
+
+    /// The space bar while it is held down: dragging then moves the page, as in many programs.
+    /// Released without dragging, it scrolls as usual.
+    private var heldSpace: NSEvent?
+    private var movedWithSpace = false
+
+    /// Whether dragging moves the page right now.
+    private var handActive: Bool { tool == .hand || heldSpace != nil }
+
     override func mouseMoved(with event: NSEvent) {
         super.mouseMoved(with: event)
         let location = convert(event.locationInWindow, from: nil)
         linkPreview.pointerMoved(to: location)
-        if pageReference(at: location) != nil { NSCursor.pointingHand.set() }
+        updateCursor(at: location)
+    }
+
+    /// Sets the pointer for the tool after PDFKit has set its own.
+    private func updateCursor(at location: NSPoint? = nil) {
+        guard let window else { return }
+        let location = location ?? convert(window.mouseLocationOutsideOfEventStream, from: nil)
+        guard bounds.contains(location) else { return }
+        if heldSpace != nil {
+            NSCursor.openHand.set()
+        } else if tool != .area, pageReference(at: location) != nil {
+            NSCursor.pointingHand.set()
+        } else if tool == .hand, !isOnLink(location) {
+            NSCursor.openHand.set()
+        } else if tool == .area, page(for: location, nearest: false) != nil {
+            NSCursor.crosshair.set()
+        } else if tool != .text {
+            NSCursor.arrow.set()
+        }
     }
 
     override func mouseExited(with event: NSEvent) {
@@ -875,19 +917,70 @@ final class ReaderPDFView: PDFView {
     override func mouseDown(with event: NSEvent) {
         linkPreview.close()
         let location = convert(event.locationInWindow, from: nil)
+        if heldSpace != nil {
+            window?.makeFirstResponder(self)
+            if pan(from: event, dragged: .leftMouseDragged, up: .leftMouseUp) { movedWithSpace = true }
+            updateCursor()
+            return
+        }
+        if tool == .area {
+            window?.makeFirstResponder(self)
+            selectArea(from: event)
+            updateCursor()
+            return
+        }
         // A link into another file opens that file like a document a reference names.
         if let remote = remoteLink(at: location) {
             onOpenDocument?(remote.file, .index(remote.page))
             return
         }
+        if tool == .hand, !isOnLink(location) {
+            window?.makeFirstResponder(self)
+            pan(from: event, dragged: .leftMouseDragged, up: .leftMouseUp)
+            updateCursor()
+            return
+        }
         let plainClick = event.clickCount == 1
             && event.modifierFlags.intersection([.command, .option, .control, .shift]).isEmpty
         clickedReference = plainClick ? pageReference(at: location) : nil
-        super.mouseDown(with: event)
+        // Text by characters; links, empty places and the option key's column selection stay
+        // with PDFKit.
+        let ownSelection = tool == .text
+            && event.modifierFlags.intersection([.command, .option, .control]).isEmpty
+            && !isOnLink(location) || clickedReference != nil
+        if !(ownSelection && selectText(from: event)) {
+            super.mouseDown(with: event)
+        }
         // PDFKit may follow the mouse until it is released before returning.
         if clickedReference != nil, NSEvent.pressedMouseButtons & 1 == 0, let window {
             followClickedReference(endingAt: convert(window.mouseLocationOutsideOfEventStream, from: nil))
         }
+    }
+
+    /// Keeps the frame of the rectangular selection on its place of the page.
+    private func updateAreaOverlay() {
+        guard let area = areaSelection, let documentView else {
+            areaOverlay.removeFromSuperview()
+            return
+        }
+        if !observesLayout {
+            observesLayout = true
+            for name in [Notification.Name.PDFViewScaleChanged, .PDFViewDisplayModeChanged, .PDFViewDisplayBoxChanged] {
+                NotificationCenter.default.addObserver(self, selector: #selector(layoutChanged), name: name, object: self)
+            }
+            documentView.postsFrameChangedNotifications = true
+            NotificationCenter.default.addObserver(self, selector: #selector(layoutChanged),
+                                                   name: NSView.frameDidChangeNotification, object: documentView)
+        }
+        let rect = documentView.convert(convert(area.rect, from: area.page), from: self)
+        if areaOverlay.superview !== documentView { documentView.addSubview(areaOverlay) }
+        areaOverlay.frame = rect.insetBy(dx: -1, dy: -1)
+        areaOverlay.needsDisplay = true
+    }
+
+    @objc private func layoutChanged() {
+        // After PDFKit has laid out the pages anew.
+        DispatchQueue.main.async { [weak self] in self?.updateAreaOverlay() }
     }
 
     override func mouseUp(with event: NSEvent) {
@@ -921,6 +1014,11 @@ final class ReaderPDFView: PDFView {
     /// like SteerMouse's "Back" and "Forward" – as the swipe of a trackpad or Magic Mouse.
     override func otherMouseDown(with event: NSEvent) {
         switch event.buttonNumber {
+        // The middle button, usually the wheel pressed down, moves the page, whatever the tool.
+        case 2:
+            linkPreview.close()
+            pan(from: event, dragged: .otherMouseDragged, up: .otherMouseUp)
+            updateCursor()
         case 3: goBackOrForward(-1)
         case 4: goBackOrForward(1)
         default: super.otherMouseDown(with: event)
@@ -939,10 +1037,11 @@ final class ReaderPDFView: PDFView {
         if direction < 0 { goBack(nil) } else { goForward(nil) }
     }
 
-    /// PDFKit's context menu, with a bookmark for the place clicked at.
+    /// PDFKit's context menu, with the picture clicked at and a bookmark for the place.
     override func menu(for event: NSEvent) -> NSMenu? {
         let menu = super.menu(for: event) ?? NSMenu()
         let location = convert(event.locationInWindow, from: nil)
+        addImageItems(to: menu, at: location)
         guard onAddBookmark != nil, let document,
               let page = page(for: location, nearest: true)
         else { return menu }
@@ -978,10 +1077,45 @@ final class ReaderPDFView: PDFView {
         return accepted
     }
 
+    override func resignFirstResponder() -> Bool {
+        let resigned = super.resignFirstResponder()
+        if resigned, heldSpace != nil {
+            // The key may be released elsewhere, after a sheet has taken the focus.
+            heldSpace = nil
+            updateCursor()
+        }
+        return resigned
+    }
+
+    /// Escape clears the rectangular selection.
+    override func cancelOperation(_ sender: Any?) {
+        if areaSelection != nil { areaSelection = nil } else { super.cancelOperation(sender) }
+    }
+
+    /// With the rectangular selection, "Copy" is there for the area. Everything else PDFView
+    /// checks itself; its check is not part of its Swift interface, so it is called through
+    /// the Objective-C runtime.
+    @objc func validateMenuItem(_ menuItem: NSMenuItem) -> Bool {
+        if menuItem.action == #selector(copy(_:)), tool == .area {
+            return areaSelection != nil
+        }
+        let selector = #selector(NSMenuItemValidation.validateMenuItem(_:))
+        guard PDFView.instancesRespond(to: selector),
+              let implementation = class_getMethodImplementation(PDFView.self, selector)
+        else { return true }
+        typealias Validate = @convention(c) (AnyObject, Selector, NSMenuItem) -> Bool
+        return unsafeBitCast(implementation, to: Validate.self)(self, selector, menuItem)
+    }
+
     /// Copies the selected text with its paragraphs rejoined instead of one line break per
     /// line of the page, so it can be pasted into a word processor as running text. Fonts,
     /// and with them bold and italic, are kept as PDFKit's own copy keeps them.
+    /// With the rectangular selection, copies the area as an image.
     override func copy(_ sender: Any?) {
+        if tool == .area {
+            if let areaSelection, document?.allowsCopying == true { areaSelection.copy(box: displayBox) }
+            return
+        }
         guard let selection = currentSelection, document?.allowsCopying == true else {
             super.copy(sender)
             return
@@ -1019,6 +1153,16 @@ final class ReaderPDFView: PDFView {
     override func keyDown(with event: NSEvent) {
         linkPreview.close()
         let modifiers = event.modifierFlags.intersection([.command, .option, .control, .shift])
+        // Holding the space bar turns the pointer into a hand; whether it scrolls is decided
+        // when it is released. Held down, it does not repeat.
+        if modifiers.isEmpty, event.charactersIgnoringModifiers == " " {
+            if !event.isARepeat, heldSpace == nil {
+                heldSpace = event
+                movedWithSpace = false
+                updateCursor()
+            }
+            return
+        }
         guard modifiers.isEmpty, let key = event.specialKey else {
             super.keyDown(with: event)
             return
@@ -1031,6 +1175,24 @@ final class ReaderPDFView: PDFView {
         default:
             super.keyDown(with: event)
         }
+    }
+
+    override func keyUp(with event: NSEvent) {
+        if event.charactersIgnoringModifiers == " ", let space = heldSpace {
+            heldSpace = nil
+            // Only pressed, not used to move the page: scroll a screen as before.
+            if !movedWithSpace { super.keyDown(with: space) }
+            updateCursor()
+            if tool == .text, let window {
+                // Let PDFKit set its own pointer again.
+                super.mouseMoved(with: NSEvent.mouseEvent(
+                    with: .mouseMoved, location: window.mouseLocationOutsideOfEventStream, modifierFlags: [],
+                    timestamp: event.timestamp, windowNumber: window.windowNumber, context: nil,
+                    eventNumber: 0, clickCount: 0, pressure: 0) ?? event)
+            }
+            return
+        }
+        super.keyUp(with: event)
     }
 
     /// When zoomed wider than the window, the arrow keys scroll sideways first and turn the page only at the edge.

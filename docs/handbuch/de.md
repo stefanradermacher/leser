@@ -57,6 +57,16 @@ Links zeigt Leser wahlweise die Gliederung des Dokuments oder Miniaturen aller S
 
 Der Zoom lässt sich in Stufen ändern oder an die Seitenbreite, die Seitenhöhe oder die ganze Seite anpassen. Die gewählte Anpassung bleibt erhalten, auch wenn du das Fenster größer oder kleiner ziehst.
 
+## Werkzeuge
+
+Was ein Ziehen mit der Maus bewirkt, bestimmt das Werkzeug. Die drei Werkzeuge stehen rechts in der Symbolleiste und im Menü „Werkzeuge“; Leser merkt sich die Wahl für neue Fenster.
+
+- Textauswahl: markiert Text, auch dort, wo ein Bild über dem Text liegt. Ein Doppelklick wählt ein Wort, ein Dreifachklick eine Zeile.
+- Rechteckige Auswahl: zieht einen Rahmen auf einer Seite auf. „Bearbeiten → Kopieren“ legt den Bereich als Bild in die Zwischenablage, Esc hebt den Rahmen auf.
+- Verschieben: schiebt eine Seite, die größer ist als das Fenster, mit der Hand zurecht. Links bleiben anklickbar.
+
+Verschieben geht auch ohne Umschalten: Halte die Leertaste gedrückt und ziehe, oder ziehe mit gedrückter mittlerer Maustaste. Kurz gedrückt blättert die Leertaste wie gewohnt weiter.
+
 ## Zurück und vor
 
 Nach einem Sprung, etwa über einen Link, die Gliederung oder „Gehe zu Seite …“, bringt dich „Gehe zu → Zurück“ wieder an die Stelle davor, „Vorwärts“ wieder hin. Mit einer Maus geht das auch über die Seitentasten, mit einem Trackpad oder einer Magic Mouse über eine Wischbewegung.
@@ -165,11 +175,15 @@ Weil das Dokument keine enthält. Viele PDFs aus Textverarbeitungen bringen kein
 
 ## Kann ich Text kopieren?
 
-Ja. Text lässt sich wie gewohnt mit der Maus markieren und kopieren, sofern das Dokument es erlaubt. Ob das so ist, steht unter „Dokumentinformationen“. Leser fügt die Zeilen dabei wieder zu Absätzen zusammen und behält Fett und Kursiv; weiße Schrift wird schwarz, damit sie auf weißem Grund lesbar bleibt.
+Ja. Text lässt sich wie gewohnt mit der Maus markieren und kopieren, sofern das Dokument es erlaubt. Ob das so ist, steht unter „Dokumentinformationen“. Leser fügt die Zeilen dabei wieder zu Absätzen zusammen und behält Fett und Kursiv; weiße Schrift wird schwarz, damit sie auf weißem Grund lesbar bleibt. Einen Bereich der Seite, etwa eine Karte oder eine Tabelle, kopierst du mit der rechteckigen Auswahl als Bild.
+
+## Kann ich Bilder aus einem Dokument sichern?
+
+Ja, mit einem Rechtsklick auf das Bild: „Bild kopieren“ legt es in die Zwischenablage, „Bild sichern unter …“ speichert es als Datei. Leser nimmt das Bild so, wie es im Dokument steckt, in voller Auflösung und mit seinem durchsichtigen Hintergrund. Ein Klick auf eine durchsichtige Stelle trifft das Bild darunter. Erlaubt ein Dokument kein Kopieren, lassen sich auch seine Bilder nicht sichern.
 
 ## Was passiert mit meinen Dokumenten?
 
-Nichts, außer dass sie angezeigt werden. Leser schreibt nie in ein Dokument und lädt nichts hoch.
+Nichts, außer dass sie angezeigt werden. Leser schreibt nie in ein Dokument und lädt nichts hoch. Eine neue Datei entsteht nur, wenn du ein Bild sicherst, und nur dort, wo du es im Sichern-Dialog angibst.
 
 # Tastaturkürzel
 
@@ -187,6 +201,7 @@ Die wichtigsten Befehle lassen sich ohne Maus erreichen:
 | Gehe zu Seite | ⌥⌘G |
 | Lesezeichen hinzufügen | ⌘D |
 | Lesezeichen ein- und ausblenden | ⌃⌘3 |
+| Seite verschieben | Leertaste halten und ziehen |
 | Ansicht teilen | ⌃⌘T |
 | Dokumentinformationen | ⌘I |
 | Drucken | ⌘P |

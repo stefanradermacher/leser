@@ -2,6 +2,23 @@
 
 Was sich in Leser von Version zu Version geändert hat. English version: [CHANGELOG.en.md](CHANGELOG.en.md).
 
+## 1.1.1 – noch nicht veröffentlicht
+
+### Neu
+
+**Werkzeuge.** Rechts in der Symbolleiste und im neuen Menü „Werkzeuge“ wählst du, was ein Ziehen mit der Maus bewirkt: Textauswahl, Rechteckige Auswahl oder Verschieben. Mit der rechteckigen Auswahl kopierst du einen Bereich der Seite als Bild. Verschieben schiebt eine Seite, die größer ist als das Fenster, mit der Hand zurecht; das geht auch jederzeit mit gehaltener Leertaste oder mit der mittleren Maustaste. Leser merkt sich das Werkzeug für neue Fenster.
+
+**Bilder sichern.** Ein Rechtsklick auf ein Bild bietet „Bild kopieren“ und „Bild sichern unter …“. Leser nimmt das Bild so, wie es im Dokument steckt: in voller Auflösung und mit durchsichtigem Hintergrund.
+
+### Verbessert
+
+**Text unter Bildern.** Text lässt sich jetzt auch dort markieren, wo ein Bild über ihm liegt, etwa an seinem durchsichtigen Rand. Eine Auswahl nimmt keine Bilder mehr mit, und ein Doppel- oder Dreifachklick wählt dort Wort oder Zeile.
+
+### Hinter den Kulissen
+
+- Leser darf Dateien, die du im Sichern-Dialog wählst, jetzt auch schreiben; nötig für „Bild sichern unter …“. Dokumente verändert Leser weiterhin nie.
+- Tests für die Werkzeuge und das Auslesen von Bildern.
+
 ## 1.1 – 3. Oktober 2026
 
 ### Neu

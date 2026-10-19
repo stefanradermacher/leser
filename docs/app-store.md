@@ -203,6 +203,8 @@ Leser fragt an seltenen Stellen, ob es die Standard-App für PDFs werden soll. D
 
 Für Verweise auf andere Dokumente merkt sich Leser eine Datei, die der Nutzer dafür selbst ausgewählt hat, mit einem Security-Scoped Bookmark (`com.apple.security.files.bookmarks.app-scope`), nur lesend. Leser öffnet nie eine Datei, die der Nutzer nicht selbst gewählt hat; die Zuordnungen lassen sich in den Einstellungen unter „Verweise“ einsehen und entfernen.
 
+Seit Version 1.1.1 hat Leser `com.apple.security.files.user-selected.read-write` statt `read-only`. Gebraucht wird das nur für „Bild sichern unter …“ im Kontextmenü eines Bildes: Leser schreibt die Bilddatei dorthin, wo der Nutzer es im Sichern-Dialog angibt. Dokumente verändert Leser weiterhin nie.
+
 Zum Testen eignet sich jedes beliebige PDF; im Quellcode liegt `docs/Leser-Handbuch.pdf` mit Gliederung und dreizehn Seiten. Es ist zugleich das Dokument, das in den Screenshots zu sehen ist.
 
 **English** (für das Feld „Notizen“ unter „Informationen zur App-Prüfung“; die Prüfer arbeiten meist mit englischer Oberfläche):
@@ -214,6 +216,8 @@ The three in-app purchases are voluntary tips for further development. They do n
 On rare occasions, Leser asks whether it should become the default app for PDFs. The question appears as a slim bar in the document window, only after PDFs have been opened on three different days, at most twice in total, and macOS itself confirms the actual change.
 
 For references to other documents, Leser remembers a file that the user has chosen for this purpose, using a read-only security-scoped bookmark (`com.apple.security.files.bookmarks.app-scope`). Leser never opens a file the user has not chosen; the assignments can be viewed and removed in the settings under “References”.
+
+Since version 1.1.1, Leser has `com.apple.security.files.user-selected.read-write` instead of `read-only`. It is needed only for “Save Image As…” in the context menu of a picture: Leser writes the image file where the user chooses in the save dialog. Leser still never modifies documents.
 
 Any PDF is suitable for testing; the source code contains `docs/Leser-Manual.pdf`, which has an outline and twelve pages. It is also the document shown in the English screenshots.
 

@@ -278,7 +278,7 @@ func titlePage() {
                      size: 12, color: quiet, alignment: .center, lineSpacing: 4)
     intro.draw(with: CGRect(x: margin + 40, y: 230, width: contentWidth - 80, height: 70), options: [.usesLineFragmentOrigin, .usesFontLeading])
 
-    let footer = text("Version 1.1 · stefanradermacher.com", size: 9.5, color: quiet, alignment: .center)
+    let footer = text("Version 1.1.1 · stefanradermacher.com", size: 9.5, color: quiet, alignment: .center)
     footer.draw(with: CGRect(x: margin, y: 120, width: contentWidth, height: 20), options: [.usesLineFragmentOrigin])
     endPage()
 }
