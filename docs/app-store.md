@@ -51,6 +51,8 @@ Angenehm im Alltag
 • Merkt sich die zuletzt gelesene Stelle und die Fenstergröße
 • Lädt ein Dokument automatisch neu, wenn ein anderes Programm die Datei ändert, etwa beim Export oder bei LaTeX
 • Kopierter Text kommt in Absätzen an, mit Fett und Kursiv
+• Bilder aus dem Dokument kopieren oder sichern, in voller Auflösung und mit durchsichtigem Hintergrund
+• Einen Bereich der Seite als Bild kopieren, große Seiten mit der Hand verschieben
 • Drucken in Originalgröße oder an das Papier angepasst
 • Sepia-Ton für langes Lesen
 • Dokumentinformationen einsehen, Handbuch direkt in der App
@@ -68,30 +70,18 @@ PDF,Viewer,Betrachter,lesen,Dokument,Gliederung,Lesezeichen,Suche,Vorschau,werbe
 
 ## Neue Funktionen (4000)
 
-Für Version 1.1. Ausführlich steht alles in `CHANGELOG.md` und `CHANGELOG.en.md`.
+Für Version 1.1.1. Ausführlich steht alles in `CHANGELOG.md` und `CHANGELOG.en.md`.
 
-Neu in Version 1.1
+Neu in Version 1.1.1
 
-• Lesezeichen: Stellen merken mit ⌘D oder per Rechtsklick, in einem eigenen Bereich über der Gliederung und im Menü „Lesezeichen“
-• Vorschau für Links: Ruht der Mauszeiger auf einem Link, zeigt Leser die Zielseite, ohne dass du die Seite verlässt
-• Seitenangaben wie „siehe Seite 12“ funktionieren wie Links, mit Vorschau und Sprung
-• Verweise auf andere Dokumente, etwa „(Titel, S. 42)“, öffnen das Dokument an der Seite; beim ersten Mal fragt Leser, welche Datei dazugehört
-• Zurück und vor mit den Seitentasten der Maus oder einer Wischbewegung
-• Sepia: Seiten wie warmes Papier
-• Das Handbuch direkt in der App unter „Hilfe“
+• Werkzeuge: In der Symbolleiste und im Menü „Werkzeuge“ wählst du zwischen Textauswahl, Rechteckiger Auswahl und Verschieben
+• Einen Bereich der Seite als Bild kopieren, mit der rechteckigen Auswahl
+• Große Seiten mit der Hand verschieben, auch jederzeit mit gehaltener Leertaste oder der mittleren Maustaste
+• Bilder aus dem Dokument kopieren oder sichern, per Rechtsklick: in voller Auflösung und mit durchsichtigem Hintergrund
 
 Verbessert
 
-• Kopierter Text kommt in Absätzen an, Fett und Kursiv bleiben erhalten
-• Drucken in Originalgröße, mit Optionen zum Verkleinern und Anpassen
-• Seitenzahlen wie im Buch, auch bei „Gehe zu Seite“
-• Die Suche beginnt auf der aktuellen Seite
-• Lesestelle und Lesezeichen bleiben, wenn du die Datei umbenennst oder verschiebst
-• Eine geteilte Ansicht öffnet beim Weiterlesen wieder geteilt
-• Einstellungen in Tabs
-• Kleinere Fehler in der Gliederung und beim Platzieren von Fenstern behoben
-
-Version 1.0: Erste Version.
+• Text lässt sich auch dort markieren, wo ein Bild über ihm liegt, und eine Auswahl nimmt keine Bilder mehr mit
 
 ## Englische Texte
 
@@ -131,6 +121,8 @@ Pleasant every day
 • Remembers the place you last read and the window size
 • Reloads a document by itself when another program changes the file, after an export or when a LaTeX document is typeset
 • Copied text arrives in paragraphs, with bold and italic
+• Copy or save pictures from the document, in full resolution and with their transparent background
+• Copy an area of the page as a picture, move large pages by hand
 • Print at actual size or fitted to the paper
 • Sepia tone for long reading
 • View document information, manual right in the app
@@ -148,28 +140,16 @@ PDF,viewer,reader,document,outline,bookmarks,search,split view,preview,ad-free,p
 
 **Neue Funktionen (4000):**
 
-New in version 1.1
+New in version 1.1.1
 
-• Bookmarks: keep places with ⌘D or a right-click, in an area of their own above the outline and in the “Bookmarks” menu
-• Link preview: when the pointer rests on a link, Leser shows the page it leads to without leaving yours
-• Page references such as “see page 12” work like links, with preview and jump
-• References to other documents, such as “(Title, p. 42)”, open the document at the page; the first time, Leser asks which file it is
-• Back and forward with the side buttons of a mouse or a swipe
-• Sepia: pages like warm paper
-• The manual right in the app under “Help”
+• Tools: in the toolbar and the “Tools” menu you choose between Text Selection, Rectangular Selection and Scroll
+• Copy an area of the page as a picture, with the rectangular selection
+• Move large pages by hand, also at any time with the space bar held down or the middle mouse button
+• Copy or save pictures from the document with a right-click: in full resolution and with their transparent background
 
 Improved
 
-• Copied text arrives in paragraphs, keeping bold and italic
-• Print at actual size, with options to shrink and fit
-• Page numbers as printed in the book, also in “Go to Page”
-• Search starts on the current page
-• Reading position and bookmarks stay when you rename or move the file
-• A split view opens split again when you continue reading
-• Settings in tabs
-• Small fixes in the outline and in placing windows
-
-Version 1.0: First release.
+• Text can be selected where a picture lies over it, and a selection no longer takes pictures with it
 
 ## In-App-Käufe
 
