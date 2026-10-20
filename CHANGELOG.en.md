@@ -2,7 +2,7 @@
 
 What changed in Leser from version to version. Deutsche Fassung: [CHANGELOG.md](CHANGELOG.md).
 
-## 1.1.1 – not released yet
+## 1.1.1 – 20 October 2026
 
 ### New
 
