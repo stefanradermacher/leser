@@ -35,12 +35,9 @@ enum AppLinks {
 }
 
 extension Color {
-    /// The brick red of the app icon, a little lighter in dark mode.
-    static let leserBrick = Color(nsColor: NSColor(name: nil) { appearance in
-        appearance.bestMatch(from: [.darkAqua, .aqua]) == .darkAqua
-            ? NSColor(srgbRed: 0.83, green: 0.36, blue: 0.30, alpha: 1)
-            : NSColor(srgbRed: 0.66, green: 0.21, blue: 0.17, alpha: 1)
-    })
+    /// The brick red of the app icon, a little lighter in dark mode. It is the app's accent color
+    /// (Assets: AccentColor), so controls take it as well.
+    static let leserBrick = Color("AccentColor")
 }
 
 struct AboutView: View {
