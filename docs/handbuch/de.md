@@ -161,7 +161,7 @@ Im Druckdialog hat Leser einen eigenen Bereich: Seiten lassen sich in Originalgr
 
 ## Standard-App
 
-Soll Leser PDFs immer öffnen, genügt ein Klick in den Einstellungen. Die Umstellung bestätigt macOS anschließend selbst, damit sie nie unbemerkt geschieht.
+Soll Leser PDFs immer öffnen, genügt ein Klick in den Einstellungen. Die Umstellung bestätigt macOS anschließend selbst, damit sie nie unbemerkt geschieht. Lässt macOS sie nicht zu, nennt Leser den Grund. Im Finder geht es auch: ein PDF auswählen, „Ablage → Informationen“, unter „Öffnen mit“ Leser wählen und „Alle ändern …“ klicken. So lässt sich auch bei einzelnen Dateien, die weiter in einer anderen App aufgehen, die eigene Einstellung „Öffnen mit“ ändern.
 
 # Fragen und Antworten
 

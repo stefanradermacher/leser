@@ -649,6 +649,17 @@
         }
       }
     },
+    "Du kannst es auch im Finder einstellen: Wähle ein PDF aus, öffne „Ablage → Informationen“, wähle unter „Öffnen mit“ Leser und klicke auf „Alle ändern …“.": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "You can also set it in the Finder: select a PDF, choose “File → Get Info”, choose Leser under “Open with”, and click “Change All…”."
+          }
+        }
+      }
+    },
     "Durchsuchbarer Text": {
       "extractionState": "manual",
       "localizations": {
@@ -1183,6 +1194,17 @@
           "stringUnit": {
             "state": "translated",
             "value": "Leser is an independent open-source project and will stay completely free. If you would like to buy me something for the continued development, I would appreciate it:"
+          }
+        }
+      }
+    },
+    "Leser konnte nicht als Standard-App für PDFs festgelegt werden.": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Leser could not be made the default app for PDFs."
           }
         }
       }

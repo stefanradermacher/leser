@@ -2,6 +2,13 @@
 
 Was sich in Leser von Version zu Version geändert hat. English version: [CHANGELOG.en.md](CHANGELOG.en.md).
 
+## 1.1.2 – noch nicht veröffentlicht
+
+### Behoben
+
+- Im Sepia-Modus wirkte die Schrift unscharf. Die Seiten werden jetzt in voller Schärfe gezeichnet und nur noch getönt; der Farbton bleibt derselbe.
+- Ließ macOS nicht zu, dass Leser zur Standard-App für PDFs wird, geschah nach einem Klick auf „Als Standard festlegen“ nichts. Jetzt nennt Leser den Grund und erklärt, wie es im Finder geht.
+
 ## 1.1.1 – 20. Oktober 2026
 
 ### Neu

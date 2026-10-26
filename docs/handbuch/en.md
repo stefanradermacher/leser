@@ -161,7 +161,7 @@ The print dialog has a section of its own for Leser: pages can be printed at act
 
 ## Default app
 
-If you want Leser to open PDFs from now on, one click in the settings is enough. macOS then confirms the change itself, so that it never happens unnoticed.
+If you want Leser to open PDFs from now on, one click in the settings is enough. macOS then confirms the change itself, so that it never happens unnoticed. If macOS does not allow it, Leser gives the reason. It also works in the Finder: select a PDF, choose “File → Get Info”, choose Leser under “Open with”, and click “Change All…”. The same way you can change the setting “Open with” of single files that still open in another app.
 
 # Questions and Answers
 

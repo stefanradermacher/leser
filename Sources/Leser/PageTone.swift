@@ -28,10 +28,33 @@ enum PageTone {
         UserDefaults.standard.bool(forKey: sepiaKey)
     }
 
-    /// Tints a view showing pages, or takes the tint off again. Does nothing if the view
-    /// already shows the setting, since it is called on every change of the user defaults,
-    /// and Leser writes those while turning pages.
-    static func apply(to view: NSView?) {
+    /// Tints a view, or takes the tint off again, with a cream laid over it. `pages` gives the
+    /// rectangles to tint, in the view's coordinates; without it, the whole view is tinted.
+    /// Does nothing if the view already shows the setting, since it is called on every change
+    /// of the user defaults, and Leser writes those while turning pages.
+    @discardableResult
+    static func apply(to view: NSView?, pages: (() -> [CGRect])? = nil) -> SepiaOverlay? {
+        guard let view else { return nil }
+        let overlay = view.subviews.first { $0 is SepiaOverlay } as? SepiaOverlay
+        if (overlay != nil) == isSepia { return overlay }
+        if isSepia {
+            view.wantsLayer = true
+            view.layerUsesCoreImageFilters = true
+            let tint = SepiaOverlay(frame: view.bounds)
+            tint.autoresizingMask = [.width, .height]
+            tint.pages = pages
+            view.addSubview(tint)
+            tint.updateMask()
+            return tint
+        }
+        overlay?.removeFromSuperview()
+        return nil
+    }
+
+    /// Tints the thumbnails with a filter on their own layer. A cream laid over them would
+    /// also tint the sidebar around them, and the filter's slight softness does not matter
+    /// for pictures this small.
+    static func applyFilter(to view: NSView?) {
         guard let view else { return }
         let tinted = !(view.layer?.filters?.isEmpty ?? true)
         guard tinted != isSepia else { return }
@@ -47,5 +70,54 @@ enum PageTone {
         filter.setValue(CIVector(x: 0, y: 0.93, z: 0, w: 0), forKey: "inputGVector")
         filter.setValue(CIVector(x: 0, y: 0, z: 0.80, w: 0), forKey: "inputBVector")
         return filter
+    }
+}
+
+/// A warm cream laid over the pages and multiplied with them: white becomes cream, black stays
+/// black, and the colours of pictures stay close to themselves, exactly as the colour matrix
+/// of the filter does. A filter on the pages' own layer renders them through an image of its
+/// own, which made the text look soft; this way the pages are drawn in full sharpness and
+/// only tinted.
+final class SepiaOverlay: NSView {
+    /// What white turns into: each colour multiplied by these shares of red, green and blue.
+    static let cream = CGColor(srgbRed: 0.98, green: 0.93, blue: 0.80, alpha: 1)
+
+    /// The rectangles to tint, in the coordinates of the view below; nil tints all of it.
+    var pages: (() -> [CGRect])?
+
+    override init(frame: NSRect) {
+        super.init(frame: frame)
+        wantsLayer = true
+        layer?.backgroundColor = Self.cream
+        layer?.compositingFilter = CIFilter(name: "CIMultiplyBlendMode")
+        // Above the views PDFKit adds for pages as they come into view, below the frame of a
+        // rectangular selection.
+        layer?.zPosition = 999
+    }
+
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+
+    /// Clicks go through to the pages.
+    override func hitTest(_ point: NSPoint) -> NSView? { nil }
+
+    override func layout() {
+        super.layout()
+        updateMask()
+    }
+
+    /// Limits the tint to the pages, so the background around them stays as it is.
+    func updateMask() {
+        guard let pages, let superview, let layer else {
+            layer?.mask = nil
+            return
+        }
+        let path = CGMutablePath()
+        for page in pages() { path.addRect(convert(page, from: superview)) }
+        let mask = (layer.mask as? CAShapeLayer) ?? CAShapeLayer()
+        mask.frame = bounds
+        mask.path = path
+        layer.mask = mask
     }
 }

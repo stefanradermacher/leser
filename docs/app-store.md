@@ -72,18 +72,12 @@ Reader,Viewer,lesen,Dokument,Gliederung,Lesezeichen,Suche,Vorschau,werbefrei,Dat
 
 ## Neue Funktionen (4000)
 
-Für Version 1.1.1. Ausführlich steht alles in `CHANGELOG.md` und `CHANGELOG.en.md`.
+Für Version 1.1.2. Ausführlich steht alles in `CHANGELOG.md` und `CHANGELOG.en.md`.
 
-Neu in Version 1.1.1
+Behoben in Version 1.1.2
 
-• Werkzeuge: In der Symbolleiste und im Menü „Werkzeuge“ wählst du zwischen Textauswahl, Rechteckiger Auswahl und Verschieben
-• Einen Bereich der Seite als Bild kopieren, mit der rechteckigen Auswahl
-• Große Seiten mit der Hand verschieben, auch jederzeit mit gehaltener Leertaste oder der mittleren Maustaste
-• Bilder aus dem Dokument kopieren oder sichern, per Rechtsklick: in voller Auflösung und mit durchsichtigem Hintergrund
-
-Verbessert
-
-• Text lässt sich auch dort markieren, wo ein Bild über ihm liegt, und eine Auswahl nimmt keine Bilder mehr mit
+• Im Sepia-Modus ist die Schrift wieder gestochen scharf; der warme Farbton bleibt
+• Lässt macOS nicht zu, dass Leser die Standard-App für PDFs wird, nennt Leser jetzt den Grund und den Weg über den Finder
 
 ## Englische Texte
 
@@ -142,16 +136,10 @@ PDF,viewer,reader,document,outline,bookmarks,search,split view,preview,ad-free,p
 
 **Neue Funktionen (4000):**
 
-New in version 1.1.1
+Fixed in version 1.1.2
 
-• Tools: in the toolbar and the “Tools” menu you choose between Text Selection, Rectangular Selection and Scroll
-• Copy an area of the page as a picture, with the rectangular selection
-• Move large pages by hand, also at any time with the space bar held down or the middle mouse button
-• Copy or save pictures from the document with a right-click: in full resolution and with their transparent background
-
-Improved
-
-• Text can be selected where a picture lies over it, and a selection no longer takes pictures with it
+• In sepia, text is sharp again; the warm tone stays
+• If macOS does not let Leser become the default app for PDFs, Leser now gives the reason and the way through the Finder
 
 ## In-App-Käufe
 

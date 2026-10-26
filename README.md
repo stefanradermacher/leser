@@ -38,7 +38,7 @@ Das App-Icon und das Dokumentsymbol werden von `scripts/make_icon.swift` gezeich
 
 - `Sources/Leser/`: Quellcode; neue Dateien gehören automatisch zum Projekt
 - `Resources/`: Asset-Katalog mit App-Icon, Monogramme, Lokalisierung, `PrivacyInfo.xcprivacy`
-- `Config/Info.plist`, `Config/Leser.entitlements`: App-Einstellungen und Sandbox-Berechtigungen (nur Lesezugriff auf selbst gewählte Dateien, das Merken solcher Dateien für Verweise auf andere Dokumente, und Drucken)
+- `Config/Info.plist`, `Config/Leser.entitlements`: App-Einstellungen und Sandbox-Berechtigungen (Lese- und Schreibzugriff auf selbst gewählte Dateien, geschrieben wird nur bei „Bild sichern unter …“; das Merken solcher Dateien für Verweise auf andere Dokumente; Drucken)
 - `Config/Leser.xcconfig`: Build-Einstellungen; bindet optional `Config/Local.xcconfig` ein
 - `Tests/LeserTests/`: Unit-Tests; neue Dateien gehören automatisch zum Test-Target
 - `testdata/`: Dokumente zum Ausprobieren von Hand, darunter zwei mit Links zwischen den Dateien (`swift scripts/make_link_tests.swift`)
@@ -51,7 +51,7 @@ Das App-Icon und das Dokumentsymbol werden von `scripts/make_icon.swift` gezeich
 
 Das führt die Unit-Tests aus (Swift Testing). Sie laufen im Debug-Build von Leser, der eigene Einstellungen hat, und lassen die der installierten App unberührt. Die PDFs, die sie brauchen, erzeugen sie selbst, mit genau dem Text, den Seitenbeschriftungen, Links und Kennungen, um die es im Test geht. Einzelne Gruppen oder Tests: `./test.sh PageReferenceTests` oder `./test.sh PageReferenceTests/pageLabelsDecide()`. Das vollständige Protokoll steht in `.build/test.log`.
 
-Geprüft werden vor allem die Teile mit eigener Logik: Seitenangaben und Verweise auf andere Dokumente, Kopieren mit Absätzen, Dokumentkennung, Lesestellen, Lesezeichen, Zuordnungen und Links in andere Dateien, Navigation, Suche, Drucken, die Teilung der Seitenleiste, die Dateiüberwachung beim Neuladen und die Nachfrage nach der Standard-App.
+Geprüft werden vor allem die Teile mit eigener Logik: Seitenangaben und Verweise auf andere Dokumente, Kopieren mit Absätzen, Dokumentkennung, Lesestellen, Lesezeichen, Zuordnungen und Links in andere Dateien, Navigation, Suche, Drucken, die Teilung der Seitenleiste, die Dateiüberwachung beim Neuladen, die Nachfrage nach der Standard-App, die Werkzeuge, das Auslesen von Bildern und der Sepia-Ton.
 
 Zum Signieren mit eigenem Entwicklerkonto `Config/Local.xcconfig.example` nach `Config/Local.xcconfig` kopieren und die eigene Team-ID eintragen. Die Datei bleibt lokal. Ohne sie baut Xcode ohne Team, und `./build.sh` signiert ad hoc.
 
@@ -83,7 +83,19 @@ Die Anzeige (Fortlaufend, Einzelseite, Doppelseite) lässt sich über das Menü 
 
 ## Symbolleiste
 
-Unter dem Dokumentnamen steht die Position im Dokument („3 von 18“). Die Symbolleiste zeigt drei Gruppen: Blättern (˄, Seitenbezeichnung, ˅), Anzeige (Anzeigemodus, geteilte Ansicht) und Zoom (verkleinern, Zoomstufe mit Anpassen-Optionen, vergrößern), dazu die Suche. Zwischen den Blätterpfeilen steht die Seitenbezeichnung, wie sie das PDF festlegt, etwa „xi“ oder „12“, sonst die Seitenzahl. Ein Klick darauf oder **Gehe zu Seite …** (⌥⌘G) öffnet ein Feld, das Seitenbezeichnungen wie Seitenzahlen versteht.
+Unter dem Dokumentnamen steht die Position im Dokument („3 von 18“). Die Symbolleiste zeigt vier Gruppen: Blättern (˄, Seitenbezeichnung, ˅), Anzeige (Anzeigemodus, geteilte Ansicht), Zoom (verkleinern, Zoomstufe mit Anpassen-Optionen, vergrößern) und Werkzeuge, dazu die Suche. Zwischen den Blätterpfeilen steht die Seitenbezeichnung, wie sie das PDF festlegt, etwa „xi“ oder „12“, sonst die Seitenzahl. Ein Klick darauf oder **Gehe zu Seite …** (⌥⌘G) öffnet ein Feld, das Seitenbezeichnungen wie Seitenzahlen versteht.
+
+## Werkzeuge
+
+Was ein Ziehen mit der Maus bewirkt, bestimmt das Werkzeug, wählbar in der Symbolleiste und im Menü „Werkzeuge“. Es gilt für das ganze Fenster, beide Hälften einer geteilten Ansicht eingeschlossen, und neue Fenster beginnen mit dem zuletzt gewählten.
+
+- **Textauswahl** (Standard): Leser wählt Text selbst nach Zeichen aus, statt das PDFKit zu überlassen. PDFKit wählt ein Bild über seinen ganzen Rahmen aus, durchsichtige Ränder eingeschlossen, und kommt an Text darunter dann nicht heran; außerdem nimmt seine Auswahl zwischen zwei Punkten Bilder mit. Die Lage der Zeichen nimmt Leser aus PDFKits Zeilen- und Zeichenauswahlen, weil `characterBounds(at:)` in manchen Dokumenten seitlich verrutscht ist. Doppelklick wählt ein Wort, Dreifachklick eine Zeile, Umschalt-Klick erweitert. Weit weg von Text, etwa mitten in einem Bild, übernimmt wie bisher PDFKit.
+- **Rechteckige Auswahl:** ein Rahmen auf einer Seite; **Bearbeiten → Kopieren** legt den Bereich als PNG und TIFF in vierfacher Auflösung ab (etwa 288 dpi, höchstens 8000 Pixel Kantenlänge). Esc hebt den Rahmen auf.
+- **Verschieben:** schiebt eine Seite, die größer ist als das Fenster; Links bleiben anklickbar.
+
+Verschieben geht auch ohne Umschalten: mit gehaltener Leertaste oder der mittleren Maustaste. Kurz gedrückt blättert die Leertaste wie gewohnt.
+
+Ein Rechtsklick auf ein Bild bietet **Bild kopieren** und **Bild sichern unter …**. Leser liest das Bild aus dem PDF selbst, in seiner eigenen Auflösung, und setzt eine Transparenzmaske (SMask) als Alphakanal ein. Liegen Bilder übereinander, gilt das oberste, das an der Stelle nicht durchsichtig ist. JPEGs ohne Transparenz werden unverändert gesichert, alles andere als PNG. Erlaubt ein Dokument kein Kopieren, sind beide Einträge ausgegraut.
 
 ## Seitenleiste
 
@@ -113,7 +125,7 @@ Kopierter Text kommt in Absätzen an: Leser fügt die Zeilen wieder zusammen, wo
 
 Der Druckdialog hat einen eigenen Abschnitt „Leser“: Originalgröße (Standard), Große Seiten verkleinern oder Auf Papierformat skalieren, dazu das automatische Drehen quer liegender Seiten. Leser merkt sich die Wahl für den nächsten Druck.
 
-**Darstellung → Sepia** tönt die Seiten wie warmes Papier; Drucken und Kopieren bleiben davon unberührt.
+**Darstellung → Sepia** tönt die Seiten wie warmes Papier; Drucken und Kopieren bleiben davon unberührt. Die Tönung ist eine cremefarbene Fläche, die im Modus „Multiplizieren“ nur über den Seiten liegt. Ein Farbfilter auf der Ebene der Seiten hätte dieselbe Wirkung, zeichnet sie aber über ein Zwischenbild und macht die Schrift weich; nur die kleinen Miniaturen bekommen noch den Filter.
 
 ## Suche
 
@@ -181,7 +193,7 @@ Leser fragt selbst höchstens zweimal, ob es PDFs standardmäßig öffnen soll, 
 - ein zweites und letztes Mal frühestens 30 Tage und drei weitere Nutzungstage nach „Nicht jetzt“,
 - nie, wenn Leser schon einmal Standard war, nicht in „Programme“ liegt oder das Dokument passwortgeschützt ist.
 
-Die Änderung selbst bestätigt macOS mit einer eigenen Rückfrage.
+Die Änderung selbst bestätigt macOS mit einer eigenen Rückfrage. Lässt macOS sie nicht zu, nennt Leser den Grund und den Weg über den Finder.
 
 ## Quellcode
 
@@ -199,7 +211,9 @@ Die Änderung selbst bestätigt macOS mit einer eigenen Rückfrage.
 - `OtherDocuments.swift`: Zuordnung von Titeln zu Dateien, Öffnen in Tab oder zweiter Ansicht, Links in andere Dateien, Einstellungen „Verweise“
 - `ParagraphText.swift`: fügt kopierte Zeilen wieder zu Absätzen zusammen
 - `PrintOptions.swift`: Abschnitt „Leser“ im Druckdialog
-- `PageTone.swift`: Sepia-Ton der Seiten
+- `PageTone.swift`: Sepia-Ton der Seiten, als Fläche über den Seiten
+- `ReaderTools.swift`: Werkzeuge, eigene Textauswahl nach Zeichen, rechteckige Auswahl, Verschieben
+- `PageImages.swift`: findet die Bilder einer Seite und liest sie mit Transparenz aus, für „Bild kopieren“ und „Bild sichern unter …“
 - `AboutView.swift`: Über-Fenster; Links (Quellcode, weitere Projekte) stehen gesammelt in `AppLinks`
 - `TipJar.swift`: Trinkgelder mit StoreKit 2
 - `DefaultAppOffer.swift`: Nachfrage und Einstellung zur Standard-App für PDFs

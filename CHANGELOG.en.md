@@ -2,6 +2,13 @@
 
 What changed in Leser from version to version. Deutsche Fassung: [CHANGELOG.md](CHANGELOG.md).
 
+## 1.1.2 – not released yet
+
+### Fixed
+
+- In sepia, text looked blurred. The pages are now drawn in full sharpness and only tinted; the tone stays the same.
+- If macOS did not let Leser become the default app for PDFs, clicking “Set as Default” did nothing. Leser now gives the reason and explains how to do it in the Finder.
+
 ## 1.1.1 – 20 October 2026
 
 ### New

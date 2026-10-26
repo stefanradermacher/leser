@@ -133,12 +133,12 @@ final class SidebarThumbnailView: PDFThumbnailView {
         super.viewDidMoveToWindow()
         guard window != nil else { return }
         revealCurrentPageSoon()
-        PageTone.apply(to: self)
+        PageTone.applyFilter(to: self)
         if toneObserver == nil {
             toneObserver = NotificationCenter.default.addObserver(
                 forName: UserDefaults.didChangeNotification, object: UserDefaults.standard, queue: .main
             ) { [weak self] _ in
-                MainActor.assumeIsolated { PageTone.apply(to: self) }
+                MainActor.assumeIsolated { PageTone.applyFilter(to: self) }
             }
         }
     }

@@ -69,6 +69,22 @@ enum DefaultAppOffer {
         defaults.set(true, forKey: Key.wasDefault)
     }
 
+    /// Makes Leser the default and says why, if macOS does not let it. Declining macOS's own
+    /// question is no error. Before, a failure went unnoticed and the button seemed to do nothing.
+    static func makeDefaultTellingWhy() async {
+        do {
+            try await makeDefault()
+        } catch let error as NSError where error.domain == NSCocoaErrorDomain && error.code == NSUserCancelledError {
+            return
+        } catch {
+            let alert = NSAlert()
+            alert.messageText = String(localized: "Leser konnte nicht als Standard-App für PDFs festgelegt werden.")
+            alert.informativeText = error.localizedDescription + "\n\n"
+                + String(localized: "Du kannst es auch im Finder einstellen: Wähle ein PDF aus, öffne „Ablage → Informationen“, wähle unter „Öffnen mit“ Leser und klicke auf „Alle ändern …“.")
+            alert.runModal()
+        }
+    }
+
     // MARK: Usage and offers
 
     /// Counts the days on which Leser opened a document.
@@ -131,7 +147,7 @@ struct DefaultAppBanner: View {
             Spacer(minLength: 8)
             Button("Als Standard festlegen") {
                 Task {
-                    try? await DefaultAppOffer.makeDefault()
+                    await DefaultAppOffer.makeDefaultTellingWhy()
                     onClose()
                 }
             }
@@ -161,7 +177,7 @@ struct DefaultAppSettingsRow: View {
                     }
                     Button("Leser als Standard festlegen") {
                         Task {
-                            try? await DefaultAppOffer.makeDefault()
+                            await DefaultAppOffer.makeDefaultTellingWhy()
                             refresh()
                         }
                     }

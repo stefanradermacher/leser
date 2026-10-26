@@ -278,7 +278,7 @@ final class ViewerModel {
     // MARK: - Page tone
 
     func applyPageTone() {
-        PageTone.apply(to: pdfView.documentView)
+        pdfView.updatePageTone()
     }
 
     // MARK: - Page layout
@@ -963,24 +963,53 @@ final class ReaderPDFView: PDFView {
             areaOverlay.removeFromSuperview()
             return
         }
-        if !observesLayout {
-            observesLayout = true
-            for name in [Notification.Name.PDFViewScaleChanged, .PDFViewDisplayModeChanged, .PDFViewDisplayBoxChanged] {
-                NotificationCenter.default.addObserver(self, selector: #selector(layoutChanged), name: name, object: self)
-            }
-            documentView.postsFrameChangedNotifications = true
-            NotificationCenter.default.addObserver(self, selector: #selector(layoutChanged),
-                                                   name: NSView.frameDidChangeNotification, object: documentView)
-        }
+        observeLayout()
         let rect = documentView.convert(convert(area.rect, from: area.page), from: self)
         if areaOverlay.superview !== documentView { documentView.addSubview(areaOverlay) }
         areaOverlay.frame = rect.insetBy(dx: -1, dy: -1)
         areaOverlay.needsDisplay = true
     }
 
+    /// Follows PDFKit laying out the pages anew, for what lies over them.
+    private func observeLayout() {
+        guard !observesLayout, let documentView else { return }
+        observesLayout = true
+        for name in [Notification.Name.PDFViewScaleChanged, .PDFViewDisplayModeChanged, .PDFViewDisplayBoxChanged,
+                     .PDFViewPageChanged, .PDFViewDocumentChanged] {
+            NotificationCenter.default.addObserver(self, selector: #selector(layoutChanged), name: name, object: self)
+        }
+        documentView.postsFrameChangedNotifications = true
+        NotificationCenter.default.addObserver(self, selector: #selector(layoutChanged),
+                                               name: NSView.frameDidChangeNotification, object: documentView)
+    }
+
     @objc private func layoutChanged() {
         // After PDFKit has laid out the pages anew.
-        DispatchQueue.main.async { [weak self] in self?.updateAreaOverlay() }
+        DispatchQueue.main.async { [weak self] in
+            self?.updateAreaOverlay()
+            self?.sepiaOverlay?.updateMask()
+        }
+    }
+
+    private var sepiaOverlay: SepiaOverlay? {
+        documentView?.subviews.first { $0 is SepiaOverlay } as? SepiaOverlay
+    }
+
+    /// Tints the pages in sepia, or takes the tint off, as set in the View menu. Only the pages:
+    /// the background around them stays as it is.
+    func updatePageTone() {
+        guard let documentView else { return }
+        observeLayout()
+        PageTone.apply(to: documentView) { [weak self] in self?.pageRects() ?? [] }?.updateMask()
+    }
+
+    /// Where the pages shown lie, in the coordinates of the document view. In the layouts
+    /// that show one page or spread at a time, only those; PDFKit places the others there too.
+    private func pageRects() -> [CGRect] {
+        guard let document, let documentView else { return [] }
+        let continuous = displayMode == .singlePageContinuous || displayMode == .twoUpContinuous
+        let pages = continuous ? (0..<document.pageCount).compactMap { document.page(at: $0) } : visiblePages
+        return pages.map { documentView.convert(convert($0.bounds(for: displayBox), from: $0), from: self) }
     }
 
     override func mouseUp(with event: NSEvent) {
