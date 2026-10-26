@@ -4,6 +4,10 @@ Was sich in Leser von Version zu Version geändert hat. English version: [CHANGE
 
 ## 1.1.2 – noch nicht veröffentlicht
 
+### Verbessert
+
+**Eigene Akzentfarbe.** Leser hat jetzt eine eigene Akzentfarbe, das Rot seines Symbols. Ist in den Systemeinstellungen unter „Erscheinungsbild“ die Akzentfarbe „Mehrfarbig“ gewählt, nehmen Knöpfe, Schalter und Auswahl in Leser diese Farbe an; bei jeder anderen Wahl bleibt es bei der Farbe des Systems.
+
 ### Behoben
 
 - Im Sepia-Modus wirkte die Schrift unscharf. Die Seiten werden jetzt in voller Schärfe gezeichnet und nur noch getönt; der Farbton bleibt derselbe.

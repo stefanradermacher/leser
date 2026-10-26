@@ -4,6 +4,10 @@ What changed in Leser from version to version. Deutsche Fassung: [CHANGELOG.md](
 
 ## 1.1.2 – not released yet
 
+### Improved
+
+**Accent colour of its own.** Leser now has an accent colour of its own, the red of its icon. If the accent colour “Multicolour” is chosen in System Settings under “Appearance”, buttons, switches, and selections in Leser take on this colour; with any other choice, the system's colour stays.
+
 ### Fixed
 
 - In sepia, text looked blurred. The pages are now drawn in full sharpness and only tinted; the tone stays the same.

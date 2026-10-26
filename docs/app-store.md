@@ -74,7 +74,11 @@ Reader,Viewer,lesen,Dokument,Gliederung,Lesezeichen,Suche,Vorschau,werbefrei,Dat
 
 Für Version 1.1.2. Ausführlich steht alles in `CHANGELOG.md` und `CHANGELOG.en.md`.
 
-Behoben in Version 1.1.2
+Verbessert in Version 1.1.2
+
+• Eigene Akzentfarbe: Mit der Akzentfarbe „Mehrfarbig“ in den Systemeinstellungen erscheinen Knöpfe, Schalter und Auswahl im Rot von Leser
+
+Behoben
 
 • Im Sepia-Modus ist die Schrift wieder gestochen scharf; der warme Farbton bleibt
 • Lässt macOS nicht zu, dass Leser die Standard-App für PDFs wird, nennt Leser jetzt den Grund und den Weg über den Finder
@@ -136,7 +140,11 @@ PDF,viewer,reader,document,outline,bookmarks,search,split view,preview,ad-free,p
 
 **Neue Funktionen (4000):**
 
-Fixed in version 1.1.2
+Improved in version 1.1.2
+
+• An accent colour of its own: with the accent colour “Multicolour” in System Settings, buttons, switches, and selections appear in Leser's red
+
+Fixed
 
 • In sepia, text is sharp again; the warm tone stays
 • If macOS does not let Leser become the default app for PDFs, Leser now gives the reason and the way through the Finder
